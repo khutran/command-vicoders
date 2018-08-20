@@ -10,6 +10,7 @@ if (_.isUndefined(process.argv[2])) {
   throw new Error("command not undefined");
 }
 
+
 _.forEach(subcommand, item => {
   if (process.argv[2] === item.name) {
     _.assign(o, item);
