@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "devstart": "./node_modules/.bin/nodemon ./node_modules/.bin/babel-node command"
+    "command": "./node_modules/.bin/babel-node index"
   },
   "author": "",
   "license": "ISC",
