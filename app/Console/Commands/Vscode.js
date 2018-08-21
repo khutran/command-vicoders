@@ -7,6 +7,7 @@ import chownr from "chownr";
 import Exception from "../../Exceptions/Exception";
 const rimraf = util.promisify(require("rimraf"));
 import colors from "colors";
+import fs from "fs";
 
 export default class UpdateProjectTableBuildtimeAndCloudflareCommand extends Command {
   signature() {
@@ -23,10 +24,13 @@ export default class UpdateProjectTableBuildtimeAndCloudflareCommand extends Com
 
   async handle(options) {
     if (!_.isUndefined(options.install) && options.install === true) {
-      const oprator = os.platform();
+      // const oprator = os.platform();
       const user = os.userInfo();
       console.log("Clear extentions ....");
-      const clear = await rimraf(`${user.homedir}/.vscode/extensions`);
+      if (!fs.existsSync(`${user.homedir}/.vscode`)) {
+        fs.mkdirSync(`${user.homedir}/.vscode`);
+      }
+      await rimraf(`${user.homedir}/.vscode/extensions`);
       console.log(`Clear extentions .... ${colors.green("done")}`);
       const extension = spawn("git", [
         "clone",
