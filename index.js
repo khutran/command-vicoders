@@ -20,6 +20,7 @@ _.forEach(commands, command => {
       .command(instance.signature())
       .description(instance.description());
     const options = instance.options();
+    
     for (const option of options) {
       if (_.isUndefined(option.key)) {
         throw new Exception("Option key is required", 1);

@@ -5,7 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "command": "./node_modules/.bin/babel-node index"
+    "vcc": "./node_modules/.bin/babel-node index.js",
+    "build": "rimraf dist/ && babel ./ --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./npm-debug.log,error_code.md,README.md,app.test.js --copy-files"
+  },
+  "bin": {
+    "vcc": "./dist/index.js"
   },
   "author": "",
   "license": "ISC",

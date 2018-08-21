@@ -4,12 +4,12 @@ import { spawn } from "child_process";
 const util = require("util");
 import os from "os";
 import chownr from "chownr";
-import Exception from "../../Exceptions/Exception";
+import { Exception } from "../../Exceptions/Exception";
 const rimraf = util.promisify(require("rimraf"));
 import colors from "colors";
 import fs from "fs";
 
-export default class UpdateProjectTableBuildtimeAndCloudflareCommand extends Command {
+export default class Vscode extends Command {
   signature() {
     return "vscode";
   }
@@ -24,14 +24,14 @@ export default class UpdateProjectTableBuildtimeAndCloudflareCommand extends Com
 
   async handle(options) {
     if (!_.isUndefined(options.install) && options.install === true) {
-      // const oprator = os.platform();
       const user = os.userInfo();
       console.log("Clear extentions ....");
       if (!fs.existsSync(`${user.homedir}/.vscode`)) {
-        fs.mkdirSync(`${user.homedir}/.vscode`);
+        throw new Exception("VIsual studio not install", 2);
       }
       await rimraf(`${user.homedir}/.vscode/extensions`);
       console.log(`Clear extentions .... ${colors.green("done")}`);
+
       const extension = spawn("git", [
         "clone",
         "https://github.com/codersvn/vscode_extensions.git",
