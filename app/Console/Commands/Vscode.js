@@ -1,10 +1,12 @@
 import { Command } from "./Command";
 import _ from "lodash";
 import { spawn } from "child_process";
-import path from "path";
 const util = require("util");
-const exec = util.promisify(require("child_process").exec);
 import os from "os";
+import chownr from "chownr";
+import Exception from "../../Exceptions/Exception";
+const rimraf = util.promisify(require("rimraf"));
+import colors from "colors";
 
 export default class UpdateProjectTableBuildtimeAndCloudflareCommand extends Command {
   signature() {
@@ -22,25 +24,36 @@ export default class UpdateProjectTableBuildtimeAndCloudflareCommand extends Com
   async handle(options) {
     if (!_.isUndefined(options.install) && options.install === true) {
       const oprator = os.platform();
-      console.log(oprator);
-      // const extension = spawn("git", [
-      //   "clone",
-      //   "https://github.com/codersvn/vscode_extensions.git"
-      //   // "/root/.vscode"
-      // ]);
+      const user = os.userInfo();
+      console.log("Clear extentions ....");
+      const clear = await rimraf(`${user.homedir}/.vscode/extensions`);
+      console.log(`Clear extentions .... ${colors.green("done")}`);
+      const extension = spawn("git", [
+        "clone",
+        "https://github.com/codersvn/vscode_extensions.git",
+        `${user.homedir}/.vscode/extensions`
+      ]);
 
-      // extension.stdout.on("data", data => {
-      //   console.log(`stdout: ${data}`);
-      // });
+      extension.stderr.on("data", data => {
+        if (data.indexOf("done") > -1) {
+          data = _.replace(data, ", done.", "");
+        }
+        console.log(`${data}`);
+      });
 
-      // extension.stderr.on("data", data => {
-      //   console.log(`stderr: ${data}`);
-      // });
-
-      // extension.on("close", code => {
-      //   console.log(`child process exited with code ${code}`);
-      // });
+      extension.on("close", code => {
+        chownr(
+          `${user.homedir}/.vscode/extensions`,
+          user.uid,
+          user.gid,
+          err => {
+            if (err) {
+              throw new Exception(err.messages);
+            }
+          }
+        );
+        console.log(`Install ... ${colors.green("done")}`);
+      });
     }
-    // process.exit();
   }
 }
