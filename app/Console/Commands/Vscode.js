@@ -11,53 +11,59 @@ import fs from "fs";
 
 export default class Vscode extends Command {
   signature() {
-    return "vscode";
+    return "vscode <<router>>";
   }
 
   description() {
-    return "Install Visual studio";
+    return [
+      "Install - Install visual studio"
+    ];
   }
 
   options() {
-    return [{ key: "install?", description: "default true" }];
+    return [];
   }
 
-  async handle(options) {
-    if (!_.isUndefined(options.install) && options.install === true) {
-      const user = os.userInfo();
-      console.log("Clear extentions ....");
-      if (!fs.existsSync(`${user.homedir}/.vscode`)) {
-        throw new Exception("VIsual studio not install", 2);
-      }
-      await rimraf(`${user.homedir}/.vscode/extensions`);
-      console.log(`Clear extentions .... ${colors.green("done")}`);
-
-      const extension = spawn("git", [
-        "clone",
-        "https://github.com/codersvn/vscode_extensions.git",
-        `${user.homedir}/.vscode/extensions`
-      ]);
-
-      extension.stderr.on("data", data => {
-        if (data.indexOf("done") > -1) {
-          data = _.replace(data, ", done.", "");
+  async handle(router, options) {
+    try {
+      if (router === "install") {
+        const user = os.userInfo();
+        console.log("Clear extentions ....");
+        if (!fs.existsSync(`${user.homedir}/.vscode`)) {
+          throw new Exception("VIsual studio not install", 2);
         }
-        console.log(`${data}`);
-      });
+        await rimraf(`${user.homedir}/.vscode/extensions`);
+        console.log(`Clear extentions .... ${colors.green("done")}`);
 
-      extension.on("close", code => {
-        chownr(
-          `${user.homedir}/.vscode/extensions`,
-          user.uid,
-          user.gid,
-          err => {
-            if (err) {
-              throw new Exception(err.messages);
-            }
+        const extension = spawn("git", [
+          "clone",
+          "https://github.com/codersvn/vscode_extensions.git",
+          `${user.homedir}/.vscode/extensions`
+        ]);
+
+        extension.stderr.on("data", data => {
+          if (data.indexOf("done") > -1) {
+            data = _.replace(data, ", done.", "");
           }
-        );
-        console.log(`Install ... ${colors.green("done")}`);
-      });
+          console.log(`${data}`);
+        });
+
+        extension.on("close", code => {
+          chownr(
+            `${user.homedir}/.vscode/extensions`,
+            user.uid,
+            user.gid,
+            err => {
+              if (err) {
+                throw new Exception(err.messages);
+              }
+            }
+          );
+          console.log(`Install ... ${colors.green("done")}`);
+        });
+      }
+    } catch (e) {
+      console.log(colors.red(e));
     }
   }
 }
