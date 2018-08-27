@@ -44,7 +44,7 @@ export default class InstallVscode extends Install {
         });
       }
       if (this.os === 'linux') {
-        const osName = new Linux.osName();
+        const osName = new Linux().osName();
         console.log(osName);
       }
     } catch (e) {
