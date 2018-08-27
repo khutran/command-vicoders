@@ -2,7 +2,7 @@ import Install from './Install';
 import { Exception } from '@codersvn/exceptions';
 import inquirer from 'inquirer';
 import colors from 'colors';
-import { Darwin } from '../Os/Darwin';
+import { Darwin } from '../Os/darwin';
 import { Linux } from '../Os/linux';
 const { spawn } = require('child_process');
 const util = require('util');
