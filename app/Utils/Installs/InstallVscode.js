@@ -12,7 +12,8 @@ export default class InstallVscode extends Install {
   async run() {
     try {
       if (this.os === 'darwin') {
-        if (!new Darwin().CheckExists('brew')) {
+        const darwin = new Darwin();
+        if (!darwin.CheckExists('brew')) {
           const answers = await inquirer.prompt({ type: 'confirm', name: 'brew', message: 'Brew not install  - Do you want insatll brew?', default: true });
           if (answers.brew) {
             const curl = await exec('curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install');
@@ -28,7 +29,7 @@ export default class InstallVscode extends Install {
           }
         }
 
-        if (new Darwin().CheckExists('code')) {
+        if (darwin.CheckExists('code')) {
           throw new Exception('install extist vscode !', 1);
         }
 
@@ -44,8 +45,20 @@ export default class InstallVscode extends Install {
         });
       }
       if (this.os === 'linux') {
-        const osName = new Linux().osName();
-        console.log(osName);
+        const linux = new Linux();
+        const osName = linux.osName();
+        if (osName === 'debian') {
+          const microsoft = spawn('curl', ['https://packages.microsoft.com/keys/microsoft.asc']);
+          const gpg = spawn('gpg', ['--dearmor', '>', 'microsoft.gpg']);
+          microsoft.stdout.on('data', data => {
+            gpg.stdin.write(data);
+          });
+          gpg.on('close', code => {
+            if (code === 0) {
+              console.log(colors.green('down microsoft success ... done !'));
+            }
+          });
+        }
       }
     } catch (e) {
       throw new Exception(e.message, 1);
