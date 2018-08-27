@@ -1,8 +1,9 @@
 import Install from './Install';
-import { Darwin } from '../Os/darwin';
 import { Exception } from '@codersvn/exceptions';
 import inquirer from 'inquirer';
 import colors from 'colors';
+import { Darwin } from '../Os/Darwin';
+import { Linux } from '../Os/linux';
 const { spawn } = require('child_process');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
@@ -11,7 +12,7 @@ export default class InstallVscode extends Install {
   async run() {
     try {
       if (this.os === 'darwin') {
-        if (!new Darwin().package('brew')) {
+        if (!new Darwin().CheckExists('brew')) {
           const answers = await inquirer.prompt({ type: 'confirm', name: 'brew', message: 'Brew not install  - Do you want insatll brew?', default: true });
           if (answers.brew) {
             const curl = await exec('curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install');
@@ -27,7 +28,7 @@ export default class InstallVscode extends Install {
           }
         }
 
-        if (new Darwin().package('code')) {
+        if (new Darwin().CheckExists('code')) {
           throw new Exception('install extist vscode !', 1);
         }
 
@@ -42,8 +43,12 @@ export default class InstallVscode extends Install {
           }
         });
       }
+      if (this.os === 'linux') {
+        const osName = new Linux.osName();
+        console.log(osName);
+      }
     } catch (e) {
-      console.log(e);
+      throw new Exception(e.message, 1);
     }
   }
 }

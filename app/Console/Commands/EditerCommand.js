@@ -51,7 +51,7 @@ export default class VscodeCommand extends Command {
       //   });
       // }
     } catch (e) {
-      console.log(colors.red(e.messages));
+      console.log(colors.red(e.message));
     }
   }
 }
