@@ -53,12 +53,27 @@ export default class InstallVscode extends Install {
           microsoft.stdout.on('data', data => {
             gpg.stdin.write(data);
           });
-          microsoft.stderr.on('data', data => {
-            gpg.stdin.write(data);
-          });
+
           gpg.on('close', code => {
             if (code === 0) {
               console.log(colors.green('down microsoft success ... done !'));
+            }
+          });
+        }
+        if (osName === 'redhat') {
+          await exec('rpm --import https://packages.microsoft.com/keys/microsoft.asc');
+          const addRepo = spawn('sh', [
+            '-c',
+            'echo',
+            '-e',
+            '[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc',
+            '>',
+            '/etc/yum.repos.d/vscode.repo'
+          ]);
+
+          addRepo.on('close', code => {
+            if (code === 0) {
+              console.log(colors.green('add repo sucess ... !'), 1);
             }
           });
         }
