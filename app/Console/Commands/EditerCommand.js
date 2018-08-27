@@ -25,7 +25,17 @@ export default class VscodeCommand extends Command {
 
   async handle(option) {
     try {
-      await new InstallVscode().run();
+      let data = {
+        install: option.install,
+        installExtentions: option.installExtentions
+      };
+      for (let i in data) {
+        if (_.isUndefined(data[i])) {
+          delete data[i];
+        }
+      }
+      console.log(data);
+      // await new InstallVscode().run();
       // if (option.installExtentions) {
       //   const user = os.userInfo();
       //   console.log('Clear extentions ....');
