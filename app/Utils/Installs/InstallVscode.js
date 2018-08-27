@@ -71,6 +71,20 @@ export default class InstallVscode extends Install {
             }
             console.log(colors.green('create file repo ... success !'));
           });
+
+          await exec('yum check-update');
+          const code = spawn('yum', ['-y', 'install', 'code']);
+          code.stdout.on('data', data => {
+            console.log(data.toString());
+          });
+          code.stderr.on('data', data => {
+            console.log(data.toString());
+          });
+          code.on('close', code => {
+            if (code === 0) {
+              console.log(colors.green('Install vs code success ... !'));
+            }
+          });
         }
       }
     } catch (e) {
