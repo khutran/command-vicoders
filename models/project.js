@@ -1,8 +1,8 @@
-"use strict";
+'use strict';
 
 module.exports = (sequelize, DataTypes) => {
   var Project = sequelize.define(
-    "project",
+    'project',
     {
       name: DataTypes.STRING,
       dir_home: DataTypes.STRING,

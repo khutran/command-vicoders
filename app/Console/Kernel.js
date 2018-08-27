@@ -1,8 +1,9 @@
-import vscode from "./Commands/Vscode";
-import project from "./Commands/Project";
+import MakeCommandCommand from './Commands/MakeCommandCommand';
+import EditerCommand from './Commands/EditerCommand';
+import ProjectCommand from './Commands/ProjectCommand';
 
 export class Kernel {
   commands() {
-    return [vscode, project];
+    return [MakeCommandCommand, EditerCommand, ProjectCommand];
   }
 }
