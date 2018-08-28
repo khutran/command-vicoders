@@ -120,8 +120,11 @@ export default class InstallVscode extends Install {
       const darwin = new Darwin();
       const user = darwin.userInfo();
       console.log('Clear extentions ....');
-      if (!fs.existsSync(`${user.homedir}/.vscode`)) {
+      if (!darwin.CheckExists('code')) {
         throw new Exception('VIsual studio not install', 2);
+      }
+      if (!fs.existsSync(`${user.homedir}/.vscode`)) {
+        fs.mkdirSync(`${user.homedir}/.vscode`);
       }
       await rimraf(`${user.homedir}/.vscode/extensions`);
       console.log(`Clear extentions .... ${colors.green('done')}`);
@@ -147,8 +150,11 @@ export default class InstallVscode extends Install {
       const user = linux.userInfo();
       if (osName === 'debian') {
         console.log('Clear extentions ....');
-        if (!fs.existsSync(`${user.homedir}/.vscode`)) {
+        if (!linux.CheckExists('code')) {
           throw new Exception('VIsual studio not install', 2);
+        }
+        if (!fs.existsSync(`${user.homedir}/.vscode`)) {
+          fs.mkdirSync(`${user.homedir}/.vscode`);
         }
         await rimraf(`${user.homedir}/.vscode/extensions`);
         console.log(`Clear extentions .... ${colors.green('done')}`);
@@ -170,8 +176,11 @@ export default class InstallVscode extends Install {
       }
       if (osName === 'redhat') {
         console.log('Clear extentions ....');
-        if (!fs.existsSync(`${user.homedir}/.vscode`)) {
+        if (!linux.CheckExists('code')) {
           throw new Exception('VIsual studio not install', 2);
+        }
+        if (!fs.existsSync(`${user.homedir}/.vscode`)) {
+          fs.mkdirSync(`${user.homedir}/.vscode`);
         }
         await rimraf(`${user.homedir}/.vscode/extensions`);
         console.log(`Clear extentions .... ${colors.green('done')}`);
