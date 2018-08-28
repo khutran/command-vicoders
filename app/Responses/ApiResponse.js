@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import { Exception } from '../Exceptions/Exception';
+import { Exception } from '@nsilly/exceptions';
 
 export default class ApiResponse {
   static item(obj, transformer) {
@@ -7,7 +7,7 @@ export default class ApiResponse {
   }
 
   static collection(collection, transformer) {
-    let data = _.map(collection, i => {
+    const data = _.map(collection, i => {
       return transformer.get(i);
     });
     return data;
@@ -17,7 +17,7 @@ export default class ApiResponse {
     if (!_.isArray(array)) {
       throw new Exception('ApiResponse.array expect an array', 2001);
     }
-    return data;
+    return array;
   }
 
   static success() {

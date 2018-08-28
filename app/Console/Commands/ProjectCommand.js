@@ -26,13 +26,13 @@ export default class ProjectCommand extends Command {
       const repository = new ProjectRepository();
       switch (router) {
         case '.':
-          let data = {
+          const data = {
             name: path.basename(process.cwd()),
             dir_home: process.cwd()
           };
 
           const git_remote = await exec('git remote -v');
-          let i = _.split(git_remote.stdout, '\n');
+          const i = _.split(git_remote.stdout, '\n');
           data.git_remote = i[0].slice(7, -8);
 
           const item = await repository.where('name', data.name).first();

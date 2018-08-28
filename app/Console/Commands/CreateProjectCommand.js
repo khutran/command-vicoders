@@ -1,0 +1,87 @@
+import { Command } from './Command';
+import axios from 'axios';
+import path from 'path';
+import decompress from 'decompress';
+import fs from 'fs';
+import { spawn } from 'child_process';
+
+export default class CreateProjectCommand extends Command {
+  signature() {
+    return 'create-project <type>';
+  }
+
+  description() {
+    return 'Software Development Kit for Vicoders';
+  }
+
+  options() {
+    return [{ key: 'name', description: 'The application name' }];
+  }
+
+  async handle(type, options) {
+    const zip_file_name = Date.now();
+    switch (type) {
+      case 'angular-admin':
+        // const url = 'http://bitbucket.org/vicoderscom/vc_kit_angular_cli_v6/get/master.zip';
+        const url = 'http://php7.local/master.zip';
+        const filepath = path.resolve(process.cwd(), `${zip_file_name}.zip`);
+        const file = fs.createWriteStream(filepath);
+        const response = await axios({
+          method: 'GET',
+          url: url,
+          responseType: 'stream'
+        });
+
+        response.data.pipe(file);
+
+        return new Promise((resolve, reject) => {
+          var len = parseInt(response.data.headers['content-length'], 10);
+          var cur = 0;
+          var total = len / 1048576;
+
+          process.stdout.write('Downloading ...');
+          response.data.on('data', function(chunk) {
+            cur += chunk.length;
+            const percent = ((100.0 * cur) / len).toFixed(2);
+            process.stdout.clearLine();
+            process.stdout.cursorTo(0);
+            process.stdout.write(`Downloading ${percent}% of ${total.toFixed(2)}MB`);
+          });
+
+          response.data.on('end', () => {
+            process.stdout.clearLine();
+            resolve(filepath);
+          });
+          response.data.on('error', () => {
+            reject(new Error('Can not download file'));
+          });
+        })
+          .then(function(filepath) {
+            return new Promise((resolve, reject) => {
+              let name = 'angular-admin';
+              if (typeof options.name === 'string' && options.name !== '') {
+                name = options.name;
+              }
+              const dest = path.resolve(process.cwd(), name);
+
+              decompress(filepath, dest)
+                .then(() => {
+                  resolve(dest);
+                })
+                .catch(error => {
+                  reject(error);
+                });
+            });
+          })
+          .then(function(dest) {
+            console.log([`${dest}/*`, path.resolve(process.cwd(), 'hihi')]);
+
+            spawn('mv', [`${dest}/*`, path.resolve(process.cwd(), 'hihi')]);
+          });
+
+      default:
+        break;
+    }
+    process.exit();
+  }
+}

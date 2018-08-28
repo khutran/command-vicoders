@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import { Exception } from '../Exceptions/Exception';
+import { Exception } from '@nsilly/exceptions';
 
 export default class Transformer {
   constructor(includes = []) {

@@ -1,6 +1,6 @@
 import Install from './Install';
 import fs from 'fs';
-import { Exception } from '@codersvn/exceptions';
+import { Exception } from '@nsilly/exceptions';
 import inquirer from 'inquirer';
 import colors from 'colors';
 import Darwin from '../Os/Darwin';

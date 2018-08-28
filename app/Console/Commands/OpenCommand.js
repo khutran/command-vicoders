@@ -2,10 +2,10 @@ import { Command } from './Command';
 import _ from 'lodash';
 import colors from 'colors';
 import ProjectRepository from '../../Repositories/ProjectRepository';
-import { Exception } from '../../Exceptions/Exception';
 import Os from '../../Utils/Os/Os';
 import Darwin from '../../Utils/Os/Darwin';
 import Linux from '../../Utils/Os/Linux';
+import { Exception } from '@nsilly/exceptions';
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 

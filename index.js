@@ -3,7 +3,7 @@
 import program from 'commander';
 import { Kernel } from './app/Console/Kernel';
 import _ from 'lodash';
-import { Exception } from './app/Exceptions/Exception';
+import { Exception } from '@nsilly/exceptions';
 
 program.version('1.0.0');
 const kernel = new Kernel();
