@@ -3,7 +3,8 @@ import axios from 'axios';
 import path from 'path';
 import decompress from 'decompress';
 import fs from 'fs';
-import { spawn } from 'child_process';
+import mv from 'mv';
+import rimraf from 'rimraf';
 
 export default class CreateProjectCommand extends Command {
   signature() {
@@ -19,11 +20,10 @@ export default class CreateProjectCommand extends Command {
   }
 
   async handle(type, options) {
-    const zip_file_name = Date.now();
+    const zip_file_name = Date.now().toString();
     switch (type) {
       case 'angular-admin':
-        // const url = 'http://bitbucket.org/vicoderscom/vc_kit_angular_cli_v6/get/master.zip';
-        const url = 'http://php7.local/master.zip';
+        const url = 'http://bitbucket.org/vicoderscom/vc_kit_angular_cli_v6/get/master.zip';
         const filepath = path.resolve(process.cwd(), `${zip_file_name}.zip`);
         const file = fs.createWriteStream(filepath);
         const response = await axios({
@@ -50,22 +50,19 @@ export default class CreateProjectCommand extends Command {
 
           response.data.on('end', () => {
             process.stdout.clearLine();
-            resolve(filepath);
+            resolve({ filename: zip_file_name, filepath });
           });
           response.data.on('error', () => {
             reject(new Error('Can not download file'));
           });
         })
-          .then(function(filepath) {
+          .then(function(data) {
             return new Promise((resolve, reject) => {
-              let name = 'angular-admin';
-              if (typeof options.name === 'string' && options.name !== '') {
-                name = options.name;
-              }
-              const dest = path.resolve(process.cwd(), name);
+              const dest = path.resolve(process.cwd(), data.filename);
 
-              decompress(filepath, dest)
+              decompress(data.filepath, dest)
                 .then(() => {
+                  rimraf.sync(data.filepath);
                   resolve(dest);
                 })
                 .catch(error => {
@@ -74,9 +71,13 @@ export default class CreateProjectCommand extends Command {
             });
           })
           .then(function(dest) {
-            console.log([`${dest}/*`, path.resolve(process.cwd(), 'hihi')]);
-
-            spawn('mv', [`${dest}/*`, path.resolve(process.cwd(), 'hihi')]);
+            let name = 'angular-admin';
+            if (typeof options.name === 'string' && options.name !== '') {
+              name = options.name;
+            }
+            const files = fs.readdirSync(dest);
+            mv(`${dest}/${files[0]}`, path.resolve(process.cwd(), name), () => {});
+            rimraf.sync(dest);
           });
 
       default:
