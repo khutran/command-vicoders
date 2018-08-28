@@ -2,6 +2,7 @@ import { Command } from './Command';
 import _ from 'lodash';
 import colors from 'colors';
 import InstallVscode from '../../Utils/Installs/InstallVscode';
+import InstallSubl from '../../Utils/Installs/installSubl';
 
 export default class VscodeCommand extends Command {
   signature() {
@@ -32,12 +33,18 @@ export default class VscodeCommand extends Command {
           case 'vscode':
             try {
               const install = new InstallVscode();
-              await install.run();
+              await install.code();
             } catch (e) {
               console.log(colors.red(e.message));
             }
             break;
           case 'subl':
+            try {
+              const install = new InstallSubl();
+              await install.code();
+            } catch (e) {
+              console.log(colors.red(e.message));
+            }
             break;
           default:
             break;
