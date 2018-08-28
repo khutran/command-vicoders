@@ -1,6 +1,7 @@
-import os from 'os';
+import Os from '../Os/Os';
+
 export default class Install {
   constructor() {
-    this.os = os.platform();
+    this.os = new Os().platform();
   }
 }

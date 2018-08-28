@@ -117,88 +117,14 @@ export default class InstallSubl extends Install {
 
   async extentions() {
     if (this.os === 'darwin') {
-      const darwin = new Darwin();
-      const user = darwin.userInfo();
-      console.log('Clear extentions ....');
-      if (!darwin.CheckExists('code')) {
-        throw new Exception('VIsual studio not install', 2);
-      }
-      if (!fs.existsSync(`${user.homedir}/.vscode`)) {
-        fs.mkdirSync(`${user.homedir}/.vscode`);
-      }
-      await rimraf(`${user.homedir}/.vscode/extensions`);
-      console.log(`Clear extentions .... ${colors.green('done')}`);
-      const extension = spawn('git', ['clone', 'https://github.com/codersvn/vscode_extensions.git', `${user.homedir}/.vscode/extensions`]);
-      extension.stderr.on('data', data => {
-        if (data.indexOf('done') > -1) {
-          data = _.replace(data, ', done.', '');
-        }
-        console.log(`${data}`);
-      });
-      extension.on('close', code => {
-        chownr(`${user.homedir}/.vscode/extensions`, user.uid, user.gid, err => {
-          if (err) {
-            throw new Exception(err.messages);
-          }
-        });
-        console.log(`Install ... ${code} ${colors.green('done')}`);
-      });
     }
     if (this.os === 'linux') {
       const linux = new Linux();
       const osName = linux.osName();
-      const user = linux.userInfo();
+      // const user = linux.userInfo();
       if (osName === 'debian') {
-        console.log('Clear extentions ....');
-        if (!linux.CheckExists('code')) {
-          throw new Exception('VIsual studio not install', 2);
-        }
-        if (!fs.existsSync(`${user.homedir}/.vscode`)) {
-          fs.mkdirSync(`${user.homedir}/.vscode`);
-        }
-        await rimraf(`${user.homedir}/.vscode/extensions`);
-        console.log(`Clear extentions .... ${colors.green('done')}`);
-        const extension = spawn('git', ['clone', 'https://github.com/codersvn/vscode_extensions.git', `${user.homedir}/.vscode/extensions`]);
-        extension.stderr.on('data', data => {
-          if (data.indexOf('done') > -1) {
-            data = _.replace(data, ', done.', '');
-          }
-          console.log(`${data}`);
-        });
-        extension.on('close', code => {
-          chownr(`${user.homedir}/.vscode/extensions`, user.uid, user.gid, err => {
-            if (err) {
-              throw new Exception(err.messages);
-            }
-          });
-          console.log(`Install ... ${code} ${colors.green('done')}`);
-        });
       }
       if (osName === 'redhat') {
-        console.log('Clear extentions ....');
-        if (!linux.CheckExists('code')) {
-          throw new Exception('VIsual studio not install', 2);
-        }
-        if (!fs.existsSync(`${user.homedir}/.vscode`)) {
-          fs.mkdirSync(`${user.homedir}/.vscode`);
-        }
-        await rimraf(`${user.homedir}/.vscode/extensions`);
-        console.log(`Clear extentions .... ${colors.green('done')}`);
-        const extension = spawn('git', ['clone', 'https://github.com/codersvn/vscode_extensions.git', `${user.homedir}/.vscode/extensions`]);
-        extension.stderr.on('data', data => {
-          if (data.indexOf('done') > -1) {
-            data = _.replace(data, ', done.', '');
-          }
-          console.log(`${data}`);
-        });
-        extension.on('close', code => {
-          chownr(`${user.homedir}/.vscode/extensions`, user.uid, user.gid, err => {
-            if (err) {
-              throw new Exception(err.messages);
-            }
-          });
-          console.log(`Install ... ${code} ${colors.green('done')}`);
-        });
       }
     }
   }

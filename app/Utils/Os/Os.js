@@ -18,5 +18,8 @@ export default class Os {
   userInfo() {
     return os.userInfo();
   }
+  platform() {
+    return os.platform();
+  }
   osVersion() {}
 }
