@@ -1,4 +1,5 @@
 import fs from 'fs';
+import os from 'os';
 // const util = require('util');
 // const exec = util.promisify(require('child_process').exec);
 // const readFile = util.promisify(fs.readFile);
@@ -13,6 +14,9 @@ export default class Os {
       osName = 'debian';
     }
     return osName;
+  }
+  userInfo() {
+    return os.userInfo();
   }
   osVersion() {}
 }
