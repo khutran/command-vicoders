@@ -1,4 +1,4 @@
-import { Exception } from '@codersvn/exceptions';
+import { Exception } from '@nsilly/exceptions';
 import 'colors';
 
 export class Command {

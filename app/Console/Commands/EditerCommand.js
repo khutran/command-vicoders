@@ -18,7 +18,7 @@ export default class VscodeCommand extends Command {
   }
 
   async handle(option) {
-    let data = {
+    const data = {
       install: option.install,
       installExtentions: option.installExtentions
     };
