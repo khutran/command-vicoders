@@ -33,7 +33,7 @@ export default class VscodeCommand extends Command {
           case 'vscode':
             try {
               const install = new InstallVscode();
-              await install.code();
+              await install.service();
             } catch (e) {
               console.log(colors.red(e.message));
             }
@@ -41,7 +41,7 @@ export default class VscodeCommand extends Command {
           case 'subl':
             try {
               const install = new InstallSubl();
-              await install.code();
+              await install.service();
             } catch (e) {
               console.log(colors.red(e.message));
             }

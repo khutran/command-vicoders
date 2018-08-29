@@ -13,7 +13,7 @@ const exec = util.promisify(require('child_process').exec);
 const rimraf = util.promisify(require('rimraf'));
 
 export default class InstallVscode extends Install {
-  async code() {
+  async service() {
     try {
       if (this.os === 'darwin') {
         const darwin = new Darwin();
