@@ -2,13 +2,13 @@ import Install from './Install';
 import { Download } from '../Download';
 import decompress from 'decompress';
 import path from 'path';
-import mv from 'mv';
 import { Exception } from '@nsilly/exceptions/dist/src/Exceptions/Exception';
 import Linux from '../Os/Linux';
 import fs from 'fs';
 const util = require('util');
 const rimraf = util.promisify(require('rimraf'));
 const exec = util.promisify(require('child_process').exec);
+const mv = util.promisify(require('mv'));
 // import Darwin from '../Os/Darwin';
 
 export default class installNginx extends Install {
@@ -62,48 +62,17 @@ export default class installNginx extends Install {
             await rimraf('/lib/systemd/system/nginx.service');
           }
 
-          mv(`${dest}/${extral[0].path}usr-nginx`, '/usr/local/nginx', { mkdirp: true }, err => {
-            if (err) {
-              throw new Exception(err.message, 1);
-            }
-          });
+          if (fs.existsSync('/usr/sbin/nginx')) {
+            await rimraf('/usr/sbin/nginx');
+          }
 
-          mv(`${dest}/${extral[0].path}nginx.service`, '/lib/systemd/system/nginx.service', { mkdirp: true }, err => {
-            if (err) {
-              throw new Exception(err.message, 1);
-            }
-          });
+          await mv(`${dest}/${extral[0].path}usr-nginx`, '/usr/local/nginx', { mkdirp: true });
+
+          await mv(`${dest}/${extral[0].path}nginx.service`, '/lib/systemd/system/nginx.service', { mkdirp: true });
 
           if (fs.existsSync('etc/nginx')) {
-            mv('/etc/nginx/', '/tmp/nginx_old', { mkdirp: true }, async err => {
-              if (err) {
-                throw new Exception(err.message, 1);
-              }
-              await rimraf('/etc/nginx');
-              mv(`${dest}/${extral[0].path}etc-nginx`, '/etc/nginx', { mkdirp: true }, async err => {
-                if (err) {
-                  throw new Exception(err.message, 1);
-                }
-                await rimraf('/etc/nginx/conf.d');
-                mv('/tmp/nginx_old/conf.d', '/etc/nginx/conf.d', { mkdirp: true }, err => {
-                  if (err) {
-                    throw new Exception(err.message, 1);
-                  }
-                  mv('/tmp/nginx_old/nginx.conf', '/etc/nginx/nginx.conf', { mkdirp: true }, async err => {
-                    if (err) {
-                      throw new Exception(err.message, 1);
-                    }
-                    await rimraf('/tmp/nginx_old');
-                  });
-                });
-              });
-            });
           } else {
-            mv(`${dest}/${extral[0].path}etc-nginx`, '/etc/nginx', { mkdirp: true }, err => {
-              if (err) {
-                throw new Exception(err.message, 1);
-              }
-            });
+            await mv(`${dest}/${extral[0].path}etc-nginx`, '/etc/nginx', { mkdirp: true });
           }
           if (!fs.existsSync('/usr/sbin/nginx')) {
             fs.symlinkSync('/usr/local/nginx/bin/nginx', '/usr/sbin/nginx');
