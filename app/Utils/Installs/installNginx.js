@@ -12,7 +12,7 @@ const exec = util.promisify(require('child_process').exec);
 // import Darwin from '../Os/Darwin';
 
 export default class installNginx extends Install {
-  async service(version = '1.13.8') {
+  async service(version) {
     if (this.os === 'darwin') {
       console.log('test');
       // try {
@@ -54,8 +54,8 @@ export default class installNginx extends Install {
           const dest = path.dirname(download_nginx.filepath);
           const extral = await decompress(download_nginx.filepath, dest);
 
-          if (fs.existsSync('/usr/local/nginx')) {
-            await rimraf('/usr/local/nginx');
+          if (fs.existsSync('/usr/local/nginx/')) {
+            await rimraf('/usr/local/nginx/');
           }
           if (fs.existsSync('/usr/sbin/nginx')) {
             await rimraf('/usr/sbin/nginx');

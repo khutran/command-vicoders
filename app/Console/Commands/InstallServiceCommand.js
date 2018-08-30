@@ -18,14 +18,14 @@ export default class VscodeCommand extends Command {
     return [
       { key: 'service', description: 'service name [code , subl , nginx ]' },
       { key: 'install-extentions', description: 'install extention [vscode, subl]' },
-      { key: 'version', description: 'version service' }
+      { key: 'versions', description: 'version service' }
     ];
   }
 
   async handle(option) {
     const data = {
       service: option.service,
-      version: option.version,
+      version: option.versions,
       installExtentions: option.installExtentions
     };
     for (const i in data) {
@@ -33,6 +33,7 @@ export default class VscodeCommand extends Command {
         delete data[i];
       }
     }
+    console.log(data);
     _.mapKeys(data, async (value, key) => {
       if (key === 'service') {
         switch (value) {
@@ -54,8 +55,12 @@ export default class VscodeCommand extends Command {
             break;
           case 'nginx':
             try {
+              let version = '1.13.8';
+              if (_.isUndefined(data.version)) {
+                version = data.version;
+              }
               const install = new installNginx();
-              await install.service(data.version);
+              await install.service(version);
             } catch (e) {
               console.log(colors.red(e.message));
             }
