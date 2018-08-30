@@ -54,7 +54,7 @@ export default class InstallVscode extends Install {
         if (osName === 'debian') {
           const data = 'deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main';
           const microsoft = spawn('curl', ['https://packages.microsoft.com/keys/microsoft.asc']);
-          const gpg = spawn('gpg', ['--dearmor']);
+          const gpg = spawn('gpg', ['--dearmor', fs.createWriteStream('microsoft.gpg')]);
           microsoft.stdout.on('data', data => {
             gpg.stdin.write(data);
           });
