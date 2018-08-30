@@ -87,7 +87,11 @@ export default class installNginx extends Install {
 
           fs.symlinkSync('/usr/local/nginx/bin/nginx', '/usr/sbin/nginx');
           fs.symlinkSync('/lib/systemd/system/nginx.service', '/etc/systemd/system/nginx.service');
-          await exec('useradd -s /sbin/nologin nginx');
+
+          if ((await exec("grep -c '^nginx:' /etc/passwd")) === 0) {
+            await exec('useradd -s /sbin/nologin nginx');
+          }
+
           // await exec('systemctl daemon-reload');
           await rimraf(download_nginx.filepath);
           await rimraf(`${dest}/${extral[0].path}`);
