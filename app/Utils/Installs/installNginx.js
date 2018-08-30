@@ -1,10 +1,11 @@
 import Install from './Install';
-import { Download } from '../Download';
 import decompress from 'decompress';
 import path from 'path';
 import { Exception } from '@nsilly/exceptions/dist/src/Exceptions/Exception';
 import Linux from '../Os/Linux';
 import fs from 'fs';
+import { App } from '@nsilly/container';
+import { Downloader } from '../Downloader';
 const util = require('util');
 const rimraf = util.promisify(require('rimraf'));
 const exec = util.promisify(require('child_process').exec);
@@ -26,8 +27,7 @@ export default class installNginx extends Install {
           );
           const aliasName = 'ubuntu';
           const url = `https://github.com/khutran/${aliasName}-nginx/archive/${version}.zip`;
-          const download = new Download();
-          const download_nginx = await download.form(url).to('/tmp');
+          const download_nginx = await App.make(Downloader).download(url, '/tmp');
           const dest = path.dirname(download_nginx.filepath);
           const extral = await decompress(download_nginx.filepath, dest);
 
