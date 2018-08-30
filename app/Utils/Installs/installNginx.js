@@ -57,16 +57,9 @@ export default class installNginx extends Install {
           if (fs.existsSync('/usr/local/nginx/')) {
             await rimraf('/usr/local/nginx/');
           }
-          if (fs.existsSync('/usr/sbin/nginx')) {
-            await rimraf('/usr/sbin/nginx');
-          }
 
           if (fs.existsSync('/lib/systemd/system/nginx.service')) {
             await rimraf('/lib/systemd/system/nginx.service');
-          }
-
-          if (fs.existsSync('/etc/systemd/system/nginx.service')) {
-            await rimraf('/etc/systemd/system/nginx.service');
           }
 
           mv(`${dest}/${extral[0].path}usr-nginx`, '/usr/local/nginx', { mkdirp: true }, err => {
@@ -74,19 +67,51 @@ export default class installNginx extends Install {
               throw new Exception(err.message, 1);
             }
           });
-          mv(`${dest}/${extral[0].path}etc-nginx`, '/etc/nginx', { mkdirp: true }, err => {
-            if (err) {
-              throw new Exception(err.message, 1);
-            }
-          });
+
           mv(`${dest}/${extral[0].path}nginx.service`, '/lib/systemd/system/nginx.service', { mkdirp: true }, err => {
             if (err) {
               throw new Exception(err.message, 1);
             }
           });
 
-          fs.symlinkSync('/usr/local/nginx/bin/nginx', '/usr/sbin/nginx');
-          fs.symlinkSync('/lib/systemd/system/nginx.service', '/etc/systemd/system/nginx.service');
+          if (fs.existsSync('etc/nginx')) {
+            mv('/etc/nginx/', '/tmp/nginx_old', { mkdirp: true }, async err => {
+              if (err) {
+                throw new Exception(err.message, 1);
+              }
+              await rimraf('/etc/nginx');
+              mv(`${dest}/${extral[0].path}etc-nginx`, '/etc/nginx', { mkdirp: true }, async err => {
+                if (err) {
+                  throw new Exception(err.message, 1);
+                }
+                await rimraf('/etc/nginx/conf.d');
+                mv('/tmp/nginx_old/conf.d', '/etc/nginx/conf.d', { mkdirp: true }, err => {
+                  if (err) {
+                    throw new Exception(err.message, 1);
+                  }
+                  mv('/tmp/nginx_old/nginx.conf', '/etc/nginx/nginx.conf', { mkdirp: true }, async err => {
+                    if (err) {
+                      throw new Exception(err.message, 1);
+                    }
+                    await rimraf('/tmp/nginx_old');
+                  });
+                });
+              });
+            });
+          } else {
+            mv(`${dest}/${extral[0].path}etc-nginx`, '/etc/nginx', { mkdirp: true }, err => {
+              if (err) {
+                throw new Exception(err.message, 1);
+              }
+            });
+          }
+          if (!fs.existsSync('/usr/sbin/nginx')) {
+            fs.symlinkSync('/usr/local/nginx/bin/nginx', '/usr/sbin/nginx');
+          }
+
+          if (!fs.existsSync('/etc/systemd/system/nginx.service')) {
+            fs.symlinkSync('/lib/systemd/system/nginx.service', '/etc/systemd/system/nginx.service');
+          }
 
           if (parseInt(await exec("grep -c '^nginx:' /etc/passwd")) === 0) {
             await exec('useradd -s /sbin/nologin nginx');
