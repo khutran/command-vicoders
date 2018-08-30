@@ -14,39 +14,16 @@ const mv = util.promisify(require('mv'));
 export default class installNginx extends Install {
   async service(version) {
     if (this.os === 'darwin') {
-      console.log('test');
-      // try {
-      //   const url = 'https://github.com/khutran/ubuntu-nginx/archive/1.13.8.zip';
-      //   const download = new Download();
-      //   const download_nginx = await download.form(url).to('/tmp');
-      //   const dest = path.dirname(download_nginx.filepath);
-      //   const extral = await decompress(download_nginx.filepath, dest);
-      //   mv(`${dest}/${extral[0].path}usr-nginx`, '/usr/local/nginx', { mkdirp: true }, err => {
-      //     if (err) {
-      //       throw new Exception(err.message, 1);
-      //     }
-      //   });
-      //   mv(`${dest}/${extral[0].path}etc-nginx`, '/etc/nginx', { mkdirp: true }, err => {
-      //     if (err) {
-      //       throw new Exception(err.message, 1);
-      //     }
-      //   });
-      //   mv(`${dest}/${extral[0].path}nginx.service`, '/lib/systemd/system//nginx.service', { mkdirp: true }, err => {
-      //     if (err) {
-      //       throw new Exception(err.message, 1);
-      //     }
-      //   });
-      //   await rimraf(download_nginx.filepath);
-      //   await rimraf(`${dest}/${extral[0].path}`);
-      // } catch (e) {
-      //   throw new Exception(e.message, 1);
-      // }
+      return 'https://www.sylvaindurand.org/setting-up-a-nginx-web-server-on-macos/';
     }
     if (this.os === 'linux') {
       const linux = new Linux();
       const osName = linux.osName();
       if (osName === 'debian') {
         try {
+          await exec(
+            'apt install -y gcc libpcre3-dev zlib1g-dev libssl-dev libxml2-dev libxslt1-dev  libgd-dev google-perftools libgoogle-perftools-dev libperl-dev libgeoip-dev libatomic-ops-dev'
+          );
           const aliasName = 'ubuntu';
           const url = `https://github.com/khutran/${aliasName}-nginx/archive/${version}.zip`;
           const download = new Download();
@@ -96,6 +73,8 @@ export default class installNginx extends Install {
           await exec('systemctl daemon-reload');
           await rimraf(download_nginx.filepath);
           await rimraf(`${dest}/${extral[0].path}`);
+
+          return 'success';
         } catch (e) {
           throw new Exception(e.message, 1);
         }

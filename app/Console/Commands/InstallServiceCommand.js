@@ -23,11 +23,6 @@ export default class VscodeCommand extends Command {
       version: option.versions,
       installExtentions: option.installExtentions
     };
-    for (const i in data) {
-      if (_.isUndefined(data[i])) {
-        delete data[i];
-      }
-    }
 
     switch (service) {
       case 'vscode':
@@ -59,7 +54,8 @@ export default class VscodeCommand extends Command {
             version = data.version;
           }
           const install = new installNginx();
-          await install.service(version);
+          const result = await install.service(version);
+          console.log(colors.green(result));
         } catch (e) {
           console.log(colors.red(e.message));
         }
