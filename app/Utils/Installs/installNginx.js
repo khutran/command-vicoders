@@ -71,8 +71,13 @@ export default class installNginx extends Install {
           await mv(`${dest}/${extral[0].path}nginx.service`, '/lib/systemd/system/nginx.service', { mkdirp: true });
 
           if (fs.existsSync('/etc/nginx/')) {
-            const aa = await mv('/etc/nginx/', '/tmp/nginx_old', { mkdirp: true });
-            console.log(aa);
+            await mv('/etc/nginx/', '/tmp/nginx_old', { mkdirp: true });
+            await mv(`${dest}/${extral[0].path}etc-nginx`, '/etc/nginx', { mkdirp: true });
+            await rimraf('/etc/nginx/conf.d/');
+            await rimraf('/etc/nginx/nginx.conf');
+            await mv('/tmp/nginx_old/conf.d', '/etc/nginx/conf.d', { mkdirp: true });
+            await mv('/tmp/nginx_old/nginx.conf', '/etc/nginx/nginx.conf', { mkdirp: true });
+            await rimraf('/tmp/nginx_old/');
           } else {
             await mv(`${dest}/${extral[0].path}etc-nginx`, '/etc/nginx', { mkdirp: true });
           }
