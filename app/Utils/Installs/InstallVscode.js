@@ -64,6 +64,10 @@ export default class InstallVscode extends Install {
             console.log(data.toString());
           });
 
+          gpg.stderr.on('data', data => {
+            console.log(data.toString());
+          });
+
           gpg.on('close', code => {
             if (code === 0) {
               console.log(colors.green('down microsoft success ... done !'));
