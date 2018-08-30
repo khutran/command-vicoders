@@ -13,6 +13,7 @@ const exec = util.promisify(require('child_process').exec);
 
 export default class installNginx extends Install {
   async service() {
+    console.log(this.os);
     if (this.os === 'darwin') {
       console.log('test');
       // try {
@@ -46,14 +47,12 @@ export default class installNginx extends Install {
       const linux = new Linux();
       const osName = linux.osName();
       if (osName === 'debian') {
-        console.log(osName);
         // try {
         //   const url = 'https://github.com/khutran/ubuntu-nginx/archive/1.13.8.zip';
         //   const download = new Download();
         //   const download_nginx = await download.form(url).to('/tmp');
         //   const dest = path.dirname(download_nginx.filepath);
         //   const extral = await decompress(download_nginx.filepath, dest);
-
         //   mv(`${dest}/${extral[0].path}usr-nginx`, '/usr/local/nginx', { mkdirp: true }, err => {
         //     if (err) {
         //       throw new Exception(err.message, 1);
@@ -69,7 +68,6 @@ export default class installNginx extends Install {
         //       throw new Exception(err.message, 1);
         //     }
         //   });
-
         //   fs.symlinkSync('/usr/sbin/nginx', '/usr/local/nginx/bin/nginx');
         //   await exec('systemctl daemon-reload');
         //   await rimraf(download_nginx.filepath);
