@@ -5,12 +5,12 @@ import inquirer from 'inquirer';
 import colors from 'colors';
 import Darwin from '../Os/Darwin';
 import Linux from '../Os/Linux';
-import chownr from 'chownr';
-import * as _ from 'lodash';
+// import chownr from 'chownr';
+// import * as _ from 'lodash';
 const { spawn } = require('child_process');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
-const rimraf = util.promisify(require('rimraf'));
+// const rimraf = util.promisify(require('rimraf'));
 
 export default class InstallSubl extends Install {
   async service() {

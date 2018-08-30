@@ -8,15 +8,18 @@ export class Download {
     this.down;
   }
   form(url) {
+    this.down = {
+      method: 'GET',
+      url: url,
+      responseType: 'stream'
+    };
+    return this;
+  }
+  to(forder = '.') {
     return new Promise(async (resolve, reject) => {
-      this.down = {
-        method: 'GET',
-        url: url,
-        responseType: 'stream'
-      };
       const f = _.split(this.down.url, '/');
       const file = _.takeRight(f).toString();
-      const filepath = path.resolve(process.cwd(), `${file}`);
+      const filepath = path.resolve(process.cwd(), `${forder}/${file}`);
       const response = await axios(this.down);
       response.data.pipe(fs.createWriteStream(filepath));
 
