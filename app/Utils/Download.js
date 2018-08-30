@@ -2,29 +2,24 @@ import axios from 'axios';
 import fs from 'fs';
 import _ from 'lodash';
 import path from 'path';
-import rimraf from 'rimraf';
-import decompress from 'decompress';
 
 export class Download {
   constructor() {
     this.down;
   }
   form(url) {
-    this.down = {
-      method: 'GET',
-      url: url,
-      responseType: 'stream'
-    };
-    return this;
-  }
-  async to(file) {
-    const f = _.split(this.down.url, '.');
-    const typeCompress = _.takeRight(f).toString();
-    const filepath = path.resolve(process.cwd(), `${file}.${typeCompress}`);
-    const response = await axios(this.down);
-    response.data.pipe(fs.createWriteStream(filepath));
+    return new Promise(async (resolve, reject) => {
+      this.down = {
+        method: 'GET',
+        url: url,
+        responseType: 'stream'
+      };
+      const f = _.split(this.down.url, '/');
+      const file = _.takeRight(f).toString();
+      const filepath = path.resolve(process.cwd(), `${file}`);
+      const response = await axios(this.down);
+      response.data.pipe(fs.createWriteStream(filepath));
 
-    return new Promise((resolve, reject) => {
       var len = parseInt(response.data.headers['content-length'], 10);
       var cur = 0;
       var total = len / 1048576;
