@@ -62,12 +62,13 @@ export default class installNginx extends Install {
               throw new Exception(err.message, 1);
             }
           });
-          mv(`${dest}/${extral[0].path}nginx.service`, '/lib/systemd/system//nginx.service', { mkdirp: true }, err => {
+          mv(`${dest}/${extral[0].path}nginx.service`, '/lib/systemd/system/nginx.service', { mkdirp: true }, err => {
             if (err) {
               throw new Exception(err.message, 1);
             }
           });
           fs.symlinkSync('/usr/local/nginx/bin/nginx', '/usr/sbin/nginx');
+          fs.symlinkSync('/lib/systemd/system/nginx.service', '/etc/systemd/system/nginx.service');
           // await exec('systemctl daemon-reload');
           await rimraf(download_nginx.filepath);
           await rimraf(`${dest}/${extral[0].path}`);
