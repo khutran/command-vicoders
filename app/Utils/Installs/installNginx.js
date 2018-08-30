@@ -88,7 +88,7 @@ export default class installNginx extends Install {
           fs.symlinkSync('/usr/local/nginx/bin/nginx', '/usr/sbin/nginx');
           fs.symlinkSync('/lib/systemd/system/nginx.service', '/etc/systemd/system/nginx.service');
 
-          if ((await exec("grep -c '^nginx:' /etc/passwd")) === 0) {
+          if (parseInt(await exec("grep -c '^nginx:' /etc/passwd")) === 0) {
             await exec('useradd -s /sbin/nologin nginx');
           }
 
