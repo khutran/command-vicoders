@@ -58,7 +58,7 @@ export default class InstallVscode extends Install {
           microsoft.stdout.on('data', data => {
             gpg.stdin.write(data);
           });
-          gpg.stdout.on.pipe(fs.createWriteStream('microsoft.gpg'));
+          gpg.stdout.pipe(fs.createWriteStream('microsoft.gpg'));
           gpg.on('close', code => {
             if (code === 0) {
               console.log(colors.green('down microsoft success ... done !'));
