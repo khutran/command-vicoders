@@ -24,6 +24,7 @@
   "author": "Khudz",
   "license": "ISC",
   "dependencies": {
+    "@nsilly/container": "^1.1.2",
     "@nsilly/exceptions": "^1.1.1",
     "@nsilly/repository": "^1.1.0",
     "@nsilly/support": "^1.1.4",
@@ -37,6 +38,7 @@
     "inquirer": "^6.2.0",
     "lodash": "^4.17.10",
     "mv": "^2.1.1",
+    "rimraf": "^2.6.2",
     "sequelize": "^4.38.0",
     "sequelize-cli": "^4.1.1",
     "sqlite3": "^4.0.2"
