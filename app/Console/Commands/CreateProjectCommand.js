@@ -21,7 +21,6 @@ export default class CreateProjectCommand extends Command {
   }
 
   async handle(type, options) {
-    // const zip_file_name = Date.now().toString();
     switch (type) {
       case 'angular-admin':
         const url = 'http://bitbucket.org/vicoderscom/vc_kit_angular_cli_v6/get/master.zip';
