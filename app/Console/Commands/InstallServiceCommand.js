@@ -7,7 +7,7 @@ import installNginx from '../../Utils/Installs/installNginx';
 
 export default class VscodeCommand extends Command {
   signature() {
-    return 'install';
+    return 'install <<service>>';
   }
 
   description() {
@@ -22,9 +22,8 @@ export default class VscodeCommand extends Command {
     ];
   }
 
-  async handle(option) {
+  async handle(service, option) {
     const data = {
-      service: option.service,
       version: option.versions,
       installExtentions: option.installExtentions
     };
@@ -33,58 +32,38 @@ export default class VscodeCommand extends Command {
         delete data[i];
       }
     }
-    console.log(data);
-    _.mapKeys(data, async (value, key) => {
-      if (key === 'service') {
-        switch (value) {
-          case 'vscode':
-            try {
-              const install = new InstallVscode();
-              await install.service();
-            } catch (e) {
-              console.log(colors.red(e.message));
-            }
-            break;
-          case 'subl':
-            try {
-              const install = new InstallSubl();
-              await install.service();
-            } catch (e) {
-              console.log(colors.red(e.message));
-            }
-            break;
-          case 'nginx':
-            try {
-              let version = '1.13.8';
-              if (_.isUndefined(data.version)) {
-                version = data.version;
-              }
-              const install = new installNginx();
-              await install.service(version);
-            } catch (e) {
-              console.log(colors.red(e.message));
-            }
-            break;
-          default:
-            break;
+
+    switch (service) {
+      case 'vscode':
+        try {
+          const install = new InstallVscode();
+          await install.service();
+        } catch (e) {
+          console.log(colors.red(e.message));
         }
-      }
-      if (key === 'installExtentions') {
-        switch (value) {
-          case 'vscode':
-            try {
-              const install = new InstallVscode();
-              await install.extentions();
-            } catch (e) {
-              console.log(colors.red(e.message));
-            }
-            break;
-          case 'subl':
-            break;
-          default:
-            break;
+        break;
+      case 'subl':
+        try {
+          const install = new InstallSubl();
+          await install.service();
+        } catch (e) {
+          console.log(colors.red(e.message));
         }
-      }
-    });
+        break;
+      case 'nginx':
+        try {
+          let version = '1.13.8';
+          if (_.isUndefined(data.version)) {
+            version = data.version;
+          }
+          const install = new installNginx();
+          await install.service(version);
+        } catch (e) {
+          console.log(colors.red(e.message));
+        }
+        break;
+      default:
+        break;
+    }
   }
 }
