@@ -12,7 +12,7 @@ const exec = util.promisify(require('child_process').exec);
 // import Darwin from '../Os/Darwin';
 
 export default class installNginx extends Install {
-  async service() {
+  async service(version = '1.13.8') {
     if (this.os === 'darwin') {
       console.log('test');
       // try {
@@ -47,11 +47,28 @@ export default class installNginx extends Install {
       const osName = linux.osName();
       if (osName === 'debian') {
         try {
-          const url = 'https://github.com/khutran/ubuntu-nginx/archive/1.13.8.zip';
+          const aliasName = 'ubuntu';
+          const url = `https://github.com/khutran/${aliasName}-nginx/archive/${version}.zip`;
           const download = new Download();
           const download_nginx = await download.form(url).to('/tmp');
           const dest = path.dirname(download_nginx.filepath);
           const extral = await decompress(download_nginx.filepath, dest);
+
+          if (fs.existsSync('/usr/local/nginx')) {
+            await rimraf('/usr/local/nginx');
+          }
+          if (fs.existsSync('/usr/sbin/nginx')) {
+            await rimraf('/usr/sbin/nginx');
+          }
+
+          if (fs.existsSync('/lib/systemd/system/nginx.service')) {
+            await rimraf('/lib/systemd/system/nginx.service');
+          }
+
+          if (fs.existsSync('/etc/systemd/system/nginx.service')) {
+            await rimraf('/etc/systemd/system/nginx.service');
+          }
+
           mv(`${dest}/${extral[0].path}usr-nginx`, '/usr/local/nginx', { mkdirp: true }, err => {
             if (err) {
               throw new Exception(err.message, 1);
@@ -67,8 +84,10 @@ export default class installNginx extends Install {
               throw new Exception(err.message, 1);
             }
           });
+
           fs.symlinkSync('/usr/local/nginx/bin/nginx', '/usr/sbin/nginx');
           fs.symlinkSync('/lib/systemd/system/nginx.service', '/etc/systemd/system/nginx.service');
+          await exec('useradd -s /sbin/nologin nginx');
           // await exec('systemctl daemon-reload');
           await rimraf(download_nginx.filepath);
           await rimraf(`${dest}/${extral[0].path}`);

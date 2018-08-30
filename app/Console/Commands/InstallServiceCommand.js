@@ -25,6 +25,7 @@ export default class VscodeCommand extends Command {
   async handle(option) {
     const data = {
       service: option.service,
+      version: option.version,
       installExtentions: option.installExtentions
     };
     for (const i in data) {
@@ -54,7 +55,7 @@ export default class VscodeCommand extends Command {
           case 'nginx':
             try {
               const install = new installNginx();
-              await install.service();
+              await install.service(data.version);
             } catch (e) {
               console.log(colors.red(e.message));
             }
