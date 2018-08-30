@@ -15,11 +15,7 @@ export default class VscodeCommand extends Command {
   }
 
   options() {
-    return [
-      { key: 'service', description: 'service name [code , subl , nginx ]' },
-      { key: 'install-extentions', description: 'install extention [vscode, subl]' },
-      { key: 'versions', description: 'version service' }
-    ];
+    return [{ key: 'install-extentions', description: 'install extention [vscode, subl]' }, { key: 'versions', description: 'version service' }];
   }
 
   async handle(service, option) {
@@ -38,6 +34,9 @@ export default class VscodeCommand extends Command {
         try {
           const install = new InstallVscode();
           await install.service();
+          if (!_.isUndefined(data.installExtentions)) {
+            await install.extentions();
+          }
         } catch (e) {
           console.log(colors.red(e.message));
         }
@@ -46,6 +45,9 @@ export default class VscodeCommand extends Command {
         try {
           const install = new InstallSubl();
           await install.service();
+          if (!_.isUndefined(data.installExtentions)) {
+            await install.extentions();
+          }
         } catch (e) {
           console.log(colors.red(e.message));
         }
@@ -53,7 +55,7 @@ export default class VscodeCommand extends Command {
       case 'nginx':
         try {
           let version = '1.13.8';
-          if (_.isUndefined(data.version)) {
+          if (!_.isUndefined(data.version)) {
             version = data.version;
           }
           const install = new installNginx();
