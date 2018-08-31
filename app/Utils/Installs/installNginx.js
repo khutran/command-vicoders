@@ -27,9 +27,9 @@ export default class installNginx extends Install {
           );
           const aliasName = 'ubuntu';
           const url = `https://github.com/khutran/${aliasName}-nginx/archive/${version}.zip`;
-          const download_nginx = await App.make(Downloader).download(url, '/tmp');
-          const dest = path.dirname(download_nginx.filepath);
-          const extral = await decompress(download_nginx.filepath, dest);
+          const download_nginx = await App.make(Downloader).download(url, `/tmp/${version}.zip`);
+          const dest = path.dirname(`/tmp/${version}.zip`);
+          const extral = await decompress(`/tmp/${version}.zip`, dest);
 
           if (fs.existsSync('/usr/local/nginx/')) {
             await rimraf('/usr/local/nginx/');
@@ -66,15 +66,14 @@ export default class installNginx extends Install {
             fs.symlinkSync('/lib/systemd/system/nginx.service', '/etc/systemd/system/nginx.service');
           }
 
-          if (parseInt(await exec("grep -c '^nginx:' /etc/passwd")) === 0) {
+          const passpd = fs.readFileSync('/etc/passwd');
+          if (passpd.indexOf('nginx') === -1) {
             await exec('useradd -s /sbin/nologin nginx');
           }
 
           await exec('systemctl daemon-reload');
-          await rimraf(download_nginx.filepath);
+          await rimraf(`/tmp/${version}.zip`);
           await rimraf(`${dest}/${extral[0].path}`);
-
-          return 'success';
         } catch (e) {
           throw new Exception(e.message, 1);
         }
