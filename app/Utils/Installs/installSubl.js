@@ -49,45 +49,45 @@ export default class InstallSubl extends Install {
           const linux = new Linux();
           const osName = linux.osName();
           if (osName === 'debian') {
-            if (!fs.existsSync('/usr/bin/wget')) {
-              await exec('apt install -y wget');
-            }
-            const data = 'deb https://download.sublimetext.com/ apt/stable/';
-            const sublimehq = spawn('wget', ['-qO', '-', 'https://download.sublimetext.com/sublimehq-pub.gpg']);
-            const apt = spawn('apt-key', ['add', '-']);
-            sublimehq.stdout.on('data', data => {
-              apt.stdin.write(data);
-            });
-            sublimehq.on('close', code => {
-              if (code === 0) {
-                apt.stdin.end();
-              }
-            });
-            apt.on('close', code => {
-              if (code === 0) {
-                console.log(colors.green('down sublime-text success ... done !'));
-                fs.writeFile('/etc/apt/sources.list.d/sublime-text.list', data, err => {
-                  if (err) {
-                    throw new Exception('create file repo errro');
-                  }
-                  console.log(colors.green('create file repo ... success !'));
-                });
-              }
-            });
+            // if (!fs.existsSync('/usr/bin/wget')) {
+            //   await exec('apt install -y wget');
+            // }
+            // const data = 'deb https://download.sublimetext.com/ apt/stable/';
+            // const sublimehq = spawn('wget', ['-qO', '-', 'https://download.sublimetext.com/sublimehq-pub.gpg']);
+            // const apt = spawn('apt-key', ['add', '-']);
+            // sublimehq.stdout.on('data', data => {
+            //   apt.stdin.write(data);
+            // });
+            // sublimehq.on('close', code => {
+            //   if (code === 0) {
+            //     apt.stdin.end();
+            //   }
+            // });
+            // apt.on('close', code => {
+            //   if (code === 0) {
+            //     console.log(colors.green('down sublime-text success ... done !'));
+            //     fs.writeFile('/etc/apt/sources.list.d/sublime-text.list', data, err => {
+            //       if (err) {
+            //         throw new Exception('create file repo errro');
+            //       }
+            //       console.log(colors.green('create file repo ... success !'));
+            //     });
+            //   }
+            // });
             await exec('apt -y update');
 
-            const sub = spawn('apt-get', ['-y', 'install', 'sublime-text']);
-            sub.stdout.on('data', data => {
-              console.log(data.toString());
-            });
-            sub.stderr.on('data', data => {
-              console.log(data.toString());
-            });
-            sub.on('close', code => {
-              if (code === 0) {
-                console.log(colors.green('Install vs subl success ... !'));
-              }
-            });
+            // const sub = spawn('apt-get', ['-y', 'install', 'sublime-text']);
+            // sub.stdout.on('data', data => {
+            //   console.log(data.toString());
+            // });
+            // sub.stderr.on('data', data => {
+            //   console.log(data.toString());
+            // });
+            // sub.on('close', code => {
+            //   if (code === 0) {
+            //     console.log(colors.green('Install vs subl success ... !'));
+            //   }
+            // });
           }
           if (osName === 'redhat') {
             await exec('rpm -v --import https://download.sublimetext.com/sublimehq-rpm-pub.gpg');
