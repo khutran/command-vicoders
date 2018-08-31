@@ -79,19 +79,19 @@ export default class InstallSubl extends Install {
               });
             }
           });
-          await exec('apt update');
-          const code = spawn('apt-get', ['-y', 'install', 'sublime-text']);
-          code.stdout.on('data', data => {
-            console.log(data.toString());
-          });
-          code.stderr.on('data', data => {
-            console.log(data.toString());
-          });
-          code.on('close', code => {
-            if (code === 0) {
-              console.log(colors.green('Install vs code success ... !'));
-            }
-          });
+          await exec('apt -y  update');
+          // const code = spawn('apt-get', ['-y', 'install', 'sublime-text']);
+          // code.stdout.on('data', data => {
+          //   console.log(data.toString());
+          // });
+          // code.stderr.on('data', data => {
+          //   console.log(data.toString());
+          // });
+          // code.on('close', code => {
+          //   if (code === 0) {
+          //     console.log(colors.green('Install vs code success ... !'));
+          //   }
+          // });
         }
         if (osName === 'redhat') {
           await exec('rpm -v --import https://download.sublimetext.com/sublimehq-rpm-pub.gpg');
