@@ -81,10 +81,16 @@ export default class InstallVscode extends Install {
 
           await await exec('apt-get -y update');
           const code = spawn('apt-get', ['-y', 'install', 'code']);
-          code.stdout.on('data', data => {
-            console.log(data.toString());
-          });
+
           let cur = 0;
+          code.stdout.on('data', chunk => {
+            cur += chunk.length;
+            const percent = (100.0 * cur).toFixed(2);
+            process.stdout.clearLine();
+            process.stdout.cursorTo(0);
+            process.stdout.write(`Install ... ${percent}`);
+          });
+
           code.stderr.on('data', chunk => {
             cur += chunk.length;
             const percent = (100.0 * cur).toFixed(2);
