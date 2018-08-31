@@ -70,9 +70,10 @@ export default class InstallVscode extends Install {
           });
 
           microsoft.on('close', code => {
-            if (code === 0) {
-              gpg.stdin.end();
+            if (code !== 0) {
+              console.log(`ps process exited with code ${code}`);
             }
+            gpg.stdin.end();
           });
 
           gpg.on('close', code => {

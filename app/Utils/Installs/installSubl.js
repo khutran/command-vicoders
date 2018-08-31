@@ -71,28 +71,27 @@ export default class InstallSubl extends Install {
           apt.on('close', code => {
             if (code === 0) {
               console.log(colors.green('down sublime-text success ... done !'));
-              fs.appendFile('/etc/apt/sources.list.d/sublime-text.list', data, async err => {
+              fs.appendFile('/etc/apt/sources.list.d/sublime-text.list', data, err => {
                 if (err) {
                   throw new Exception('create file repo errro');
                 }
-                await exec('apt -y  update');
                 console.log(colors.green('create file repo ... success !'));
               });
             }
           });
-
-          // const code = spawn('apt-get', ['-y', 'install', 'sublime-text']);
-          // code.stdout.on('data', data => {
-          //   console.log(data.toString());
-          // });
-          // code.stderr.on('data', data => {
-          //   console.log(data.toString());
-          // });
-          // code.on('close', code => {
-          //   if (code === 0) {
-          //     console.log(colors.green('Install vs code success ... !'));
-          //   }
-          // });
+          await exec('apt -y  update');
+          const code = spawn('apt-get', ['-y', 'install', 'sublime-text']);
+          code.stdout.on('data', data => {
+            console.log(data.toString());
+          });
+          code.stderr.on('data', data => {
+            console.log(data.toString());
+          });
+          code.on('close', code => {
+            if (code === 0) {
+              console.log(colors.green('Install vs code success ... !'));
+            }
+          });
         }
         if (osName === 'redhat') {
           await exec('rpm -v --import https://download.sublimetext.com/sublimehq-rpm-pub.gpg');
