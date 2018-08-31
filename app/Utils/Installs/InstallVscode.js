@@ -107,6 +107,10 @@ export default class InstallVscode extends Install {
           });
         }
         if (osName === 'redhat') {
+          if (fs.existsSync('/usr/bin/code')) {
+            throw new Exception('Vscode exitis', 1);
+          }
+
           await exec('rpm --import https://packages.microsoft.com/keys/microsoft.asc');
           const data =
             '[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc';
