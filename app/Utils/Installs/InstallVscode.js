@@ -75,17 +75,16 @@ export default class InstallVscode extends Install {
           gpg.on('close', code => {
             if (code === 0) {
               console.log(colors.green('down microsoft success ... done !'));
-              fs.appendFile('/etc/apt/sources.list.d/vscode.list', data, err => {
+              fs.appendFile('/etc/apt/sources.list.d/vscode.list', data, async err => {
                 if (err) {
                   throw new Exception('create file repo errro');
                 }
-
+                await exec('apt-get -y update');
                 console.log(colors.green('create file repo ... success !'));
               });
             }
           });
 
-          await exec('apt-get -y update');
           const code = spawn('apt-get', ['-y', 'install', 'code']);
 
           let cur = 0;
@@ -108,15 +107,14 @@ export default class InstallVscode extends Install {
           await exec('rpm --import https://packages.microsoft.com/keys/microsoft.asc');
           const data =
             '[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc';
-          fs.appendFile('/etc/yum.repos.d/vscode.repo', data, err => {
+          fs.appendFile('/etc/yum.repos.d/vscode.repo', data, async err => {
             if (err) {
               throw new Exception(colors.red('create file repo error'), 1);
             }
-
+            await exec('yum -y update');
             console.log(colors.green('create file repo ... success !'));
           });
 
-          await exec('yum -y update');
           const code = spawn('yum', ['-y', 'install', 'code']);
           code.stdout.on('data', data => {
             console.log(data.toString());
