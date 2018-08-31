@@ -4,6 +4,7 @@ import colors from 'colors';
 import InstallVscode from '../../Utils/Installs/InstallVscode';
 import InstallSubl from '../../Utils/Installs/installSubl';
 import installNginx from '../../Utils/Installs/installNginx';
+import installAPache from '../../Utils/Installs/installApache';
 
 export default class VscodeCommand extends Command {
   signature() {
@@ -54,6 +55,19 @@ export default class VscodeCommand extends Command {
             version = data.version;
           }
           const install = new installNginx();
+          await install.service(version);
+          console.log(colors.green('success .. !'));
+        } catch (e) {
+          console.log(colors.red(e.message));
+        }
+        break;
+      case 'apache':
+        try {
+          let version = '2.4.34';
+          if (!_.isUndefined(data.version)) {
+            version = data.version;
+          }
+          const install = new installAPache();
           await install.service(version);
           console.log(colors.green('success .. !'));
         } catch (e) {

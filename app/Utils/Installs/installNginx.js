@@ -62,8 +62,8 @@ export default class installNginx extends Install {
             fs.symlinkSync('/usr/local/nginx/bin/nginx', '/usr/sbin/nginx');
           }
 
-          if (!fs.existsSync('/etc/systemd/system/nginx.service')) {
-            fs.symlinkSync('/lib/systemd/system/nginx.service', '/etc/systemd/system/nginx.service');
+          if (!fs.existsSync('/etc/systemd/system/multi-user.target.wants/nginx.service')) {
+            fs.symlinkSync('/lib/systemd/system/nginx.service', '/etc/systemd/system/multi-user.target.wants/nginx.service');
           }
 
           const passpd = fs.readFileSync('/etc/passwd');
