@@ -11,6 +11,7 @@ const { spawn } = require('child_process');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 const rimraf = util.promisify(require('rimraf'));
+const mv = util.promisify(require('mv'));
 
 export default class InstallVscode extends Install {
   async service() {
@@ -77,7 +78,8 @@ export default class InstallVscode extends Install {
               });
             }
           });
-          await exec('apt-get -y update');
+          await mv('microsoft.gpg', '/etc/apt/trusted.gpg.d/microsoft.gpg', { mkdirp: true });
+          await await exec('apt-get -y update');
           const code = spawn('apt-get', ['-y', 'install', 'code']);
           code.stdout.on('data', data => {
             console.log(data.toString());
