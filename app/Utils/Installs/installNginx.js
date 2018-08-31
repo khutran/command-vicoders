@@ -73,8 +73,6 @@ export default class installNginx extends Install {
           await exec('systemctl daemon-reload');
           await rimraf(download_nginx.filepath);
           await rimraf(`${dest}/${extral[0].path}`);
-
-          return 'success';
         } catch (e) {
           throw new Exception(e.message, 1);
         }

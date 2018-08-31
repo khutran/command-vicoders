@@ -79,18 +79,23 @@ export default class InstallSubl extends Install {
               });
             }
           });
-          await exec('apt -y  update');
-          const code = spawn('apt-get', ['-y', 'install', 'sublime-text']);
-          code.stdout.on('data', data => {
-            console.log(data.toString());
-          });
-          code.stderr.on('data', data => {
-            console.log(data.toString());
-          });
-          code.on('close', code => {
-            if (code === 0) {
-              console.log(colors.green('Install vs code success ... !'));
+          const update = spawn('apt', ['-y', 'update']);
+          update.on('close', code => {
+            if (code !== 0) {
+              throw new Exception(`ps process exited with code ${code}`);
             }
+            const sub = spawn('apt-get', ['-y', 'install', 'sublime-text']);
+            sub.stdout.on('data', data => {
+              console.log(data.toString());
+            });
+            sub.stderr.on('data', data => {
+              console.log(data.toString());
+            });
+            sub.on('close', code => {
+              if (code === 0) {
+                console.log(colors.green('Install vs subl success ... !'));
+              }
+            });
           });
         }
         if (osName === 'redhat') {
@@ -104,18 +109,23 @@ export default class InstallSubl extends Install {
             console.log(colors.green('create file repo ... success !'));
           });
 
-          await exec('yum -y update');
-          const code = spawn('yum', ['-y', 'install', 'sublime-text']);
-          code.stdout.on('data', data => {
-            console.log(data.toString());
-          });
-          code.stderr.on('data', data => {
-            console.log(data.toString());
-          });
-          code.on('close', code => {
-            if (code === 0) {
-              console.log(colors.green('Install vs sublime-text success ... !'));
+          const update = spawn('yum', ['-y', 'update']);
+          update.on('close', code => {
+            if (code !== 0) {
+              throw new Exception(`ps process exited with code ${code}`);
             }
+            const sub = spawn('yum', ['-y', 'install', 'sublime-text']);
+            sub.stdout.on('data', data => {
+              console.log(data.toString());
+            });
+            sub.stderr.on('data', data => {
+              console.log(data.toString());
+            });
+            sub.on('close', code => {
+              if (code === 0) {
+                console.log(colors.green('Install vs subl success ... !'));
+              }
+            });
           });
         }
       }
