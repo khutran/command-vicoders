@@ -74,8 +74,8 @@ export default class InstallSubl extends Install {
                 });
               }
             });
-            const update = await exec('apt -y update');
-            console.log(update);
+            // const update = await exec('apt -y update');
+            // console.log(update);
             // const sub = spawn('apt-get', ['-y', 'install', 'sublime-text']);
             // sub.stdout.on('data', data => {
             //   console.log(data.toString());
@@ -88,6 +88,7 @@ export default class InstallSubl extends Install {
             //     console.log(colors.green('Install vs subl success ... !'));
             //   }
             // });
+            resolve(true);
           }
           if (osName === 'redhat') {
             await exec('rpm -v --import https://download.sublimetext.com/sublimehq-rpm-pub.gpg');
