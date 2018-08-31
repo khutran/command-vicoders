@@ -71,15 +71,16 @@ export default class InstallSubl extends Install {
           apt.on('close', code => {
             if (code === 0) {
               console.log(colors.green('down sublime-text success ... done !'));
-              fs.appendFile('/etc/apt/sources.list.d/sublime-text.list', data, err => {
+              fs.appendFile('/etc/apt/sources.list.d/sublime-text.list', data, async err => {
                 if (err) {
                   throw new Exception('create file repo errro');
                 }
+                await exec('apt-get -y update');
                 console.log(colors.green('create file repo ... success !'));
               });
             }
           });
-          await exec('apt-get -y update');
+
           const code = spawn('apt-get', ['-y', 'install', 'sublime-text']);
           code.stdout.on('data', data => {
             console.log(data.toString());
@@ -97,14 +98,14 @@ export default class InstallSubl extends Install {
           await exec('rpm -v --import https://download.sublimetext.com/sublimehq-rpm-pub.gpg');
           const data =
             '[sublime-text]\nname=Sublime Text - x86_64 - Stable\nbaseurl=https://download.sublimetext.com/rpm/stable/x86_64\nenabled=1\ngpgcheck=1\ngpgkey=https://download.sublimetext.com/sublimehq-rpm-pub.gpg';
-          fs.appendFile('/etc/yum.repos.d/sublime-text.repo', data, err => {
+          fs.appendFile('/etc/yum.repos.d/sublime-text.repo', data, async err => {
             if (err) {
               throw new Exception(colors.red('create file repo error'), 1);
             }
+            await exec('yum -y update');
             console.log(colors.green('create file repo ... success !'));
           });
 
-          await exec('yum -y update');
           const code = spawn('yum', ['-y', 'install', 'sublime-text']);
           code.stdout.on('data', data => {
             console.log(data.toString());
