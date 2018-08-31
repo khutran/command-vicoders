@@ -52,6 +52,9 @@ export default class InstallSubl extends Install {
         const linux = new Linux();
         const osName = linux.osName();
         if (osName === 'debian') {
+          if (!fs.existsSync('/usr/bin/wget')) {
+            await exec('apt install -y wget');
+          }
           const data = 'deb https://download.sublimetext.com/ apt/stable/';
           const sublimehq = spawn('wget', ['-qO', '-', 'https://download.sublimetext.com/sublimehq-pub.gpg']);
           const apt = spawn('apt-key', ['add', '-']);

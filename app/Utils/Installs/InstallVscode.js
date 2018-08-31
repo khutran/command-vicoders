@@ -20,6 +20,9 @@ export default class InstallVscode extends Install {
         if (!darwin.CheckExists('brew')) {
           const answers = await inquirer.prompt({ type: 'confirm', name: 'brew', message: 'Brew not install  - Do you want insatll brew?', default: true });
           if (answers.brew) {
+            if (!fs.existsSync('/usr/bin/curl')) {
+              await exec('apt install -y curl');
+            }
             const curl = await exec('curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install');
             const brew = spawn('ruby', ['-e', curl.stdout]);
             brew.stdout.on('data', data => {
@@ -52,6 +55,9 @@ export default class InstallVscode extends Install {
         const linux = new Linux();
         const osName = linux.osName();
         if (osName === 'debian') {
+          if (!fs.existsSync('/usr/bin/curl')) {
+            await exec('apt install -y curl');
+          }
           const data = 'deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main';
           const microsoft = spawn('curl', ['https://packages.microsoft.com/keys/microsoft.asc']);
           const gpg = spawn('gpg', ['--dearmor', '--output', '/etc/apt/trusted.gpg.d/microsoft.gpg']);
