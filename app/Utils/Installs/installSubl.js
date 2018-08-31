@@ -12,7 +12,7 @@ const exec = util.promisify(require('child_process').exec);
 // const rimraf = util.promisify(require('rimraf'));
 
 export default class InstallSubl extends Install {
-  service() {
+  async service() {
     return new Promise(async (resolve, reject) => {
       try {
         if (this.os === 'darwin') {
@@ -88,7 +88,6 @@ export default class InstallSubl extends Install {
             //     console.log(colors.green('Install vs subl success ... !'));
             //   }
             // });
-            resolve(true);
           }
           if (osName === 'redhat') {
             await exec('rpm -v --import https://download.sublimetext.com/sublimehq-rpm-pub.gpg');
