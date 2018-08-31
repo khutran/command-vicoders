@@ -27,7 +27,7 @@ export default class installNginx extends Install {
           );
           const aliasName = 'ubuntu';
           const url = `https://github.com/khutran/${aliasName}-nginx/archive/${version}.zip`;
-          const download_nginx = await App.make(Downloader).download(url, '/tmp');
+          const download_nginx = await App.make(Downloader).download(url, `/tmp/${version}.zip`);
           const dest = path.dirname(download_nginx.filepath);
           const extral = await decompress(download_nginx.filepath, dest);
 
