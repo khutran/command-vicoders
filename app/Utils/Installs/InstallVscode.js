@@ -54,44 +54,37 @@ export default class InstallVscode extends Install {
         if (osName === 'debian') {
           const data = 'deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main';
           const microsoft = spawn('curl', ['https://packages.microsoft.com/keys/microsoft.asc']);
-          const gpg = spawn('gpg', ['--dearmor', '--output', 'microsoft.gpg']);
+          // const gpg = spawn('gpg', ['--dearmor', '--output', 'microsoft.gpg']);
 
           microsoft.stdout.on('data', data => {
-            gpg.stdin.write(data);
+            console.log(data.toString());
+            // gpg.stdin.write(data);
           });
 
-          gpg.stdout.on('data', data => {
-            console.log(data.toString());
-          });
-
-          gpg.stderr.on('data', data => {
-            console.log(data.toString());
-          });
-
-          gpg.on('close', code => {
-            if (code === 0) {
-              console.log(colors.green('down microsoft success ... done !'));
-              fs.appendFile('/etc/apt/sources.list.d/vscode.list', data, err => {
-                if (err) {
-                  throw new Exception('create file repo errro');
-                }
-                console.log(colors.green('create file repo ... success !'));
-              });
-            }
-          });
-          await exec('apt-get -y update');
-          const code = spawn('apt-get', ['-y', 'install', 'code']);
-          code.stdout.on('data', data => {
-            console.log(data.toString());
-          });
-          code.stderr.on('data', data => {
-            console.log(data.toString());
-          });
-          code.on('close', code => {
-            if (code === 0) {
-              console.log(colors.green('Install vs code success ... !'));
-            }
-          });
+          // gpg.on('close', code => {
+          //   if (code === 0) {
+          //     console.log(colors.green('down microsoft success ... done !'));
+          //     fs.appendFile('/etc/apt/sources.list.d/vscode.list', data, err => {
+          //       if (err) {
+          //         throw new Exception('create file repo errro');
+          //       }
+          //       console.log(colors.green('create file repo ... success !'));
+          //     });
+          //   }
+          // });
+          // await exec('apt-get -y update');
+          // const code = spawn('apt-get', ['-y', 'install', 'code']);
+          // code.stdout.on('data', data => {
+          //   console.log(data.toString());
+          // });
+          // code.stderr.on('data', data => {
+          //   console.log(data.toString());
+          // });
+          // code.on('close', code => {
+          //   if (code === 0) {
+          //     console.log(colors.green('Install vs code success ... !'));
+          //   }
+          // });
         }
         if (osName === 'redhat') {
           await exec('rpm --import https://packages.microsoft.com/keys/microsoft.asc');
