@@ -63,11 +63,8 @@ export default class InstallSubl extends Install {
           });
 
           sublimehq.on('close', code => {
-            if (code === 0) {
-              apt.stdin.end();
-            }
+            apt.stdin.end();
           });
-
           apt.on('close', code => {
             if (code === 0) {
               console.log(colors.green('down sublime-text success ... done !'));
@@ -79,21 +76,17 @@ export default class InstallSubl extends Install {
               });
             }
           });
-          const update = spawn('apt-get', ['-y', 'update']);
-          update.on('close', code => {
+          await exec('apt-get -y update');
+          const code = spawn('apt-get', ['-y', 'install', 'sublime-text']);
+          code.stdout.on('data', data => {
+            console.log(data.toString());
+          });
+          code.stderr.on('data', data => {
+            console.log(data.toString());
+          });
+          code.on('close', code => {
             if (code === 0) {
-              const sub = spawn('apt-get', ['-y', 'install', 'sublime-text']);
-              sub.stdout.on('data', data => {
-                console.log(data.toString());
-              });
-              sub.stderr.on('data', data => {
-                console.log(data.toString());
-              });
-              sub.on('close', code => {
-                if (code === 0) {
-                  console.log(colors.green('Install vs code success ... !'));
-                }
-              });
+              console.log(colors.green('Install vs code success ... !'));
             }
           });
         }
