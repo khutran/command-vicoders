@@ -21,3 +21,21 @@ If Yarn
 ```terminal
 yarn global add @vicoders/cli
 ```
+
+## Availabel Commands
+
+### Create Project
+
+> vcc create-project type --name="Project Name"
+
+Create angular admin project
+
+```
+vcc create-project angular-admin
+```
+
+Create HTML/CSS/JS kit
+
+```
+vcc create-project kit-html-css
+```
