@@ -55,7 +55,7 @@ export default class InstallVscode extends Install {
         if (osName === 'debian') {
           const data = 'deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main';
           const microsoft = spawn('curl', ['https://packages.microsoft.com/keys/microsoft.asc']);
-          const gpg = spawn('gpg', ['--dearmor', '--output', 'microsoft.gpg']);
+          const gpg = spawn('gpg', ['--dearmor', '--output', '/etc/apt/trusted.gpg.d/microsoft.gpg']);
 
           microsoft.stdout.on('data', data => {
             gpg.stdin.write(data);
@@ -78,7 +78,7 @@ export default class InstallVscode extends Install {
               });
             }
           });
-          await mv('microsoft.gpg', '/etc/apt/trusted.gpg.d/microsoft.gpg', { mkdirp: true });
+
           await await exec('apt-get -y update');
           const code = spawn('apt-get', ['-y', 'install', 'code']);
           code.stdout.on('data', data => {
