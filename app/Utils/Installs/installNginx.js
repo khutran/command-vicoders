@@ -66,7 +66,7 @@ export default class installNginx extends Install {
             fs.symlinkSync('/lib/systemd/system/nginx.service', '/etc/systemd/system/nginx.service');
           }
 
-          const passpd = fs.readdirSync('/etc/passwd');
+          const passpd = fs.readFileSync('/etc/passwd');
           if (passpd.indexOf('nginx') === -1) {
             await exec('useradd -s /sbin/nologin nginx');
           }
