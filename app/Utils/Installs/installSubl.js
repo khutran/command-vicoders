@@ -79,7 +79,7 @@ export default class InstallSubl extends Install {
               });
             }
           });
-          const update = spawn('apt-get -y update');
+          const update = spawn('apt-get', ['-y', 'update']);
           update.on('close', code => {
             if (code === 0) {
               const sub = spawn('apt-get', ['-y', 'install', 'sublime-text']);
