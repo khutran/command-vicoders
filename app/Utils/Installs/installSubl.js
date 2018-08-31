@@ -71,7 +71,7 @@ export default class InstallSubl extends Install {
           apt.on('close', code => {
             if (code === 0) {
               console.log(colors.green('down sublime-text success ... done !'));
-              fs.appendFile('/etc/apt/sources.list.d/sublime-text.list', data, err => {
+              fs.writeFile('/etc/apt/sources.list.d/sublime-text.list', data, err => {
                 if (err) {
                   throw new Exception('create file repo errro');
                 }
@@ -97,7 +97,7 @@ export default class InstallSubl extends Install {
           await exec('rpm -v --import https://download.sublimetext.com/sublimehq-rpm-pub.gpg');
           const data =
             '[sublime-text]\nname=Sublime Text - x86_64 - Stable\nbaseurl=https://download.sublimetext.com/rpm/stable/x86_64\nenabled=1\ngpgcheck=1\ngpgkey=https://download.sublimetext.com/sublimehq-rpm-pub.gpg';
-          fs.appendFile('/etc/yum.repos.d/sublime-text.repo', data, err => {
+          fs.writeFile('/etc/yum.repos.d/sublime-text.repo', data, err => {
             if (err) {
               throw new Exception(colors.red('create file repo error'), 1);
             }

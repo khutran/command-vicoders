@@ -79,7 +79,7 @@ export default class InstallVscode extends Install {
           gpg.on('close', code => {
             if (code === 0) {
               console.log(colors.green('down microsoft success ... done !'));
-              fs.appendFile('/etc/apt/sources.list.d/vscode.list', data, err => {
+              fs.writeFile('/etc/apt/sources.list.d/vscode.list', data, err => {
                 if (err) {
                   throw new Exception('create file repo errro');
                 }
@@ -115,7 +115,7 @@ export default class InstallVscode extends Install {
           await exec('rpm --import https://packages.microsoft.com/keys/microsoft.asc');
           const data =
             '[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc';
-          fs.appendFile('/etc/yum.repos.d/vscode.repo', data, err => {
+          fs.writeFile('/etc/yum.repos.d/vscode.repo', data, err => {
             if (err) {
               throw new Exception(colors.red('create file repo error'), 1);
             }
