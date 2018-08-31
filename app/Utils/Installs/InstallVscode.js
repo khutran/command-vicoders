@@ -84,8 +84,13 @@ export default class InstallVscode extends Install {
           code.stdout.on('data', data => {
             console.log(data.toString());
           });
-          code.stderr.on('data', data => {
-            console.log(data.toString());
+          let cur = 0;
+          code.stderr.on('data', chunk => {
+            cur += chunk.length;
+            const percent = (100.0 * cur).toFixed(2);
+            process.stdout.clearLine();
+            process.stdout.cursorTo(0);
+            process.stdout.write(`Install ... ${percent}`);
           });
           code.on('close', code => {
             if (code === 0) {
