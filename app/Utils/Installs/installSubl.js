@@ -63,8 +63,11 @@ export default class InstallSubl extends Install {
           });
 
           sublimehq.on('close', code => {
-            apt.stdin.end();
+            if (code === 0) {
+              apt.stdin.end();
+            }
           });
+
           apt.on('close', code => {
             if (code === 0) {
               console.log(colors.green('down sublime-text success ... done !'));
@@ -76,7 +79,7 @@ export default class InstallSubl extends Install {
               });
             }
           });
-          await exec('apt-get -y update');
+          await exec('apt update');
           const code = spawn('apt-get', ['-y', 'install', 'sublime-text']);
           code.stdout.on('data', data => {
             console.log(data.toString());
