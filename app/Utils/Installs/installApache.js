@@ -22,6 +22,7 @@ export default class installAPache extends Install {
       const osName = linux.osName();
       if (osName === 'debian') {
         try {
+          console.log('Install lib... !');
           await exec(
             'apt install -y gcc libapr1 libapr1-dev libaprutil1-dev libpcre3-dev zlib1g-dev libssl-dev libxml2-dev libxslt1-dev  libgd-dev google-perftools libgoogle-perftools-dev libperl-dev libgeoip-dev libatomic-ops-dev'
           );
@@ -43,8 +44,6 @@ export default class installAPache extends Install {
             await rimraf('/usr/sbin/httpd');
           }
 
-          await mv('/usr/local/apache/service/httpd.service', '/lib/systemd/system/httpd.service', { mkdirp: true });
-
           if (fs.existsSync('/usr/local/apache/')) {
             await mv('/usr/local/apache', '/tmp/apache_old', { mkdirp: true });
             await mv(`${dest}/${extral[0].path}`, '/usr/local/apache', { mkdirp: true });
@@ -56,6 +55,9 @@ export default class installAPache extends Install {
           } else {
             await mv(`${dest}/${extral[0].path}`, '/usr/local/apache', { mkdirp: true });
           }
+
+          await mv('/usr/local/apache/service/httpd.service', '/lib/systemd/system/httpd.service', { mkdirp: true });
+
           if (!fs.existsSync('/usr/sbin/httpd')) {
             fs.symlinkSync('/usr/local/apache/bin/httpd', '/usr/sbin/httpd');
           }
