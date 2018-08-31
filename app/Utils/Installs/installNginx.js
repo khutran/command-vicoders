@@ -71,7 +71,7 @@ export default class installNginx extends Install {
             await exec('useradd -s /sbin/nologin nginx');
           }
 
-          // await exec('systemctl daemon-reload');
+          await exec('systemctl daemon-reload');
           await rimraf(`/tmp/${version}.zip`);
           await rimraf(`${dest}/${extral[0].path}`);
         } catch (e) {
