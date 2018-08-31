@@ -62,6 +62,12 @@ export default class InstallSubl extends Install {
             apt.stdin.write(data);
           });
 
+          sublimehq.on('close', code => {
+            if (code === 0) {
+              apt.stdin.end();
+            }
+          });
+
           apt.on('close', code => {
             if (code === 0) {
               console.log(colors.green('down sublime-text success ... done !'));
