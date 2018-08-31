@@ -76,7 +76,7 @@ export default class InstallVscode extends Install {
             gpg.stdin.end();
           });
 
-          gpg.on('close', code => {
+          gpg.on('close', async code => {
             if (code === 0) {
               console.log(colors.green('down microsoft success ... done !'));
               fs.writeFile('/etc/apt/sources.list.d/vscode.list', data, err => {
@@ -85,30 +85,26 @@ export default class InstallVscode extends Install {
                 }
                 console.log(colors.green('create file repo ... success !'));
               });
-            }
-          });
 
-          const update = spawn('apt-get', ['-y', 'update']);
-          update.on('close', code => {
-            if (code !== 0) {
-              throw new Exception(`ps process exited with code ${code}`);
-            }
-            const vscode = spawn('apt-get', ['-y', 'install', 'code']);
-            let cur = 0;
-            vscode.stdout.on('data', chunk => {
-              cur += chunk.length;
-              const percent = cur.toFixed(2);
-              process.stdout.clearLine();
-              process.stdout.cursorTo(0);
-              process.stdout.write(`Install ... ${percent}`);
-            });
+              await exec('apt-get -y update');
 
-            vscode.on('close', code => {
-              if (code === 0) {
-                process.stdout.write('\n');
-                console.log(colors.green('Install vs code success ... !'));
-              }
-            });
+              const vscode = spawn('apt-get', ['-y', 'install', 'code']);
+              let cur = 0;
+              vscode.stdout.on('data', chunk => {
+                cur += chunk.length;
+                const percent = cur.toFixed(2);
+                process.stdout.clearLine();
+                process.stdout.cursorTo(0);
+                process.stdout.write(`Install ... ${percent}`);
+              });
+
+              vscode.on('close', code => {
+                if (code === 0) {
+                  process.stdout.write('\n');
+                  console.log(colors.green('Install vs code success ... !'));
+                }
+              });
+            }
           });
         }
         if (osName === 'redhat') {
@@ -126,27 +122,23 @@ export default class InstallVscode extends Install {
             console.log(colors.green('create file repo ... success !'));
           });
 
-          const update = spawn('yum', ['-y', 'update']);
-          update.on('close', code => {
-            if (code !== 0) {
-              throw new Exception(`ps process exited with code ${code}`);
-            }
-            const vscode = spawn('yum', ['-y', 'install', 'code']);
-            let cur = 0;
-            vscode.stdout.on('data', chunk => {
-              cur += chunk.length;
-              const percent = cur.toFixed(2);
-              process.stdout.clearLine();
-              process.stdout.cursorTo(0);
-              process.stdout.write(`Install ... ${percent}`);
-            });
+          await exec('yum -y update');
 
-            vscode.on('close', code => {
-              if (code === 0) {
-                process.stdout.write('\n');
-                console.log(colors.green('Install vs code success ... !'));
-              }
-            });
+          const vscode = spawn('yum', ['-y', 'install', 'code']);
+          let cur = 0;
+          vscode.stdout.on('data', chunk => {
+            cur += chunk.length;
+            const percent = cur.toFixed(2);
+            process.stdout.clearLine();
+            process.stdout.cursorTo(0);
+            process.stdout.write(`Install ... ${percent}`);
+          });
+
+          vscode.on('close', code => {
+            if (code === 0) {
+              process.stdout.write('\n');
+              console.log(colors.green('Install vs code success ... !'));
+            }
           });
         }
       }

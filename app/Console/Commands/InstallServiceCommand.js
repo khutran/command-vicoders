@@ -54,8 +54,8 @@ export default class VscodeCommand extends Command {
             version = data.version;
           }
           const install = new installNginx();
-          const result = await install.service(version);
-          console.log(colors.green(result));
+          await install.service(version);
+          console.log(colors.green('success .. !'));
         } catch (e) {
           console.log(colors.red(e.message));
         }
