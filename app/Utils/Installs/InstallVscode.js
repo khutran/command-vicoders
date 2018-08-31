@@ -93,7 +93,7 @@ export default class InstallVscode extends Install {
 
           code.on('close', code => {
             if (code === 0) {
-              process.stdout.write(colors.green('Install vs code success ... !'));
+              console.log(colors.green('Install vs code success ... !'));
             }
           });
         }
