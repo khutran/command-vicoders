@@ -84,24 +84,16 @@ export default class InstallVscode extends Install {
 
           let cur = 0;
           code.stdout.on('data', chunk => {
-            console.log(this);
             cur += chunk.length;
-            const percent = (100.0 * cur).toFixed(2);
+            const percent = cur.toFixed(2);
             process.stdout.clearLine();
             process.stdout.cursorTo(0);
             process.stdout.write(`Install ... ${percent}`);
           });
 
-          code.stderr.on('data', chunk => {
-            cur += chunk.length;
-            const percent = (100.0 * cur).toFixed(2);
-            process.stdout.clearLine();
-            process.stdout.cursorTo(0);
-            process.stdout.write(`Install ... ${percent}`);
-          });
           code.on('close', code => {
             if (code === 0) {
-              console.log(colors.green('Install vs code success ... !'));
+              process.stdout.write(colors.green('Install vs code success ... !'));
             }
           });
         }
