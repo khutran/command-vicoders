@@ -11,7 +11,6 @@ const { spawn } = require('child_process');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 const rimraf = util.promisify(require('rimraf'));
-const mv = util.promisify(require('mv'));
 
 export default class InstallVscode extends Install {
   async service() {
@@ -93,6 +92,7 @@ export default class InstallVscode extends Install {
 
           code.on('close', code => {
             if (code === 0) {
+              process.stdout.write('/n');
               console.log(colors.green('Install vs code success ... !'));
             }
           });
