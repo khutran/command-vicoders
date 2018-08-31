@@ -39,7 +39,7 @@ export default class VscodeCommand extends Command {
       case 'subl':
         try {
           const install = new InstallSubl();
-          await install.service();
+          const i = await install.service();
           if (!_.isUndefined(data.installExtentions)) {
             await install.extentions();
           }
