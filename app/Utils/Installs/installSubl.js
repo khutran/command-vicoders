@@ -74,8 +74,8 @@ export default class InstallSubl extends Install {
                 });
               }
             });
-            await exec('apt -y update');
-
+            const update = await exec('apt -y update');
+            console.log(update);
             // const sub = spawn('apt-get', ['-y', 'install', 'sublime-text']);
             // sub.stdout.on('data', data => {
             //   console.log(data.toString());
