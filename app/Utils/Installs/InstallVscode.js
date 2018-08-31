@@ -83,7 +83,7 @@ export default class InstallVscode extends Install {
           const code = spawn('apt-get', ['-y', 'install', 'code']);
 
           let cur = 0;
-          console.log(code.length);
+          console.log(code);
           code.stdout.on('data', chunk => {
             cur += chunk.length;
             const percent = (100.0 * cur).toFixed(2);
