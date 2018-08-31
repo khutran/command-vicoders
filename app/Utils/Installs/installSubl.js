@@ -66,10 +66,11 @@ export default class InstallSubl extends Install {
             apt.on('close', code => {
               if (code === 0) {
                 console.log(colors.green('down sublime-text success ... done !'));
-                fs.writeFile('/etc/apt/sources.list.d/sublime-text.list', data, err => {
+                fs.writeFile('/etc/apt/sources.list.d/sublime-text.list', data, async err => {
                   if (err) {
                     throw new Exception('create file repo errro');
                   }
+                  await exec('apt -y update');
                   console.log(colors.green('create file repo ... success !'));
                 });
               }
@@ -88,7 +89,6 @@ export default class InstallSubl extends Install {
             //     console.log(colors.green('Install vs subl success ... !'));
             //   }
             // });
-            resolve(true);
           }
           if (osName === 'redhat') {
             await exec('rpm -v --import https://download.sublimetext.com/sublimehq-rpm-pub.gpg');
