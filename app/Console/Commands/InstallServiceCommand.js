@@ -8,7 +8,7 @@ import installAPache from '../../Utils/Installs/installApache';
 
 export default class VscodeCommand extends Command {
   signature() {
-    return 'install <<service>>';
+    return 'install <service>';
   }
 
   description() {
@@ -29,7 +29,10 @@ export default class VscodeCommand extends Command {
       case 'vscode':
         try {
           const install = new InstallVscode();
-          await install.service();
+          const result = await install.service();
+          if (result.code === 1) {
+            console.log(colors.green(result.message));
+          }
           if (!_.isUndefined(data.installExtentions)) {
             await install.extentions();
           }
@@ -40,7 +43,10 @@ export default class VscodeCommand extends Command {
       case 'subl':
         try {
           const install = new InstallSubl();
-          await install.service();
+          const result = await install.service();
+          if (result.code === 1) {
+            console.log(colors.green(result.message));
+          }
           if (!_.isUndefined(data.installExtentions)) {
             await install.extentions();
           }

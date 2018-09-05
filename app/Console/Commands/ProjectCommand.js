@@ -10,7 +10,7 @@ const exec = util.promisify(require('child_process').exec);
 
 export default class ProjectCommand extends Command {
   signature() {
-    return 'project <<router>>';
+    return 'project <router>';
   }
 
   description() {

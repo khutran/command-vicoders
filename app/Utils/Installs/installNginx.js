@@ -20,6 +20,7 @@ export default class installNginx extends Install {
     if (this.os === 'linux') {
       const linux = new Linux();
       const osName = linux.osName();
+      // http://sharadchhetri.com/2018/05/15/install-and-compile-nginx-1-14-on-ubuntu-18-04-lts-server/
       if (osName === 'debian') {
         try {
           console.log('Install lib... !');

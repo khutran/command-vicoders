@@ -11,7 +11,7 @@ const exec = util.promisify(require('child_process').exec);
 
 export default class OpenCommand extends Command {
   signature() {
-    return 'open <<project>>';
+    return 'open <project>';
   }
 
   description() {
