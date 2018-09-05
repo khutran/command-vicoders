@@ -25,7 +25,7 @@ export default class installNginx extends Install {
         try {
           console.log('Install lib... !');
           await exec(
-            'apt install -y gcc libpcre3-devel zlib1g-devel libssl-devel libxml2-devel libxslt1-devel  libgd-devel google-perftools libgoogle-perftools-devel libperl-devel libgeoip-devel libatomic-ops-devel'
+            'apt install -y gcc libpcre3-dev zlib1g-dev libssl-dev libxml2-dev libxslt1-dev  libgd-dev google-perftools libgoogle-perftools-dev libperl-dev libgeoip-dev libatomic-ops-dev'
           );
           const aliasName = 'ubuntu';
           const url = `https://github.com/khutran/${aliasName}-nginx/archive/${version}.zip`;

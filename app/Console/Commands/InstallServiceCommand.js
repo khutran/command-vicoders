@@ -16,7 +16,7 @@ export default class VscodeCommand extends Command {
   }
 
   options() {
-    return [{ key: 'install-extentions', description: 'install extention [vscode, subl]' }, { key: 'versions', description: 'version service' }];
+    return [{ key: 'install-extentions', description: 'install extention [vscode, subl]' }, { key: 'versions', description: 'version service nginx | apache' }];
   }
 
   async handle(service, option) {
