@@ -1,13 +1,13 @@
 {
   "name": "@vicoders/cli",
-  "version": "1.0.24",
+  "version": "1.0.32",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "vcc": "./node_modules/.bin/babel-node index.js",
     "migrate": "./node_modules/.bin/sequelize db:migrate",
-    "build": "rimraf dist/ && mv app/config/app.js app/config/app.js.bak && cp app/config/app.prod.js app/config/app.js && babel ./ --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./npm-debug.log,error_code.md,README.md,app.test.js --copy-files && rm -rf app/config/app.js && mv app/config/app.js.bak app/config/app.js",
+    "build": "rimraf dist/ && babel ./ --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./npm-debug.log,error_code.md,README.md,app.test.js --copy-files",
     "publish_module": "rm -rf data/vcc.db && npm run migrate && npm run build && npx @codersvn/npm-auto-version && npm publish --access public && rm -rf dist/"
   },
   "bin": {

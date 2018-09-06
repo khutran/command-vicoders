@@ -47,11 +47,11 @@ export default class ManagerProjects {
           if (obj.PORT) {
             resolve(obj.PORT);
           } else {
-            resolve(3000);
+            resolve(80);
           }
         });
       }
-      resolve(3000);
+      resolve(80);
     });
   }
 }
