@@ -5,7 +5,9 @@ export default class ProjectTransformer extends Transformer {
     return {
       name: model.name,
       dir_home: model.dir_home,
-      git_remote: model.git_remote
+      git_remote: model.git_remote,
+      framework: model.framework,
+      port: model.port
     };
   }
 }
