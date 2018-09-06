@@ -4,7 +4,7 @@ import _ from 'lodash';
 export default class ManagerProjects {
   async framework() {
     let framework;
-    if (fs.existsSync('wp-config.php') && fs.existsSync('wp-admin') && fs.existsSync('wp-content') && fs.existsSync('wp-includes')) {
+    if (fs.existsSync('wp-admin') && fs.existsSync('wp-content') && fs.existsSync('wp-includes')) {
       framework = 'workpress';
     }
     if (

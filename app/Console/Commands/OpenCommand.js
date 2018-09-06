@@ -60,6 +60,7 @@ export default class OpenCommand extends Command {
         }
       }
       exec(`${editer} ${item.dir_home}`);
+      exec(`cd ${item.dir_home}`);
     } catch (e) {
       console.log(colors.red(e.message));
     }

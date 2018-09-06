@@ -11,7 +11,7 @@ const exec = util.promisify(require('child_process').exec);
 
 export default class ProjectCommand extends Command {
   signature() {
-    return 'project <router>';
+    return 'project <select>';
   }
 
   description() {
@@ -22,11 +22,11 @@ export default class ProjectCommand extends Command {
     return [];
   }
 
-  async handle(router) {
+  async handle(select) {
     try {
       const repository = new ProjectRepository();
       const manager = new ManagerProjects();
-      switch (router) {
+      switch (select) {
         case '.':
           const data = {
             name: path.basename(process.cwd()),
