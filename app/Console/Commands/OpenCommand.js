@@ -45,7 +45,10 @@ export default class OpenCommand extends Command {
         }
       }
       const repository = new ProjectRepository();
-      const item = await repository.where('name', project).first();
+      const item = await repository
+        .orWhere('name', 'like', project)
+        .orWhere('id', 'like', project)
+        .first();
       if (!item) {
         throw new Exception('Project not exists  !', 1);
       }

@@ -38,6 +38,9 @@ export default class ProjectCommand extends Command {
           data.git_remote = i[0].slice(7, -8);
 
           data.port = await manager.getPort();
+          if (data.name === 'workspace' || data.name === 'public_html') {
+            data.name = path.basename(path.dirname(process.cwd()));
+          }
           const item = await repository.where('name', data.name).first();
           if (item) {
             await item.update(data);
