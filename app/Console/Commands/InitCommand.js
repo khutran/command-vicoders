@@ -67,16 +67,16 @@ export default class InitCommand extends Command {
       const user = new Linux().userInfo();
       if (!fs.existsSync(`${user.homedir}/.npm/vcc/config.json`)) {
         await mv(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`, { mkdirp: true });
-        fs.symlinkSync(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`);
+        fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
       } else {
         const answers = await inquirer.prompt({ type: 'confirm', name: 'config', message: 'Config exitis - you overwrite ?', default: false });
         if (answers.config) {
           await rimraf(`${user.homedir}/.npm/vcc/config.json`);
           await mv(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`, { mkdirp: true });
-          fs.symlinkSync(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`);
+          fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
         } else {
           await rimraf(`${__dirname}/../../config/config.json`);
-          fs.symlinkSync(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`);
+          fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
         }
       }
 
