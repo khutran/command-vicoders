@@ -4,6 +4,7 @@ import Linux from '../../Utils/Os/Linux';
 import Darwin from '../../Utils/Os/Darwin';
 import fs from 'fs';
 import inquirer from 'inquirer';
+import { Exception } from '@nsilly/exceptions';
 const util = require('util');
 const rimraf = util.promisify(require('rimraf'));
 const mv = util.promisify(require('mv'));
@@ -32,6 +33,14 @@ export default class InitCommand extends Command {
     const os = new Os().platform();
     if (os === 'darwin') {
       const user = new Darwin().userInfo();
+      if (fs.stats.isSymbolicLink(`${__dirname}/../../config/config.json`)) {
+        throw new Exception('vcc exitis init', 1);
+      }
+
+      if (fs.stats.isSymbolicLink(`${__dirname}/../../../data/vcc.db`)) {
+        throw new Exception('vcc exitis init', 1);
+      }
+
       if (!fs.existsSync(`${user.homedir}/.npm/vcc/config.json`)) {
         await mv(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`, { mkdirp: true });
         fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
