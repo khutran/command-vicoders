@@ -60,11 +60,11 @@ export default class CreateProjectCommand extends Command {
           config_nginx.stdout = _.replace(config_nginx.stdout, new RegExp('3000', 'g'), item.port);
         }
 
-        fs.writeFile(`${config.nginx.dir_home}/servers/nginx-${item.name}.conf`, config_nginx.stdout, err => {
+        fs.writeFile(`${config.nginx.dir_etc}/servers/nginx-${item.name}.conf`, config_nginx.stdout, err => {
           if (err) {
             throw new Exception(err.message);
           }
-          console.log(colors.green(`${config.nginx.dir_home}/servers/nginx-${item.name}.conf`));
+          console.log(colors.green(`${config.nginx.dir_etc}/servers/nginx-${item.name}.conf`));
           console.log(colors.green('Create success ... !'));
         });
       }
@@ -74,11 +74,11 @@ export default class CreateProjectCommand extends Command {
           config_apache.stdout = _.replace(config_apache.stdout, new RegExp('xxx.com', 'g'), item.name);
           config_apache.stdout = _.replace(config_apache.stdout, new RegExp('/path', 'g'), item.dir_home);
 
-          fs.writeFile(`${config.apache.dir_home}/conf/extra/web/apache-${item.name}.conf`, config_apache.stdout, err => {
+          fs.writeFile(`${config.apache.dir_etc}/conf/extra/web/apache-${item.name}.conf`, config_apache.stdout, err => {
             if (err) {
               throw new Exception(err.message);
             }
-            console.log(colors.green(`${config.apache.dir_home}/conf/extra/web/apache-${item.name}.conf`));
+            console.log(colors.green(`${config.apache.dir_etc}/conf/extra/web/apache-${item.name}.conf`));
           });
         }
 
@@ -88,11 +88,11 @@ export default class CreateProjectCommand extends Command {
         if (item.port !== 80) {
           config_nginx.stdout = _.replace(config_nginx.stdout, new RegExp('3000', 'g'), item.port);
         }
-        fs.writeFile(`${config.nginx.dir_home}/conf.d/nginx-${item.name}.conf`, config_nginx.stdout, err => {
+        fs.writeFile(`${config.nginx.dir_etc}/conf.d/nginx-${item.name}.conf`, config_nginx.stdout, err => {
           if (err) {
             throw new Exception(err.message);
           }
-          console.log(colors.green(`${config.nginx.dir_home}/conf.d/nginx-${item.name}.conf`));
+          console.log(colors.green(`${config.nginx.dir_etc}/conf.d/nginx-${item.name}.conf`));
           console.log(colors.green('Create success ... !'));
         });
       }

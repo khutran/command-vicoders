@@ -72,7 +72,7 @@ export default class installAPache extends Install {
           await mv(`${config.apache.dir_home}/service/httpd.service`, `${config.apache.dir_systemd}/httpd.service`, { mkdirp: true });
 
           if (!fs.existsSync('/usr/sbin/httpd')) {
-            fs.symlinkSync('/usr/local/apache/bin/httpd', '/usr/sbin/httpd');
+            fs.symlinkSync(config.apache.dir_bin, '/usr/sbin/httpd');
           }
 
           if (!fs.existsSync('/etc/systemd/system/multi-user.target.wants/httpd.service')) {
@@ -117,13 +117,13 @@ export default class installAPache extends Install {
             await mv(`${dest}/${extral[0].path}`, config.apache.dir_home, { mkdirp: true });
             await rimraf('/usr/local/apache/conf/extra/web');
             await rimraf('/usr/local/apache/conf/httpd.conf');
-            await mv('/tmp/apache_old/conf/httpd.conf', '/usr/local/apache/conf/httpd.conf', { mkdirp: true });
-            await mv('/tmp/apache_old/conf/extra/web', '/usr/local/apache/conf/extra/web', { mkdirp: true });
+            await mv('/tmp/apache_old/conf/httpd.conf', `${config.apache.dir_home}/conf/httpd.conf`, { mkdirp: true });
+            await mv('/tmp/apache_old/conf/extra/web', `${config.apache.dir_home}/conf/extra/web`, { mkdirp: true });
             await rimraf('/tmp/apache_old/');
           } else {
-            await mv(`${dest}/${extral[0].path}`, '/etc/apache', { mkdirp: true });
+            await mv(`${dest}/${extral[0].path}`, config.apache.dir_home, { mkdirp: true });
           }
-          await mv('/usr/local/apache/service/httpd.service', '/lib/systemd/system/httpd.service', { mkdirp: true });
+          await mv(`${config.apache.dir_home}/service/httpd.service`, `${config.apache.dir_systemd}/httpd.service`, { mkdirp: true });
 
           if (!fs.existsSync('/usr/sbin/httpd')) {
             fs.symlinkSync(config.apache.dir_bin, '/usr/sbin/httpd');

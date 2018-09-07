@@ -50,8 +50,8 @@ export default class installNginx extends Install {
           const dest = path.dirname(`/tmp/${version}.zip`);
           const extral = await decompress(`/tmp/${version}.zip`, dest);
 
-          if (fs.existsSync(`${config.dir_home_nginx}`)) {
-            await rimraf(`${config.dir_home_nginx}`);
+          if (fs.existsSync(`${config.nginx.dir_home}`)) {
+            await rimraf(`${config.nginx.dir_home}`);
           }
 
           if (fs.existsSync(`${config.nginx.dir_systemd}/nginx.service`)) {

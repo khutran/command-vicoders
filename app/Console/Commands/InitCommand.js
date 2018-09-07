@@ -37,46 +37,48 @@ export default class InitCommand extends Command {
       if (os === 'darwin') {
         const user = new Darwin().userInfo();
 
-        // if ((await lstat(`${__dirname}/../../config/config.json`)).isSymbolicLink()) {
-        //   throw new Exception('vcc exitis init', 1);
-        // }
+        if ((await lstat(`${__dirname}/../../config/config.json`)).isSymbolicLink()) {
+          throw new Exception('vcc exitis init', 1);
+        }
 
-        // if ((await lstat(`${__dirname}/../../../data/vcc.db`)).isSymbolicLink()) {
-        //   throw new Exception('vcc exitis init', 1);
-        // }
+        if ((await lstat(`${__dirname}/../../../data/vcc.db`)).isSymbolicLink()) {
+          throw new Exception('vcc exitis init', 1);
+        }
 
-        // if (!fs.existsSync(`${user.homedir}/.npm/vcc/config.json`)) {
-        //   await mv(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`, { mkdirp: true });
-        //   fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
-        // } else {
-        //   const answers = await inquirer.prompt({ type: 'confirm', name: 'config', message: 'Config exitis - you overwrite ?', default: false });
-        //   if (answers.config) {
-        //     await rimraf(`${user.homedir}/.npm/vcc/config.json`);
-        //     await mv(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`, { mkdirp: true });
-        //     fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
-        //   } else {
-        //     await rimraf(`${__dirname}/../../config/config.json`);
-        //     fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
-        //   }
-        // }
+        if (!fs.existsSync(`${user.homedir}/.npm/vcc/config.json`)) {
+          await mv(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`, { mkdirp: true });
+          fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
+        } else {
+          const answers = await inquirer.prompt({ type: 'confirm', name: 'config', message: 'Config exitis - you overwrite ?', default: false });
+          if (answers.config) {
+            await rimraf(`${user.homedir}/.npm/vcc/config.json`);
+            await mv(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`, { mkdirp: true });
+            fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
+          } else {
+            await rimraf(`${__dirname}/../../config/config.json`);
+            fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
+          }
+        }
 
-        // if (!fs.existsSync(`${user.homedir}/.npm/vcc/data/vcc.db`)) {
-        //   await mv(`${__dirname}/../../../data/vcc.db`, `${user.homedir}/.npm/vcc/data/vcc.db`, { mkdirp: true });
-        //   fs.symlinkSync(`${user.homedir}/.npm/vcc/data/vcc.db`, `${__dirname}/../../../data/vcc.db`);
-        // } else {
-        //   const answers = await inquirer.prompt({ type: 'confirm', name: 'config', message: 'Config exitis - you overwrite ?', default: false });
-        //   if (answers.config) {
-        //     await rimraf(`${user.homedir}/.npm/vcc/data/vcc.db`);
-        //     await mv(`${__dirname}/../../../data/vcc.db`, `${user.homedir}/.npm/vcc/data/vcc.db`, { mkdirp: true });
-        //     fs.symlinkSync(`${user.homedir}/.npm/vcc/data/vcc.db`, `${__dirname}/../../../data/vcc.db`);
-        //   } else {
-        //     await rimraf(`${__dirname}/../../../data/vcc.db`);
-        //     fs.symlinkSync(`${user.homedir}/.npm/vcc/data/vcc.db`, `${__dirname}/../../../data/vcc.db`);
-        //   }
-        // }
+        if (!fs.existsSync(`${user.homedir}/.npm/vcc/data/vcc.db`)) {
+          await mv(`${__dirname}/../../../data/vcc.db`, `${user.homedir}/.npm/vcc/data/vcc.db`, { mkdirp: true });
+          fs.symlinkSync(`${user.homedir}/.npm/vcc/data/vcc.db`, `${__dirname}/../../../data/vcc.db`);
+        } else {
+          const answers = await inquirer.prompt({ type: 'confirm', name: 'config', message: 'Config exitis - you overwrite ?', default: false });
+          if (answers.config) {
+            await rimraf(`${user.homedir}/.npm/vcc/data/vcc.db`);
+            await mv(`${__dirname}/../../../data/vcc.db`, `${user.homedir}/.npm/vcc/data/vcc.db`, { mkdirp: true });
+            fs.symlinkSync(`${user.homedir}/.npm/vcc/data/vcc.db`, `${__dirname}/../../../data/vcc.db`);
+          } else {
+            await rimraf(`${__dirname}/../../../data/vcc.db`);
+            fs.symlinkSync(`${user.homedir}/.npm/vcc/data/vcc.db`, `${__dirname}/../../../data/vcc.db`);
+          }
+        }
         const config = require(`${__dirname}/../../config/config.json`);
-        config.apache.dir_home = '/usr/local/etc/httpd/';
-        config.nginx.dir_home = '/usr/local/etc/nginx/';
+        config.apache.dir_etc = '/usr/local/etc/httpd';
+        config.apache.dir_home = '/usr/local/etc/httpd';
+        config.nginx.dir_home = '/usr/local/etc/nginx';
+        config.nginx.dir_etc = '/usr/local/etc/nginx';
 
         const data = JSON.stringify(config, null, 2);
         fs.writeFileSync(`${__dirname}/../../config/config.json`, data);
@@ -84,47 +86,48 @@ export default class InitCommand extends Command {
       }
       if (os === 'linux') {
         const user = new Linux().userInfo();
-        // if ((await lstat(`${__dirname}/../../config/config.json`)).isSymbolicLink()) {
-        //   throw new Exception('vcc exitis init', 1);
-        // }
+        if ((await lstat(`${__dirname}/../../config/config.json`)).isSymbolicLink()) {
+          throw new Exception('vcc exitis init', 1);
+        }
 
-        // if ((await lstat(`${__dirname}/../../../data/vcc.db`)).isSymbolicLink()) {
-        //   throw new Exception('vcc exitis init', 1);
-        // }
+        if ((await lstat(`${__dirname}/../../../data/vcc.db`)).isSymbolicLink()) {
+          throw new Exception('vcc exitis init', 1);
+        }
 
-        // if (!fs.existsSync(`${user.homedir}/.npm/vcc/config.json`)) {
-        //   await mv(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`, { mkdirp: true });
-        //   fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
-        // } else {
-        //   const answers = await inquirer.prompt({ type: 'confirm', name: 'config', message: 'Config exitis - you overwrite ?', default: false });
-        //   if (answers.config) {
-        //     await rimraf(`${user.homedir}/.npm/vcc/config.json`);
-        //     await mv(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`, { mkdirp: true });
-        //     fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
-        //   } else {
-        //     await rimraf(`${__dirname}/../../config/config.json`);
-        //     fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
-        //   }
-        // }
+        if (!fs.existsSync(`${user.homedir}/.npm/vcc/config.json`)) {
+          await mv(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`, { mkdirp: true });
+          fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
+        } else {
+          const answers = await inquirer.prompt({ type: 'confirm', name: 'config', message: 'Config exitis - you overwrite ?', default: false });
+          if (answers.config) {
+            await rimraf(`${user.homedir}/.npm/vcc/config.json`);
+            await mv(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`, { mkdirp: true });
+            fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
+          } else {
+            await rimraf(`${__dirname}/../../config/config.json`);
+            fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
+          }
+        }
 
-        // if (!fs.existsSync(`${user.homedir}/.npm/vcc/data/vcc.db`)) {
-        //   await mv(`${__dirname}/../../../data/vcc.db`, `${user.homedir}/.npm/vcc/data/vcc.db`, { mkdirp: true });
-        //   fs.symlinkSync(`${user.homedir}/.npm/vcc/data/vcc.db`, `${__dirname}/../../../data/vcc.db`);
-        // } else {
-        //   const answers = await inquirer.prompt({ type: 'confirm', name: 'config', message: 'Config exitis - you overwrite ?', default: false });
-        //   if (answers.config) {
-        //     await rimraf(`${user.homedir}/.npm/vcc/data/vcc.db`);
-        //     await mv(`${__dirname}/../../../data/vcc.db`, `${user.homedir}/.npm/vcc/data/vcc.db`, { mkdirp: true });
-        //     fs.symlinkSync(`${user.homedir}/.npm/vcc/data/vcc.db`, `${__dirname}/../../../data/vcc.db`);
-        //   } else {
-        //     await rimraf(`${__dirname}/../../../data/vcc.db`);
-        //     fs.symlinkSync(`${user.homedir}/.npm/vcc/data/vcc.db`, `${__dirname}/../../../data/vcc.db`);
-        //   }
-        // }
+        if (!fs.existsSync(`${user.homedir}/.npm/vcc/data/vcc.db`)) {
+          await mv(`${__dirname}/../../../data/vcc.db`, `${user.homedir}/.npm/vcc/data/vcc.db`, { mkdirp: true });
+          fs.symlinkSync(`${user.homedir}/.npm/vcc/data/vcc.db`, `${__dirname}/../../../data/vcc.db`);
+        } else {
+          const answers = await inquirer.prompt({ type: 'confirm', name: 'config', message: 'Config exitis - you overwrite ?', default: false });
+          if (answers.config) {
+            await rimraf(`${user.homedir}/.npm/vcc/data/vcc.db`);
+            await mv(`${__dirname}/../../../data/vcc.db`, `${user.homedir}/.npm/vcc/data/vcc.db`, { mkdirp: true });
+            fs.symlinkSync(`${user.homedir}/.npm/vcc/data/vcc.db`, `${__dirname}/../../../data/vcc.db`);
+          } else {
+            await rimraf(`${__dirname}/../../../data/vcc.db`);
+            fs.symlinkSync(`${user.homedir}/.npm/vcc/data/vcc.db`, `${__dirname}/../../../data/vcc.db`);
+          }
+        }
         const config = require(`${__dirname}/../../config/config.json`);
         config.apache.dir_home = '/usr/local/httpd';
         config.apache.dir_bin = '/usr/local/httpd/bin/httpd';
         config.apache.dir_systemd = '/lib/systemd/system';
+        config.apache.dir_etc = '/usr/local/httpd';
         config.nginx.dir_home = '/usr/local/nginx';
         config.nginx.dir_bin = '/usr/local/nginx/bin/nginx';
         config.nginx.dir_systemd = '/lib/systemd/system';
