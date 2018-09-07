@@ -37,55 +37,61 @@ export default class CreateProjectCommand extends Command {
 
       const os = new Os().platform();
       if (os === 'darwin') {
-        const nginx_content = await exec(`curl https://raw.githubusercontent.com/khutran/config_web/master/default-${item.framework}-apache-conf`);
-        nginx_content.stdout = _.replace(nginx_content.stdout, new RegExp('xxx.com', 'g'), item.name);
-        nginx_content.stdout = _.replace(nginx_content.stdout, new RegExp('/path', 'g'), item.dir_home);
-        if (item.port !== 80) {
-          nginx_content.stdout = _.replace(nginx_content.stdout, new RegExp('3000', 'g'), item.port);
-        }
-
-        fs.writeFile(`/usr/local/etc/nginx/servers/nginx-${item.name}.conf`, nginx_content.stdout, err => {
-          if (err) {
-            throw new Exception(err.message);
-          }
-        });
-
         if (item.framework !== 'nodejs') {
-          const apache_content = await exec(`curl https://raw.githubusercontent.com/khutran/config_web/master/default-${item.framework}-apache.conf`);
-          apache_content.stdout = _.replace(apache_content.stdout, new RegExp('xxx.com', 'g'), item.name);
-          apache_content.stdout = _.replace(apache_content.stdout, new RegExp('/path', 'g'), item.dir_home);
+          const config_apache = await exec(`curl https://raw.githubusercontent.com/khutran/config_web/master/default-${item.framework}-apache.conf`);
+          config_apache.stdout = _.replace(config_apache.stdout, new RegExp('xxx.com', 'g'), item.name);
+          config_apache.stdout = _.replace(config_apache.stdout, new RegExp('/path', 'g'), item.dir_home);
 
-          fs.writeFile(`/usr/local/etc/httpd/conf.d/apache-${item.name}.conf`, nginx_content.stdout, err => {
+          fs.writeFile(`/usr/local/etc/httpd/conf.d/apache-${item.name}.conf`, config_apache.stdout, err => {
             if (err) {
               throw new Exception(err.message);
             }
+            console.log(colors.green(`/usr/local/etc/httpd/conf.d/apache-${item.name}.conf`));
           });
         }
+
+        const config_nginx = await exec(`curl https://raw.githubusercontent.com/khutran/config_web/master/default-${item.framework}-nginx.conf`);
+        config_nginx.stdout = _.replace(config_nginx.stdout, new RegExp('xxx.com', 'g'), item.name);
+        config_nginx.stdout = _.replace(config_nginx.stdout, new RegExp('/path', 'g'), item.dir_home);
+        if (item.port !== 80) {
+          config_nginx.stdout = _.replace(config_nginx.stdout, new RegExp('3000', 'g'), item.port);
+        }
+
+        fs.writeFile(`/usr/local/etc/nginx/servers/nginx-${item.name}.conf`, config_nginx.stdout, err => {
+          if (err) {
+            throw new Exception(err.message);
+          }
+          console.log(colors.green(`/usr/local/etc/nginx/servers/nginx-${item.name}.conf`));
+          console.log(colors.green('Create success ... !'));
+        });
       }
       if (os === 'linux') {
-        const nginx_content = await exec(`curl https://raw.githubusercontent.com/khutran/config_web/master/default-${item.framework}-nginx-conf`);
-        nginx_content.stdout = _.replace(nginx_content.stdout, new RegExp('xxx.com', 'g'), item.name);
-        nginx_content.stdout = _.replace(nginx_content.stdout, new RegExp('/path', 'g'), item.dir_home);
-        if (item.port !== 80) {
-          nginx_content.stdout = _.replace(nginx_content.stdout, new RegExp('3000', 'g'), item.port);
-        }
-        fs.writeFile(`/etc/nginx/conf.d/nginx-${item.name}.conf`, nginx_content.stdout, err => {
-          if (err) {
-            throw new Exception(err.message);
-          }
-        });
-
         if (item.framework !== 'nodejs') {
-          const apache_content = await exec(`curl https://raw.githubusercontent.com/khutran/config_web/master/default-${item.framework}-apache.conf`);
-          apache_content.stdout = _.replace(apache_content.stdout, new RegExp('xxx.com', 'g'), item.name);
-          apache_content.stdout = _.replace(apache_content.stdout, new RegExp('/path', 'g'), item.dir_home);
+          const config_apache = await exec(`curl https://raw.githubusercontent.com/khutran/config_web/master/default-${item.framework}-apache.conf`);
+          config_apache.stdout = _.replace(config_apache.stdout, new RegExp('xxx.com', 'g'), item.name);
+          config_apache.stdout = _.replace(config_apache.stdout, new RegExp('/path', 'g'), item.dir_home);
 
-          fs.writeFile(`/etc/httpd/conf.d/apache-${item.name}.conf`, nginx_content.stdout, err => {
+          fs.writeFile(`/usr/local/apache/conf/extra/web/apache-${item.name}.conf`, config_apache.stdout, err => {
             if (err) {
               throw new Exception(err.message);
             }
+            console.log(colors.green(`/usr/local/apache/conf/extra/web/apache-${item.name}.conf`));
           });
         }
+
+        const config_nginx = await exec(`curl https://raw.githubusercontent.com/khutran/config_web/master/default-${item.framework}-nginx.conf`);
+        config_nginx.stdout = _.replace(config_nginx.stdout, new RegExp('xxx.com', 'g'), item.name);
+        config_nginx.stdout = _.replace(config_nginx.stdout, new RegExp('/path', 'g'), item.dir_home);
+        if (item.port !== 80) {
+          config_nginx.stdout = _.replace(config_nginx.stdout, new RegExp('3000', 'g'), item.port);
+        }
+        fs.writeFile(`/etc/nginx/conf.d/nginx-${item.name}.conf`, config_nginx.stdout, err => {
+          if (err) {
+            throw new Exception(err.message);
+          }
+          console.log(colors.green(`/etc/nginx/conf.d/nginx-${item.name}.conf`));
+          console.log(colors.green('Create success ... !'));
+        });
       }
     } catch (e) {
       console.log(colors.red(e.message));
