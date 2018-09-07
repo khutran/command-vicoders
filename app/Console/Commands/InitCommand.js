@@ -65,7 +65,35 @@ export default class InitCommand extends Command {
     }
     if (os === 'linux') {
       const user = new Linux().userInfo();
-      console.log(user);
+      if (!fs.existsSync(`${user.homedir}/.npm/vcc/config.json`)) {
+        await mv(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`, { mkdirp: true });
+        fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
+      } else {
+        const answers = await inquirer.prompt({ type: 'confirm', name: 'config', message: 'Config exitis - you overwrite ?', default: false });
+        if (answers.config) {
+          await rimraf(`${user.homedir}/.npm/vcc/config.json`);
+          await mv(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`, { mkdirp: true });
+          fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
+        } else {
+          await rimraf(`${__dirname}/../../config/config.json`);
+          fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
+        }
+      }
+
+      if (!fs.existsSync(`${user.homedir}/.npm/vcc/data/vcc.db`)) {
+        await mv(`${__dirname}/../../../data/vcc.db`, `${user.homedir}/.npm/vcc/data/vcc.db`, { mkdirp: true });
+        fs.symlinkSync(`${user.homedir}/.npm/vcc/data/vcc.db`, `${__dirname}/../../../data/vcc.db`);
+      } else {
+        const answers = await inquirer.prompt({ type: 'confirm', name: 'config', message: 'Config exitis - you overwrite ?', default: false });
+        if (answers.config) {
+          await rimraf(`${user.homedir}/.npm/vcc/data/vcc.db`);
+          await mv(`${__dirname}/../../../data/vcc.db`, `${user.homedir}/.npm/vcc/data/vcc.db`, { mkdirp: true });
+          fs.symlinkSync(`${user.homedir}/.npm/vcc/data/vcc.db`, `${__dirname}/../../../data/vcc.db`);
+        } else {
+          await rimraf(`${__dirname}/../../../data/vcc.db`);
+          fs.symlinkSync(`${user.homedir}/.npm/vcc/data/vcc.db`, `${__dirname}/../../../data/vcc.db`);
+        }
+      }
     }
   }
 }
