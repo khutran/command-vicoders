@@ -36,13 +36,13 @@ export default class InitCommand extends Command {
       if (os === 'darwin') {
         const user = new Darwin().userInfo();
 
-        if ((await lstat(`${__dirname}/../../config/config.json`)).isSymbolicLink()) {
-          throw new Exception('vcc exitis init', 1);
-        }
+        // if ((await lstat(`${__dirname}/../../config/config.json`)).isSymbolicLink()) {
+        //   throw new Exception('vcc exitis init', 1);
+        // }
 
-        if ((await lstat(`${__dirname}/../../../data/vcc.db`)).isSymbolicLink()) {
-          throw new Exception('vcc exitis init', 1);
-        }
+        // if ((await lstat(`${__dirname}/../../../data/vcc.db`)).isSymbolicLink()) {
+        //   throw new Exception('vcc exitis init', 1);
+        // }
 
         // if (!fs.existsSync(`${user.homedir}/.npm/vcc/config.json`)) {
         //   await mv(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`, { mkdirp: true });
@@ -73,16 +73,18 @@ export default class InitCommand extends Command {
         //     fs.symlinkSync(`${user.homedir}/.npm/vcc/data/vcc.db`, `${__dirname}/../../../data/vcc.db`);
         //   }
         // }
+        const config = require(`${__dirname}/../../config/config.json`);
+        console.log(config);
       }
       if (os === 'linux') {
         const user = new Linux().userInfo();
-        if ((await lstat(`${__dirname}/../../config/config.json`)).isSymbolicLink()) {
-          throw new Exception('vcc exitis init', 1);
-        }
+        // if ((await lstat(`${__dirname}/../../config/config.json`)).isSymbolicLink()) {
+        //   throw new Exception('vcc exitis init', 1);
+        // }
 
-        if ((await lstat(`${__dirname}/../../../data/vcc.db`)).isSymbolicLink()) {
-          throw new Exception('vcc exitis init', 1);
-        }
+        // if ((await lstat(`${__dirname}/../../../data/vcc.db`)).isSymbolicLink()) {
+        //   throw new Exception('vcc exitis init', 1);
+        // }
 
         // if (!fs.existsSync(`${user.homedir}/.npm/vcc/config.json`)) {
         //   await mv(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`, { mkdirp: true });
@@ -113,6 +115,8 @@ export default class InitCommand extends Command {
         //     fs.symlinkSync(`${user.homedir}/.npm/vcc/data/vcc.db`, `${__dirname}/../../../data/vcc.db`);
         //   }
         // }
+        const config = require(`${__dirname}/../../config/config.json`);
+        console.log(config);
       }
     } catch (e) {
       throw new Exception(e.message, 1);
