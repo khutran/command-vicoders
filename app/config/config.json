@@ -1,0 +1,10 @@
+{
+  "use_db_commands": ["project", "open", "create-config"],
+  "apache": {
+    "dir_home": "",
+    "dir_bin": "",
+    "dir_systemd": "",
+    "dir_etc": ""
+  },
+  "nginx": { "dir_home": "", "dir_bin": "", "dir_systemd": "", "dir_etc": "" }
+}

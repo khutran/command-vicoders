@@ -6,6 +6,8 @@ import Linux from '../Os/Linux';
 import fs from 'fs';
 import { App } from '@nsilly/container';
 import { Downloader } from '../Downloader';
+import config from '../../config/config.json';
+import _ from 'lodash';
 const util = require('util');
 const rimraf = util.promisify(require('rimraf'));
 const exec = util.promisify(require('child_process').exec);
@@ -21,6 +23,21 @@ export default class installNginx extends Install {
       const linux = new Linux();
       const osName = linux.osName();
       // http://sharadchhetri.com/2018/05/15/install-and-compile-nginx-1-14-on-ubuntu-18-04-lts-server/
+      if (_.isEmpty(config.nginx.dir_home) || !config.nginx.dir_home) {
+        config.nginx.dir_home = '/usr/local/nginx';
+      }
+      if (_.isEmpty(config.nginx.dir_bin) || !config.nginx.dir_bin) {
+        config.nginx.dir_bin = '/usr/local/nginx/bin/nginx';
+      }
+
+      if (_.isEmpty(config.nginx.dir_systemd) || !config.nginx.dir_systemd) {
+        config.nginx.dir_systemd = '/lib/systemd/system';
+      }
+
+      if (_.isEmpty(config.nginx.dir_etc) || !config.nginx.dir_etc) {
+        config.nginx.dir_etc = '/etc/nginx';
+      }
+
       if (osName === 'debian') {
         try {
           console.log('Install lib... !');
@@ -33,45 +50,48 @@ export default class installNginx extends Install {
           const dest = path.dirname(`/tmp/${version}.zip`);
           const extral = await decompress(`/tmp/${version}.zip`, dest);
 
-          if (fs.existsSync('/usr/local/nginx/')) {
-            await rimraf('/usr/local/nginx/');
+          if (fs.existsSync(`${config.dir_home_nginx}`)) {
+            await rimraf(`${config.dir_home_nginx}`);
           }
 
-          if (fs.existsSync('/lib/systemd/system/nginx.service')) {
-            await rimraf('/lib/systemd/system/nginx.service');
+          if (fs.existsSync(`${config.nginx.dir_systemd}/nginx.service`)) {
+            await rimraf(`${config.nginx.dir_systemd}/nginx.service`);
           }
 
           if (fs.existsSync('/usr/sbin/nginx')) {
             await rimraf('/usr/sbin/nginx');
           }
 
-          await mv(`${dest}/${extral[0].path}usr-nginx`, '/usr/local/nginx', { mkdirp: true });
+          await mv(`${dest}/${extral[0].path}usr-nginx`, config.nginx.dir_home, { mkdirp: true });
 
-          await mv(`${dest}/${extral[0].path}nginx.service`, '/lib/systemd/system/nginx.service', { mkdirp: true });
+          await mv(`${dest}/${extral[0].path}nginx.service`, `${config.nginx.dir_systemd}/nginx.service`, { mkdirp: true });
 
-          if (fs.existsSync('/etc/nginx/')) {
-            await mv('/etc/nginx/', '/tmp/nginx_old', { mkdirp: true });
-            await mv(`${dest}/${extral[0].path}etc-nginx`, '/etc/nginx', { mkdirp: true });
-            await rimraf('/etc/nginx/conf.d/');
-            await rimraf('/etc/nginx/nginx.conf');
-            await mv('/tmp/nginx_old/conf.d', '/etc/nginx/conf.d', { mkdirp: true });
-            await mv('/tmp/nginx_old/nginx.conf', '/etc/nginx/nginx.conf', { mkdirp: true });
+          if (fs.existsSync(`${config.nginx.dir_etc}`)) {
+            await mv(config.nginx.dir_etc, '/tmp/nginx_old', { mkdirp: true });
+            await mv(`${dest}/${extral[0].path}etc-nginx`, config.nginx.dir_etc, { mkdirp: true });
+            await rimraf(`${config.nginx.dir_etc}/conf.d/`);
+            await rimraf(`${config.nginx.dir_etc}/nginx.conf`);
+            await mv('/tmp/nginx_old/conf.d', `${config.nginx.dir_etc}/conf.d`, { mkdirp: true });
+            await mv('/tmp/nginx_old/nginx.conf', `${config.nginx.dir_etc}/nginx.conf`, { mkdirp: true });
             await rimraf('/tmp/nginx_old/');
           } else {
-            await mv(`${dest}/${extral[0].path}etc-nginx`, '/etc/nginx', { mkdirp: true });
+            await mv(`${dest}/${extral[0].path}etc-nginx`, config.nginx.dir_etc, { mkdirp: true });
           }
           if (!fs.existsSync('/usr/sbin/nginx')) {
-            fs.symlinkSync('/usr/local/nginx/bin/nginx', '/usr/sbin/nginx');
+            fs.symlinkSync(`${config.nginx.dir_bin}`, '/usr/sbin/nginx');
           }
 
           if (!fs.existsSync('/etc/systemd/system/multi-user.target.wants/nginx.service')) {
-            fs.symlinkSync('/lib/systemd/system/nginx.service', '/etc/systemd/system/multi-user.target.wants/nginx.service');
+            fs.symlinkSync(`${config.nginx.dir_systemd}/nginx.service`, '/etc/systemd/system/multi-user.target.wants/nginx.service');
           }
 
           const passpd = fs.readFileSync('/etc/passwd');
           if (passpd.indexOf('nginx') === -1) {
             await exec('useradd -s /sbin/nologin nginx');
           }
+
+          const data = JSON.stringify(config, null, 2);
+          fs.writeFileSync(`${__dirname}/../../config/config.json`, data);
 
           await exec('systemctl daemon-reload');
           await rimraf(`/tmp/${version}.zip`);
@@ -90,45 +110,48 @@ export default class installNginx extends Install {
           const dest = path.dirname(`/tmp/${version}.zip`);
           const extral = await decompress(`/tmp/${version}.zip`, dest);
 
-          if (fs.existsSync('/usr/local/nginx/')) {
-            await rimraf('/usr/local/nginx/');
+          if (fs.existsSync(`${config.nginx.dir_home}`)) {
+            await rimraf(`${config.nginx.dir_home}`);
           }
 
-          if (fs.existsSync('/lib/systemd/system/nginx.service')) {
-            await rimraf('/lib/systemd/system/nginx.service');
+          if (fs.existsSync(`${config.nginx.dir_systemd}/nginx.service`)) {
+            await rimraf(`${config.nginx.dir_systemd}/nginx.service`);
           }
 
           if (fs.existsSync('/usr/sbin/nginx')) {
             await rimraf('/usr/sbin/nginx');
           }
 
-          await mv(`${dest}/${extral[0].path}usr-nginx`, '/usr/local/nginx', { mkdirp: true });
+          await mv(`${dest}/${extral[0].path}usr-nginx`, config.nginx.dir_home, { mkdirp: true });
 
-          await mv(`${dest}/${extral[0].path}nginx.service`, '/lib/systemd/system/nginx.service', { mkdirp: true });
+          await mv(`${dest}/${extral[0].path}nginx.service`, `${config.nginx.dir_systemd}/nginx.service`, { mkdirp: true });
 
-          if (fs.existsSync('/etc/nginx/')) {
-            await mv('/etc/nginx/', '/tmp/nginx_old', { mkdirp: true });
-            await mv(`${dest}/${extral[0].path}etc-nginx`, '/etc/nginx', { mkdirp: true });
-            await rimraf('/etc/nginx/conf.d/');
-            await rimraf('/etc/nginx/nginx.conf');
-            await mv('/tmp/nginx_old/conf.d', '/etc/nginx/conf.d', { mkdirp: true });
-            await mv('/tmp/nginx_old/nginx.conf', '/etc/nginx/nginx.conf', { mkdirp: true });
+          if (fs.existsSync(config.nginx.dir_etc)) {
+            await mv(config.nginx.dir_etc, '/tmp/nginx_old', { mkdirp: true });
+            await mv(`${dest}/${extral[0].path}etc-nginx`, config.nginx.dir_etc, { mkdirp: true });
+            await rimraf(`${config.nginx.dir_etc}/conf.d/`);
+            await rimraf(`${config.nginx.dir_etc}/nginx.conf`);
+            await mv('/tmp/nginx_old/conf.d', `${config.nginx.dir_etc}/conf.d`, { mkdirp: true });
+            await mv('/tmp/nginx_old/nginx.conf', `${config.nginx.dir_etc}/nginx.conf`, { mkdirp: true });
             await rimraf('/tmp/nginx_old/');
           } else {
-            await mv(`${dest}/${extral[0].path}etc-nginx`, '/etc/nginx', { mkdirp: true });
+            await mv(`${dest}/${extral[0].path}etc-nginx`, config.nginx.dir_etc, { mkdirp: true });
           }
           if (!fs.existsSync('/usr/sbin/nginx')) {
-            fs.symlinkSync('/usr/local/nginx/bin/nginx', '/usr/sbin/nginx');
+            fs.symlinkSync(config.nginx.dir_bin, '/usr/sbin/nginx');
           }
 
-          if (!fs.existsSync('/etc/systemd/system/multi-user.target.wants/nginx.service')) {
-            fs.symlinkSync('/lib/systemd/system/nginx.service', '/etc/systemd/system/multi-user.target.wants/nginx.service');
+          if (!fs.existsSync(`${config.nginx.dir_systemd}/multi-user.target.wants/nginx.service`)) {
+            fs.symlinkSync(`${config.nginx.dir_systemd}/nginx.service`, '/etc/systemd/system/multi-user.target.wants/nginx.service');
           }
 
           const passpd = fs.readFileSync('/etc/passwd');
           if (passpd.indexOf('nginx') === -1) {
             await exec('useradd -s /sbin/nologin nginx');
           }
+
+          const data = JSON.stringify(config, null, 2);
+          fs.writeFileSync(`${__dirname}/../../config/config.json`, data);
 
           await exec('systemctl daemon-reload');
           await rimraf(`/tmp/${version}.zip`);

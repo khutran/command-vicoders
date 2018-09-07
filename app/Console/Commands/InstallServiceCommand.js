@@ -5,7 +5,7 @@ import InstallVscode from '../../Utils/Installs/InstallVscode';
 import InstallSubl from '../../Utils/Installs/installSubl';
 import installNginx from '../../Utils/Installs/installNginx';
 import installAPache from '../../Utils/Installs/installApache';
-
+import config from '../../config/config.json';
 export default class VscodeCommand extends Command {
   signature() {
     return 'install <service>';
