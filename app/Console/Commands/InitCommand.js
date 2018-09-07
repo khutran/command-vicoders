@@ -4,6 +4,7 @@ import Linux from '../../Utils/Os/Linux';
 import Darwin from '../../Utils/Os/Darwin';
 import fs from 'fs';
 import inquirer from 'inquirer';
+import colors from 'colors';
 import { Exception } from '@nsilly/exceptions';
 const util = require('util');
 const rimraf = util.promisify(require('rimraf'));
@@ -74,7 +75,12 @@ export default class InitCommand extends Command {
         //   }
         // }
         const config = require(`${__dirname}/../../config/config.json`);
-        console.log(config);
+        config.apache.dir_home = '/usr/local/etc/httpd/';
+        config.nginx.dir_home = '/usr/local/etc/nginx/';
+
+        const data = JSON.stringify(config, null, 2);
+        fs.writeFileSync(`${__dirname}/../../config/config.json`, data);
+        console.log(colors.green('success ... !'));
       }
       if (os === 'linux') {
         const user = new Linux().userInfo();
@@ -116,7 +122,17 @@ export default class InitCommand extends Command {
         //   }
         // }
         const config = require(`${__dirname}/../../config/config.json`);
-        console.log(config);
+        config.apache.dir_home = '/usr/local/httpd';
+        config.apache.dir_bin = '/usr/local/httpd/bin/httpd';
+        config.apache.dir_systemd = '/lib/systemd/system';
+        config.nginx.dir_home = '/usr/local/nginx';
+        config.nginx.dir_bin = '/usr/local/nginx/bin/nginx';
+        config.nginx.dir_systemd = '/lib/systemd/system';
+        config.nginx.dir_etc = '/etc/nginx';
+
+        const data = JSON.stringify(config, null, 2);
+        fs.writeFileSync(`${__dirname}/../../config/config.json`, data);
+        console.log(colors.green('success ... !'));
       }
     } catch (e) {
       throw new Exception(e.message, 1);
