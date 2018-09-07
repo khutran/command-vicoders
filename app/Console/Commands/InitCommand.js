@@ -8,6 +8,7 @@ import { Exception } from '@nsilly/exceptions';
 const util = require('util');
 const rimraf = util.promisify(require('rimraf'));
 const mv = util.promisify(require('mv'));
+const lstat = util.promisify(fs.lstat);
 
 export default class InitCommand extends Command {
   signature() {
@@ -33,11 +34,12 @@ export default class InitCommand extends Command {
     const os = new Os().platform();
     if (os === 'darwin') {
       const user = new Darwin().userInfo();
-      if (fs.stats.isSymbolicLink(`${__dirname}/../../config/config.json`)) {
+
+      if (await lstat(`${__dirname}/../../config/config.json`).isSymbolicLink()) {
         throw new Exception('vcc exitis init', 1);
       }
 
-      if (fs.stats.isSymbolicLink(`${__dirname}/../../../data/vcc.db`)) {
+      if (await lstat(`${__dirname}/../../../data/vcc.db`).isSymbolicLink()) {
         throw new Exception('vcc exitis init', 1);
       }
 
@@ -73,14 +75,14 @@ export default class InitCommand extends Command {
     }
     if (os === 'linux') {
       const user = new Linux().userInfo();
-      if (fs.stats.isSymbolicLink(`${__dirname}/../../config/config.json`)) {
+      if (await lstat(`${__dirname}/../../config/config.json`).isSymbolicLink()) {
         throw new Exception('vcc exitis init', 1);
       }
 
-      if (fs.stats.isSymbolicLink(`${__dirname}/../../../data/vcc.db`)) {
+      if (await lstat(`${__dirname}/../../../data/vcc.db`).isSymbolicLink()) {
         throw new Exception('vcc exitis init', 1);
       }
-
+      
       if (!fs.existsSync(`${user.homedir}/.npm/vcc/config.json`)) {
         await mv(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`, { mkdirp: true });
         fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
