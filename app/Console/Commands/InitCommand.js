@@ -31,87 +31,91 @@ export default class InitCommand extends Command {
   }
 
   async handle() {
-    const os = new Os().platform();
-    if (os === 'darwin') {
-      const user = new Darwin().userInfo();
+    try {
+      const os = new Os().platform();
+      if (os === 'darwin') {
+        const user = new Darwin().userInfo();
 
-      if ((await lstat(`${__dirname}/../../config/config.json`)).isSymbolicLink()) {
-        throw new Exception('vcc exitis init', 1);
+        if ((await lstat(`${__dirname}/../../config/config.json`)).isSymbolicLink()) {
+          throw new Exception('vcc exitis init', 1);
+        }
+
+        if ((await lstat(`${__dirname}/../../../data/vcc.db`)).isSymbolicLink()) {
+          throw new Exception('vcc exitis init', 1);
+        }
+
+        // if (!fs.existsSync(`${user.homedir}/.npm/vcc/config.json`)) {
+        //   await mv(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`, { mkdirp: true });
+        //   fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
+        // } else {
+        //   const answers = await inquirer.prompt({ type: 'confirm', name: 'config', message: 'Config exitis - you overwrite ?', default: false });
+        //   if (answers.config) {
+        //     await rimraf(`${user.homedir}/.npm/vcc/config.json`);
+        //     await mv(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`, { mkdirp: true });
+        //     fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
+        //   } else {
+        //     await rimraf(`${__dirname}/../../config/config.json`);
+        //     fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
+        //   }
+        // }
+
+        // if (!fs.existsSync(`${user.homedir}/.npm/vcc/data/vcc.db`)) {
+        //   await mv(`${__dirname}/../../../data/vcc.db`, `${user.homedir}/.npm/vcc/data/vcc.db`, { mkdirp: true });
+        //   fs.symlinkSync(`${user.homedir}/.npm/vcc/data/vcc.db`, `${__dirname}/../../../data/vcc.db`);
+        // } else {
+        //   const answers = await inquirer.prompt({ type: 'confirm', name: 'config', message: 'Config exitis - you overwrite ?', default: false });
+        //   if (answers.config) {
+        //     await rimraf(`${user.homedir}/.npm/vcc/data/vcc.db`);
+        //     await mv(`${__dirname}/../../../data/vcc.db`, `${user.homedir}/.npm/vcc/data/vcc.db`, { mkdirp: true });
+        //     fs.symlinkSync(`${user.homedir}/.npm/vcc/data/vcc.db`, `${__dirname}/../../../data/vcc.db`);
+        //   } else {
+        //     await rimraf(`${__dirname}/../../../data/vcc.db`);
+        //     fs.symlinkSync(`${user.homedir}/.npm/vcc/data/vcc.db`, `${__dirname}/../../../data/vcc.db`);
+        //   }
+        // }
       }
+      if (os === 'linux') {
+        const user = new Linux().userInfo();
+        if ((await lstat(`${__dirname}/../../config/config.json`)).isSymbolicLink()) {
+          throw new Exception('vcc exitis init', 1);
+        }
 
-      if ((await lstat(`${__dirname}/../../../data/vcc.db`)).isSymbolicLink()) {
-        throw new Exception('vcc exitis init', 1);
+        if ((await lstat(`${__dirname}/../../../data/vcc.db`)).isSymbolicLink()) {
+          throw new Exception('vcc exitis init', 1);
+        }
+
+        // if (!fs.existsSync(`${user.homedir}/.npm/vcc/config.json`)) {
+        //   await mv(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`, { mkdirp: true });
+        //   fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
+        // } else {
+        //   const answers = await inquirer.prompt({ type: 'confirm', name: 'config', message: 'Config exitis - you overwrite ?', default: false });
+        //   if (answers.config) {
+        //     await rimraf(`${user.homedir}/.npm/vcc/config.json`);
+        //     await mv(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`, { mkdirp: true });
+        //     fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
+        //   } else {
+        //     await rimraf(`${__dirname}/../../config/config.json`);
+        //     fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
+        //   }
+        // }
+
+        // if (!fs.existsSync(`${user.homedir}/.npm/vcc/data/vcc.db`)) {
+        //   await mv(`${__dirname}/../../../data/vcc.db`, `${user.homedir}/.npm/vcc/data/vcc.db`, { mkdirp: true });
+        //   fs.symlinkSync(`${user.homedir}/.npm/vcc/data/vcc.db`, `${__dirname}/../../../data/vcc.db`);
+        // } else {
+        //   const answers = await inquirer.prompt({ type: 'confirm', name: 'config', message: 'Config exitis - you overwrite ?', default: false });
+        //   if (answers.config) {
+        //     await rimraf(`${user.homedir}/.npm/vcc/data/vcc.db`);
+        //     await mv(`${__dirname}/../../../data/vcc.db`, `${user.homedir}/.npm/vcc/data/vcc.db`, { mkdirp: true });
+        //     fs.symlinkSync(`${user.homedir}/.npm/vcc/data/vcc.db`, `${__dirname}/../../../data/vcc.db`);
+        //   } else {
+        //     await rimraf(`${__dirname}/../../../data/vcc.db`);
+        //     fs.symlinkSync(`${user.homedir}/.npm/vcc/data/vcc.db`, `${__dirname}/../../../data/vcc.db`);
+        //   }
+        // }
       }
-
-      // if (!fs.existsSync(`${user.homedir}/.npm/vcc/config.json`)) {
-      //   await mv(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`, { mkdirp: true });
-      //   fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
-      // } else {
-      //   const answers = await inquirer.prompt({ type: 'confirm', name: 'config', message: 'Config exitis - you overwrite ?', default: false });
-      //   if (answers.config) {
-      //     await rimraf(`${user.homedir}/.npm/vcc/config.json`);
-      //     await mv(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`, { mkdirp: true });
-      //     fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
-      //   } else {
-      //     await rimraf(`${__dirname}/../../config/config.json`);
-      //     fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
-      //   }
-      // }
-
-      // if (!fs.existsSync(`${user.homedir}/.npm/vcc/data/vcc.db`)) {
-      //   await mv(`${__dirname}/../../../data/vcc.db`, `${user.homedir}/.npm/vcc/data/vcc.db`, { mkdirp: true });
-      //   fs.symlinkSync(`${user.homedir}/.npm/vcc/data/vcc.db`, `${__dirname}/../../../data/vcc.db`);
-      // } else {
-      //   const answers = await inquirer.prompt({ type: 'confirm', name: 'config', message: 'Config exitis - you overwrite ?', default: false });
-      //   if (answers.config) {
-      //     await rimraf(`${user.homedir}/.npm/vcc/data/vcc.db`);
-      //     await mv(`${__dirname}/../../../data/vcc.db`, `${user.homedir}/.npm/vcc/data/vcc.db`, { mkdirp: true });
-      //     fs.symlinkSync(`${user.homedir}/.npm/vcc/data/vcc.db`, `${__dirname}/../../../data/vcc.db`);
-      //   } else {
-      //     await rimraf(`${__dirname}/../../../data/vcc.db`);
-      //     fs.symlinkSync(`${user.homedir}/.npm/vcc/data/vcc.db`, `${__dirname}/../../../data/vcc.db`);
-      //   }
-      // }
-    }
-    if (os === 'linux') {
-      const user = new Linux().userInfo();
-      if ((await lstat(`${__dirname}/../../config/config.json`)).isSymbolicLink()) {
-        throw new Exception('vcc exitis init', 1);
-      }
-
-      if ((await lstat(`${__dirname}/../../../data/vcc.db`)).isSymbolicLink()) {
-        throw new Exception('vcc exitis init', 1);
-      }
-
-      // if (!fs.existsSync(`${user.homedir}/.npm/vcc/config.json`)) {
-      //   await mv(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`, { mkdirp: true });
-      //   fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
-      // } else {
-      //   const answers = await inquirer.prompt({ type: 'confirm', name: 'config', message: 'Config exitis - you overwrite ?', default: false });
-      //   if (answers.config) {
-      //     await rimraf(`${user.homedir}/.npm/vcc/config.json`);
-      //     await mv(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`, { mkdirp: true });
-      //     fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
-      //   } else {
-      //     await rimraf(`${__dirname}/../../config/config.json`);
-      //     fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
-      //   }
-      // }
-
-      // if (!fs.existsSync(`${user.homedir}/.npm/vcc/data/vcc.db`)) {
-      //   await mv(`${__dirname}/../../../data/vcc.db`, `${user.homedir}/.npm/vcc/data/vcc.db`, { mkdirp: true });
-      //   fs.symlinkSync(`${user.homedir}/.npm/vcc/data/vcc.db`, `${__dirname}/../../../data/vcc.db`);
-      // } else {
-      //   const answers = await inquirer.prompt({ type: 'confirm', name: 'config', message: 'Config exitis - you overwrite ?', default: false });
-      //   if (answers.config) {
-      //     await rimraf(`${user.homedir}/.npm/vcc/data/vcc.db`);
-      //     await mv(`${__dirname}/../../../data/vcc.db`, `${user.homedir}/.npm/vcc/data/vcc.db`, { mkdirp: true });
-      //     fs.symlinkSync(`${user.homedir}/.npm/vcc/data/vcc.db`, `${__dirname}/../../../data/vcc.db`);
-      //   } else {
-      //     await rimraf(`${__dirname}/../../../data/vcc.db`);
-      //     fs.symlinkSync(`${user.homedir}/.npm/vcc/data/vcc.db`, `${__dirname}/../../../data/vcc.db`);
-      //   }
-      // }
+    } catch (e) {
+      throw new Exception(e.message, 1);
     }
   }
 }
