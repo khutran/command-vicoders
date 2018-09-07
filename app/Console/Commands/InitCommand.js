@@ -73,6 +73,14 @@ export default class InitCommand extends Command {
     }
     if (os === 'linux') {
       const user = new Linux().userInfo();
+      if (fs.stats.isSymbolicLink(`${__dirname}/../../config/config.json`)) {
+        throw new Exception('vcc exitis init', 1);
+      }
+
+      if (fs.stats.isSymbolicLink(`${__dirname}/../../../data/vcc.db`)) {
+        throw new Exception('vcc exitis init', 1);
+      }
+
       if (!fs.existsSync(`${user.homedir}/.npm/vcc/config.json`)) {
         await mv(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`, { mkdirp: true });
         fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
