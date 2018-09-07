@@ -5,9 +5,10 @@ import CreateProjectCommand from './Commands/CreateProjectCommand';
 import InstallServiceCommand from './Commands/InstallServiceCommand';
 import CreateConfigCommand from './Commands/CreateConfigCommand';
 import ConfigCommand from './Commands/ConfigCommand';
+import InitCommand from './Commands/InitCommand';
 
 export class Kernel {
   commands() {
-    return [MakeCommandCommand, InstallServiceCommand, ProjectCommand, OpenCommand, CreateProjectCommand, CreateConfigCommand, ConfigCommand];
+    return [MakeCommandCommand, InstallServiceCommand, ProjectCommand, OpenCommand, CreateProjectCommand, CreateConfigCommand, ConfigCommand, InitCommand];
   }
 }
