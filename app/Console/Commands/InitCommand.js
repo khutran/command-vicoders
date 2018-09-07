@@ -3,11 +3,10 @@ import Os from '../../Utils/Os/Os';
 import Linux from '../../Utils/Os/Linux';
 import Darwin from '../../Utils/Os/Darwin';
 import fs from 'fs';
-import mv from 'mv';
 import inquirer from 'inquirer';
 const util = require('util');
-const exec = util.promisify(require('child_process').exec);
 const rimraf = util.promisify(require('rimraf'));
+const mv = util.promisify(require('mv'));
 
 export default class InitCommand extends Command {
   signature() {
@@ -66,16 +65,14 @@ export default class InitCommand extends Command {
     if (os === 'linux') {
       const user = new Linux().userInfo();
       if (!fs.existsSync(`${user.homedir}/.npm/vcc/config.json`)) {
-        mv(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`, { mkdirp: true }).then(() => {
-          fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
-        });
+        await mv(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`, { mkdirp: true });
+        fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
       } else {
         const answers = await inquirer.prompt({ type: 'confirm', name: 'config', message: 'Config exitis - you overwrite ?', default: false });
         if (answers.config) {
           await rimraf(`${user.homedir}/.npm/vcc/config.json`);
-          mv(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`, { mkdirp: true }).then(() => {
-            fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
-          });
+          await mv(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`, { mkdirp: true });
+          fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
         } else {
           await rimraf(`${__dirname}/../../config/config.json`);
           fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
