@@ -29,12 +29,13 @@ export default class installPhp extends Install {
           await spawn('add-apt-repository', ['ppa:ondrej/php'], {
             capture: ['stdout']
           }).progress(childProcess => {
+            childProcess.stdin.on('data', key => {
+              console.log(key);
+            });
             // childProcess.stdin.write('\n');
             // childProcess.stdin.end();
           });
-          process.stdin.on('data', key => {
-            console.log(key);
-          });
+
           // console.log('update .... !');
           // await exec('apt -y update');
           // console.log(`Install php ${version}`);
