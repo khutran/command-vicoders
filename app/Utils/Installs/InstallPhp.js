@@ -28,14 +28,12 @@ export default class installPhp extends Install {
           await exec('apt-get install -y software-properties-common');
           let app = spawn('add-apt-repository', ['ppa:ondrej/php']);
           app.stdin.write('3');
-          app.on('close', async code => {
-            console.log('update .... !');
-            await exec('apt -y update');
-            console.log(`Install php ${version}`);
-            await exec(
-              `apt-get install -y php${version} php${version}-cli php${version}-common php${version}-json php${version}-opcache php${version}-mysql php${version}-mbstring php${version}-mcrypt php${version}-zip php${version}-fpm`
-            );
-          });
+          console.log('update .... !');
+          await exec('apt -y update');
+          console.log(`Install php ${version}`);
+          await exec(
+            `apt-get install -y php${version} php${version}-cli php${version}-common php${version}-json php${version}-opcache php${version}-mysql php${version}-mbstring php${version}-mcrypt php${version}-zip php${version}-fpm`
+          );
         } catch (e) {
           throw new Exception(e.message, 1);
         }
