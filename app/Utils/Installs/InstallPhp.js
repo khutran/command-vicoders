@@ -33,7 +33,7 @@ export default class installPhp extends Install {
             childProcess.stdin.end();
           });
           console.log('update .... !');
-          await exec('apt -y update');
+          // await exec('apt -y update');
           console.log(add.stdout);
           // console.log(`Install php ${version}`);
           // await exec(
