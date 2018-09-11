@@ -26,11 +26,13 @@ export default class installPhp extends Install {
         try {
           console.log('Enable PPA');
           await exec('apt-get install -y software-properties-common');
+
           const app = spawn('add-apt-repository', ['ppa:ondrej/php']);
           app.stdin.write('3');
+          app.stdin.end();
           app.on('close', async code => {
             console.log(code);
-            console.log('update .... !');
+            // console.log('update .... !');
             // await exec('apt -y update');
             // console.log(`Install php ${version}`);
             // await exec(
