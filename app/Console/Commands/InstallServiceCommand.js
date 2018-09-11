@@ -5,7 +5,8 @@ import InstallVscode from '../../Utils/Installs/InstallVscode';
 import InstallSubl from '../../Utils/Installs/installSubl';
 import installNginx from '../../Utils/Installs/installNginx';
 import installAPache from '../../Utils/Installs/installApache';
-import config from '../../config/config.json';
+import installPhp from '../../Utils/Installs/InstallPhp';
+
 export default class VscodeCommand extends Command {
   signature() {
     return 'install <service>';
@@ -74,6 +75,19 @@ export default class VscodeCommand extends Command {
             version = data.version;
           }
           const install = new installAPache();
+          await install.service(version);
+          console.log(colors.green('success .. !'));
+        } catch (e) {
+          console.log(colors.red(e.message));
+        }
+        break;
+      case 'php':
+        try {
+          let version = '7.1';
+          if (!_.isUndefined(data.version)) {
+            version = data.version;
+          }
+          const install = new installPhp();
           await install.service(version);
           console.log(colors.green('success .. !'));
         } catch (e) {

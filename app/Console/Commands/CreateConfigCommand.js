@@ -40,19 +40,6 @@ export default class CreateProjectCommand extends Command {
 
       const os = new Os().platform();
       if (os === 'darwin') {
-        if (item.framework !== 'nodejs') {
-          const config_apache = await exec(`curl https://raw.githubusercontent.com/khutran/config_web/master/default-${item.framework}-apache.conf`);
-          config_apache.stdout = _.replace(config_apache.stdout, new RegExp('xxx.com', 'g'), item.name);
-          config_apache.stdout = _.replace(config_apache.stdout, new RegExp('/path', 'g'), item.dir_home);
-
-          fs.writeFile(`${config.apache.dir_home}/conf.d/apache-${item.name}.conf`, config_apache.stdout, err => {
-            if (err) {
-              throw new Exception(err.message);
-            }
-            console.log(colors.green(`${config.apache.dir_home}/conf.d/apache-${item.name}.conf`));
-          });
-        }
-
         const config_nginx = await exec(`curl https://raw.githubusercontent.com/khutran/config_web/master/default-${item.framework}-nginx.conf`);
         config_nginx.stdout = _.replace(config_nginx.stdout, new RegExp('xxx.com', 'g'), item.name);
         config_nginx.stdout = _.replace(config_nginx.stdout, new RegExp('/path', 'g'), item.dir_home);
@@ -69,19 +56,6 @@ export default class CreateProjectCommand extends Command {
         });
       }
       if (os === 'linux') {
-        if (item.framework !== 'nodejs') {
-          const config_apache = await exec(`curl https://raw.githubusercontent.com/khutran/config_web/master/default-${item.framework}-apache.conf`);
-          config_apache.stdout = _.replace(config_apache.stdout, new RegExp('xxx.com', 'g'), item.name);
-          config_apache.stdout = _.replace(config_apache.stdout, new RegExp('/path', 'g'), item.dir_home);
-
-          fs.writeFile(`${config.apache.dir_etc}/conf/extra/web/apache-${item.name}.conf`, config_apache.stdout, err => {
-            if (err) {
-              throw new Exception(err.message);
-            }
-            console.log(colors.green(`${config.apache.dir_etc}/conf/extra/web/apache-${item.name}.conf`));
-          });
-        }
-
         const config_nginx = await exec(`curl https://raw.githubusercontent.com/khutran/config_web/master/default-${item.framework}-nginx.conf`);
         config_nginx.stdout = _.replace(config_nginx.stdout, new RegExp('xxx.com', 'g'), item.name);
         config_nginx.stdout = _.replace(config_nginx.stdout, new RegExp('/path', 'g'), item.dir_home);
