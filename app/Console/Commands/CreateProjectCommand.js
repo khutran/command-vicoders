@@ -42,6 +42,9 @@ export default class CreateProjectCommand extends Command {
       case 'kit-html-css':
         await createFromUrl('https://bitbucket.org/vicoderscom/vc_kit_html_css_javascript/get/master.zip', 'kit-html-css');
         break;
+      case 'kit-javascript':
+        await createFromUrl('https://bitbucket.org/hieu_pv/vc_kit_javascript_module/get/master.zip', 'kit-javascript');
+        break;
       default:
         break;
     }
