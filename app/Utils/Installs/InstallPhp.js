@@ -22,6 +22,9 @@ export default class installPhp extends Install {
       const linux = new Linux();
       const osName = linux.osName();
       if (osName === 'debian') {
+        console.log('Enable PPA');
+        await exec('apt-get install -y software-properties-common');
+        await exec('add-apt-repository ppa:ondrej/php');
         console.log('update .... !');
         await exec('apt -y update');
         console.log(`Install php ${version}`);

@@ -83,7 +83,6 @@ export default class VscodeCommand extends Command {
         break;
       case 'php':
         try {
-          console.log('test');
           let version = '7.1';
           if (!_.isUndefined(data.version)) {
             version = data.version;
