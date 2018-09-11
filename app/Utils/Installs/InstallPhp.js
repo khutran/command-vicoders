@@ -8,7 +8,7 @@ import { App } from '@nsilly/container';
 import { Downloader } from '../Downloader';
 import config from '../../config/config.json';
 import _ from 'lodash';
-import { spawn } from 'child_process';
+import { spawn } from 'child-process-promise';
 const util = require('util');
 const rimraf = util.promisify(require('rimraf'));
 const exec = util.promisify(require('child_process').exec);
@@ -27,18 +27,18 @@ export default class installPhp extends Install {
           console.log('Enable PPA');
           await exec('apt-get install -y software-properties-common');
 
-          const app = spawn('add-apt-repository', ['ppa:ondrej/php']);
-          app.stdin.write('3');
-          app.stdin.end();
-          app.on('close', async code => {
-            console.log(code);
-            // console.log('update .... !');
-            // await exec('apt -y update');
-            // console.log(`Install php ${version}`);
-            // await exec(
-            //   `apt-get install -y php${version} php${version}-cli php${version}-common php${version}-json php${version}-opcache php${version}-mysql php${version}-mbstring php${version}-mcrypt php${version}-zip php${version}-fpm`
-            // );
+          await spawn('add-apt-repository', ['ppa:ondrej/php'], {
+            capture: ['stdout', 'stderr']
+          }).progress(childProcess => {
+            childProcess.stdin.write(3);
+            childProcess.stdin.end();
           });
+          console.log('update .... !');
+          await exec('apt -y update');
+          // console.log(`Install php ${version}`);
+          // await exec(
+          //   `apt-get install -y php${version} php${version}-cli php${version}-common php${version}-json php${version}-opcache php${version}-mysql php${version}-mbstring php${version}-mcrypt php${version}-zip php${version}-fpm`
+          // );
         } catch (e) {
           throw new Exception(e.message, 1);
         }
