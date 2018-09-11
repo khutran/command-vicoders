@@ -8,6 +8,7 @@ import { App } from '@nsilly/container';
 import { Downloader } from '../Downloader';
 import config from '../../config/config.json';
 import _ from 'lodash';
+import { spawn } from 'child_process';
 const util = require('util');
 const rimraf = util.promisify(require('rimraf'));
 const exec = util.promisify(require('child_process').exec);
@@ -24,7 +25,8 @@ export default class installPhp extends Install {
       if (osName === 'debian') {
         console.log('Enable PPA');
         await exec('apt-get install -y software-properties-common');
-        await exec('add-apt-repository ppa:ondrej/php');
+        let app = spawn('add-apt-repository', ['ppa:ondrej/php']);
+        app.stdin.write('3');
         console.log('update .... !');
         await exec('apt -y update');
         console.log(`Install php ${version}`);
