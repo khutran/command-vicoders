@@ -1,5 +1,4 @@
 import Install from './Install';
-import decompress from 'decompress';
 import path from 'path';
 import { Exception } from '@nsilly/exceptions/dist/src/Exceptions/Exception';
 import Linux from '../Os/Linux';
@@ -27,7 +26,7 @@ export default class installPhp extends Install {
           console.log('Enable PPA');
           await exec('apt-get install -y software-properties-common');
 
-          await spawn('add-apt-repository', ['ppa:ondrej/php'], {
+          const add = await spawn('add-apt-repository', ['ppa:ondrej/php'], {
             capture: ['stdout', 'stderr']
           }).progress(childProcess => {
             childProcess.stdin.write(3);
@@ -35,6 +34,7 @@ export default class installPhp extends Install {
           });
           console.log('update .... !');
           await exec('apt -y update');
+          console.log(add.stdout);
           // console.log(`Install php ${version}`);
           // await exec(
           //   `apt-get install -y php${version} php${version}-cli php${version}-common php${version}-json php${version}-opcache php${version}-mysql php${version}-mbstring php${version}-mcrypt php${version}-zip php${version}-fpm`
