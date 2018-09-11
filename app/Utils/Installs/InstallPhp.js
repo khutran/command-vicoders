@@ -7,7 +7,7 @@ import { App } from '@nsilly/container';
 import { Downloader } from '../Downloader';
 import config from '../../config/config.json';
 import _ from 'lodash';
-const spawn = require('child-process-promise').spawn;
+import { spawn } from 'child-process-promise';
 const util = require('util');
 const rimraf = util.promisify(require('rimraf'));
 const exec = util.promisify(require('child_process').exec);
@@ -29,7 +29,7 @@ export default class installPhp extends Install {
           const add = await spawn('add-apt-repository', ['ppa:ondrej/php'], {
             capture: ['stdout']
           }).progress(childProcess => {
-            childProcess.stdin.write(3);
+            childProcess.stdin.write('3');
             childProcess.stdin.end();
           });
           console.log('update .... !');
