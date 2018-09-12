@@ -89,7 +89,6 @@ export default class VscodeCommand extends Command {
           }
           const install = new installPhp();
           await install.service(version);
-
           console.log(colors.green('success .. !'));
         } catch (e) {
           console.log(colors.red(e.message));
