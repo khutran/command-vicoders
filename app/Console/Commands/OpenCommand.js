@@ -6,8 +6,7 @@ import Os from '../../Utils/Os/Os';
 import Darwin from '../../Utils/Os/Darwin';
 import Linux from '../../Utils/Os/Linux';
 import { Exception } from '@nsilly/exceptions';
-const util = require('util');
-const exec = util.promisify(require('child_process').exec);
+import { exec } from 'child-process-promise';
 
 export default class OpenCommand extends Command {
   signature() {

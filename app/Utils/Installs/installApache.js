@@ -8,11 +8,10 @@ import { App } from '@nsilly/container';
 import { Downloader } from '../Downloader';
 import config from '../../config/config.json';
 import _ from 'lodash';
+import { exec } from 'child-process-promise';
 const util = require('util');
 const rimraf = util.promisify(require('rimraf'));
-const exec = util.promisify(require('child_process').exec);
 const mv = util.promisify(require('mv'));
-// import Darwin from '../Os/Darwin';
 
 export default class installAPache extends Install {
   async service(version) {
@@ -35,7 +34,7 @@ export default class installAPache extends Install {
 
       if (osName === 'debian') {
         try {
-          console.log('Install lib... !');
+          console.log('Install module ... !');
           await exec(
             'apt install -y gcc libapr1 libapr1-dev libaprutil1-dev libpcre3-dev zlib1g-dev libssl-dev libxml2-dev libxslt1-dev  libgd-dev google-perftools libgoogle-perftools-dev libperl-dev libgeoip-dev libatomic-ops-dev'
           );

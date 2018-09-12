@@ -1,13 +1,8 @@
 import Install from './Install';
 import { Exception } from '@nsilly/exceptions/dist/src/Exceptions/Exception';
 import Linux from '../Os/Linux';
-import fs from 'fs';
-import _ from 'lodash';
 import of from 'await-of';
-import { spawn } from 'child-process-promise';
-const util = require('util');
-const exec = util.promisify(require('child_process').exec);
-const { dd } = require('dumper.js');
+import { exec } from 'child-process-promise';
 
 export default class installPhp extends Install {
   async service(version) {

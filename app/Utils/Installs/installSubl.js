@@ -1,15 +1,10 @@
 import Install from './Install';
 import fs from 'fs';
-import { Exception } from '@nsilly/exceptions';
 import inquirer from 'inquirer';
 import colors from 'colors';
 import Darwin from '../Os/Darwin';
 import Linux from '../Os/Linux';
-// import * as _ from 'lodash';
-const { spawn } = require('child_process');
-const util = require('util');
-const exec = util.promisify(require('child_process').exec);
-// const rimraf = util.promisify(require('rimraf'));
+import { spawn, exec } from 'child-process-promise';
 
 export default class InstallSubl extends Install {
   async service() {
@@ -21,31 +16,15 @@ export default class InstallSubl extends Install {
             const answers = await inquirer.prompt({ type: 'confirm', name: 'brew', message: 'Brew not install  - Do you want insatll brew?', default: true });
             if (answers.brew) {
               const curl = await exec('curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install');
-              const brew = spawn('ruby', ['-e', curl.stdout]);
-              brew.stdout.on('data', data => {
-                console.log(data.toString());
-              });
-              brew.on('close', async code => {
-                if (code === 0) {
-                  console.log(colors.green('insatll brew success !'));
-                }
-              });
+              await spawn('ruby', ['-e', curl.stdout]);
+              console.log(colors.green('Install brew success ... !'));
             }
           }
           if (darwin.CheckExists('subl')) {
             resolve({ message: 'subl exitis install !', code: 1 });
           } else {
-            const subl = spawn('brew', ['cask', 'install', 'sublime-text']);
-            subl.stdout.on('data', data => {
-              console.log(data.toString());
-            });
-            subl.on('close', code => {
-              if (code !== 0) {
-                reject(code);
-              } else {
-                resolve({ message: 'install success !', code: code });
-              }
-            });
+            await spawn('brew', ['cask', 'install', 'sublime-text']);
+            resolve({ message: 'install success !', code: 0 });
           }
         } catch (e) {
           reject(e);
@@ -65,37 +44,17 @@ export default class InstallSubl extends Install {
               resolve({ message: 'subl exitis install !', code: 1 });
             } else {
               const data = 'deb https://download.sublimetext.com/ apt/stable/';
-              const sublimehq = spawn('wget', ['-qO', '-', 'https://download.sublimetext.com/sublimehq-pub.gpg']);
-              const apt = spawn('apt-key', ['add', '-']);
-              sublimehq.stdout.on('data', data => {
-                apt.stdin.write(data);
-              });
-              sublimehq.on('close', code => {
-                if (code === 0) {
-                  apt.stdin.end();
-                }
+              const sublimehq = await spawn('wget', ['-qO', '-', 'https://download.sublimetext.com/sublimehq-pub.gpg'], { capture: ['stdout'] });
+              await spawn('apt-key', ['add', '-'], { capture: ['stdout', 'stderr'] }).progress(childProcess => {
+                childProcess.stdin.write(sublimehq.stdout);
+                childProcess.stdin.end();
               });
 
-              apt.on('close', async code => {
-                if (code === 0) {
-                  console.log(colors.green('down sublime-text success ... done !'));
-                  fs.writeFile('/etc/apt/sources.list.d/sublime-text.list', data, err => {
-                    if (err) {
-                      throw new Exception('create file repo errro');
-                    }
-                  });
-                  await exec('apt -y update');
-                  const sub = spawn('apt-get', ['-y', 'install', 'sublime-text']);
-
-                  sub.on('close', code => {
-                    if (code !== 0) {
-                      reject(code);
-                    } else {
-                      resolve({ message: 'install success !', code: code });
-                    }
-                  });
-                }
-              });
+              console.log(colors.green('down sublime-text success ... done !'));
+              fs.writeFileSync('/etc/apt/sources.list.d/sublime-text.list', data);
+              await exec('apt -y update');
+              await spawn('apt-get', ['-y', 'install', 'sublime-text']);
+              resolve({ message: 'install success !', code: 0 });
             }
           } catch (e) {
             reject(e);
@@ -111,28 +70,13 @@ export default class InstallSubl extends Install {
               await exec('rpm -v --import https://download.sublimetext.com/sublimehq-rpm-pub.gpg');
               const data =
                 '[sublime-text]\nname=Sublime Text - x86_64 - Stable\nbaseurl=https://download.sublimetext.com/rpm/stable/x86_64\nenabled=1\ngpgcheck=1\ngpgkey=https://download.sublimetext.com/sublimehq-rpm-pub.gpg';
-              fs.writeFile('/etc/yum.repos.d/sublime-text.repo', data, err => {
-                if (err) {
-                  throw new Exception(colors.red('create file repo error'), 1);
-                }
-                console.log(colors.green('create file repo ... success !'));
-              });
+
+              fs.writeFileSync('/etc/yum.repos.d/sublime-text.repo', data);
+
               await exec('yum -y update');
 
-              const sub = spawn('yum', ['-y', 'install', 'sublime-text']);
-              sub.stdout.on('data', data => {
-                console.log(data.toString());
-              });
-              sub.stderr.on('data', data => {
-                console.log(data.toString());
-              });
-              sub.on('close', code => {
-                if (code !== 0) {
-                  reject(code);
-                } else {
-                  resolve({ message: 'install success !', code: code });
-                }
-              });
+              spawn('yum', ['-y', 'install', 'sublime-text'], { capture: ['stdout', 'stderr'] });
+              resolve({ message: 'install success !', code: 0 });
             }
           } catch (e) {
             reject(e);

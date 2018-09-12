@@ -5,9 +5,8 @@ import ProjectRepository from '../../Repositories/ProjectRepository';
 import ProjectTransformer from '../../Transformers/ProjectTranformer';
 import ApiResponse from '../../Responses/ApiResponse';
 import ManagerProjects from '../../Utils/ManagerProjects';
+import { exec } from 'child-process-promise';
 const path = require('path');
-const util = require('util');
-const exec = util.promisify(require('child_process').exec);
 
 export default class ProjectCommand extends Command {
   signature() {
