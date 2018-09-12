@@ -23,7 +23,7 @@ export default class installPhp extends Install {
           console.log(err);
         }
 
-        const [, err2] = await of(spawn('add-apt-repository', ['ppa:ondrej/php'], { capture: ['stdout'] }));
+        const [, err2] = await of(exec('add-apt-repository ppa:ondrej/php'));
         if (err2) {
           console.log(err2);
         }
