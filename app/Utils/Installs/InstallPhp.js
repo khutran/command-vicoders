@@ -25,14 +25,14 @@ export default class installPhp extends Install {
         }
 
         await of(exec('add-apt-repository -y ppa:ondrej/php'));
-        await exec('apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4F4EA0AAE5267A6C');
-        await of(exec('apt-get -y update'));
-        await exec('apt list --upgradable');
         console.log('update .... !');
+        await exec('apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4F4EA0AAE5267A6C');
+        await of(exec('apt -y update'));
+        await exec('apt list --upgradable');
 
         console.log(`Install php ${version}`);
         await exec(
-          `apt-get install -y --allow-unauthenticated php${version} php${version}-cli php${version}-common php${version}-json  php${version}-mysql php${version}-mbstring php${version}-mcrypt php${version}-zip php${version}-fpm`
+          `apt install -y php${version} php${version}-cli php${version}-common php${version}-json  php${version}-mysql php${version}-mbstring php${version}-mcrypt php${version}-zip php${version}-fpm`
         );
       }
       if (osName === 'redhat') {
