@@ -54,7 +54,7 @@ export default class InstallVscode extends Install {
                 await exec('apt install -y curl');
               }
               const data = 'deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main';
-              const microsoft = spawn('curl', ['https://packages.microsoft.com/keys/microsoft.asc'], { capture: ['stdout', 'stderr'] });
+              const microsoft = await spawn('curl', ['https://packages.microsoft.com/keys/microsoft.asc'], { capture: ['stdout', 'stderr'] });
               await spawn('gpg', ['--dearmor', '--output', '/etc/apt/trusted.gpg.d/microsoft.gpg']).progress(childProcess => {
                 childProcess.stdin.write(microsoft.stdout);
                 childProcess.stdin.end();

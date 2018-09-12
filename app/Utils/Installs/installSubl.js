@@ -12,7 +12,7 @@ export default class InstallSubl extends Install {
       return new Promise(async (resolve, reject) => {
         try {
           const darwin = new Darwin();
-          if (!darwin.CheckExists('brew')) {
+          if (!(await darwin.CheckExists('brew'))) {
             const answers = await inquirer.prompt({ type: 'confirm', name: 'brew', message: 'Brew not install  - Do you want insatll brew?', default: true });
             if (answers.brew) {
               const curl = await exec('curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install');
@@ -20,7 +20,7 @@ export default class InstallSubl extends Install {
               console.log(colors.green('Install brew success ... !'));
             }
           }
-          if (darwin.CheckExists('subl')) {
+          if (await darwin.CheckExists('subl')) {
             resolve({ message: 'subl exitis install !', code: 1 });
           } else {
             await spawn('brew', ['cask', 'install', 'sublime-text']);
@@ -38,15 +38,16 @@ export default class InstallSubl extends Install {
         return new Promise(async (resolve, reject) => {
           try {
             if (!fs.existsSync('/usr/bin/wget')) {
+              console.log('install wget ... !');
               await exec('apt install -y wget');
             }
             if (await linux.CheckExists('subl')) {
               resolve({ message: 'subl exitis install !', code: 1 });
             } else {
               const data = 'deb https://download.sublimetext.com/ apt/stable/';
-              const sublimehq = await spawn('wget', ['-qO', '-', 'https://download.sublimetext.com/sublimehq-pub.gpg'], { capture: ['stdout'] });
+              const sublime = await spawn('wget', ['-qO', '-', 'https://download.sublimetext.com/sublimehq-pub.gpg'], { capture: ['stdout'] });
               await spawn('apt-key', ['add', '-'], { capture: ['stdout', 'stderr'] }).progress(childProcess => {
-                childProcess.stdin.write(sublimehq.stdout);
+                childProcess.stdin.write(sublime.stdout);
                 childProcess.stdin.end();
               });
 
@@ -64,7 +65,7 @@ export default class InstallSubl extends Install {
       if (osName === 'redhat') {
         return new Promise(async (resolve, reject) => {
           try {
-            if (linux.CheckExists('subl')) {
+            if (await linux.CheckExists('subl')) {
               resolve({ message: 'subl exitis install !', code: 1 });
             } else {
               await exec('rpm -v --import https://download.sublimetext.com/sublimehq-rpm-pub.gpg');
