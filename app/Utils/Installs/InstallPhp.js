@@ -3,6 +3,8 @@ import Linux from '../Os/Linux';
 import of from 'await-of';
 import { exec } from 'child-process-promise';
 import { dd } from 'dumper.js';
+import _ from 'lodash';
+
 export default class installPhp extends Install {
   async service(version) {
     if (this.os === 'darwin') {
@@ -33,6 +35,7 @@ export default class installPhp extends Install {
       }
       if (osName === 'redhat') {
         try {
+          version = _.replace(version, '.', '');
           await exec('yum install -y epel-release');
           await exec('rpm -Uvh https://mirror.webtatic.com/yum/el7/webtatic-release.rpm');
           await exec(
