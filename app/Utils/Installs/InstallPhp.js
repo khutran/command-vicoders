@@ -27,12 +27,9 @@ export default class installPhp extends Install {
         if (err2) {
           console.log(err2);
         }
-        process.stdin.on('data', key => {
-          console.log(key);
-        });
 
         console.log('update .... !');
-        await exec('apt -y update');
+        await of(exec('apt -y update'));
         // console.log(`Install php ${version}`);
         // await exec(
         //   `apt-get install -y php${version} php${version}-cli php${version}-common php${version}-json php${version}-opcache php${version}-mysql php${version}-mbstring php${version}-mcrypt php${version}-zip php${version}-fpm`
