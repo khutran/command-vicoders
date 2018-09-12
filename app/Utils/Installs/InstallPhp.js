@@ -3,6 +3,7 @@ import { Exception } from '@nsilly/exceptions/dist/src/Exceptions/Exception';
 import Linux from '../Os/Linux';
 import fs from 'fs';
 import _ from 'lodash';
+import of from 'await-of';
 import { spawn } from 'child-process-promise';
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
@@ -19,7 +20,7 @@ export default class installPhp extends Install {
         console.log('Enable PPA');
         await exec('apt-get install -y software-properties-common');
 
-        await exec('add-apt-repository -y ppa:ondrej/php');
+        await of(exec('add-apt-repository -y ppa:ondrej/php'));
         console.log('update .... !');
         await exec('apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4F4EA0AAE5267A6C');
         await exec('apt -y update');
