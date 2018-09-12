@@ -37,7 +37,7 @@ export default class installPhp extends Install {
         try {
           version = _.replace(version, '.', '');
           await exec('yum install -y epel-release');
-          await exec('rpm -Uvh https://mirror.webtatic.com/yum/el7/webtatic-release.rpm');
+          await of(exec('rpm -Uvh https://mirror.webtatic.com/yum/el7/webtatic-release.rpm'));
           await exec(
             `yum install -y php${version}w-curl php${version}w-devel php${version}w-mysql php${version}w-json php${version}w-mbstring php${version}w-gd php${version}w-intl php${version}w-xml php${version}w-pecl-imagick php${version}w-redis php${version}w-zip`
           );
