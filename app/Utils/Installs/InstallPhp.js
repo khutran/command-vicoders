@@ -7,7 +7,7 @@ import of from 'await-of';
 import { spawn } from 'child-process-promise';
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
-const { dd } = require('dumper.js');
+const { dd } = require('dumper');
 
 export default class installPhp extends Install {
   async service(version) {
