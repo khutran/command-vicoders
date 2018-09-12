@@ -25,17 +25,19 @@ export default class installPhp extends Install {
         }
 
         await of(exec('add-apt-repository -y ppa:ondrej/php'));
-        // if (err2) {
-        //   dd(err2);
-        // }
 
         console.log('update .... !');
         await of(exec('apt -y update'));
 
         console.log(`Install php ${version}`);
-        await exec(
-          `apt-get install -y php${version} php${version}-cli php${version}-common php${version}-json  php${version}-mysql php${version}-mbstring php${version}-mcrypt php${version}-zip php${version}-fpm`
+        const [data, err3] = await of(
+          exec(
+            `apt-get install -y php${version} php${version}-cli php${version}-common php${version}-json  php${version}-mysql php${version}-mbstring php${version}-mcrypt php${version}-zip php${version}-fpm`
+          )
         );
+        if (err3) {
+          dd(err);
+        }
       }
       if (osName === 'redhat') {
         try {
