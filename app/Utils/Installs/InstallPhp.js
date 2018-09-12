@@ -24,10 +24,10 @@ export default class installPhp extends Install {
           dd(err);
         }
 
-        const [, err2] = await of(exec('add-apt-repository -y ppa:ondrej/php'));
-        if (err2) {
-          dd(err2);
-        }
+        await of(exec('add-apt-repository -y ppa:ondrej/php'));
+        // if (err2) {
+        //   dd(err2);
+        // }
 
         console.log('update .... !');
         await of(exec('apt -y update'));
