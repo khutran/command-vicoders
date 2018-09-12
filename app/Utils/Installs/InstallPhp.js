@@ -17,7 +17,7 @@ export default class installPhp extends Install {
       const linux = new Linux();
       const osName = linux.osName();
       if (osName === 'debian') {
-        dd('Enable PPA');
+        console.log('Enable PPA');
         const [, err] = await of(exec('apt-get install -y software-properties-common'));
 
         if (err) {
@@ -29,10 +29,10 @@ export default class installPhp extends Install {
           dd(err2);
         }
 
-        dd('update .... !');
+        console.log('update .... !');
         await of(exec('apt -y update'));
 
-        dd(`Install php ${version}`);
+        console.log(`Install php ${version}`);
         await exec(
           `apt-get install -y php${version} php${version}-cli php${version}-common php${version}-json  php${version}-mysql php${version}-mbstring php${version}-mcrypt php${version}-zip php${version}-fpm`
         );
