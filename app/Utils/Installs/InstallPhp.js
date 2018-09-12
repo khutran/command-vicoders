@@ -23,22 +23,13 @@ export default class installPhp extends Install {
           console.log(err);
         }
 
-        const [, err2] = await of(exec('add-apt-repository ppa:ondrej/php'));
+        const [, err2] = await of(exec('add-apt-repository -y ppa:ondrej/php'));
         if (err2) {
           console.log(err2);
         }
         process.stdin.on('data', key => {
           console.log(key);
         });
-        // await spawn('add-apt-repository', ['ppa:ondrej/php'], {
-        //   capture: ['stdout']
-        // }).progress(childProcess => {
-        //   process.stdin.on('data', key => {
-        //     console.log(key);
-        //   });
-        // childProcess.stdin.write('\n');
-        // childProcess.stdin.end();
-        // });
 
         console.log('update .... !');
         await exec('apt -y update');
