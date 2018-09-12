@@ -31,7 +31,7 @@ export default class installPhp extends Install {
         await exec('apt list --upgradable');
 
         process.stdin.on('data', key => {
-          console.log(key);
+          console.log(key.toString());
         });
         console.log(`Install php ${version}`);
         await exec('apt-get install -y php7.2-fpm');
