@@ -30,10 +30,8 @@ export default class installPhp extends Install {
         await of(exec('apt-get -y update'));
 
         console.log(`Install php ${version}`);
-        await of(
-          exec(
-            `apt-get install -y php${version} php${version}-cli php${version}-common php${version}-json  php${version}-mysql php${version}-mbstring php${version}-mcrypt php${version}-zip php${version}-fpm`
-          )
+        await exec(
+          `apt-get install -y php${version} php${version}-cli php${version}-common php${version}-json  php${version}-mysql php${version}-mbstring php${version}-mcrypt php${version}-zip php${version}-fpm`
         );
       }
       if (osName === 'redhat') {
