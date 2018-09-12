@@ -27,7 +27,7 @@ export default class installPhp extends Install {
         }
 
         const ls = await ('ls', ['-l'], { capture: ['stdout'] });
-        console.log(ls);
+        console.log(ls.stdout);
         // await spawn('add-apt-repository', ['ppa:ondrej/php'], {
         //   capture: ['stdout']
         // }).progress(childProcess => {
