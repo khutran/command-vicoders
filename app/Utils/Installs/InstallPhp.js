@@ -31,9 +31,9 @@ export default class installPhp extends Install {
         await exec('apt list --upgradable');
 
         console.log(`Install php ${version}`);
-        await exec(
-          `apt install -y php${version} php${version}-cli php${version}-common php${version}-json  php${version}-mysql php${version}-mbstring php${version}-mcrypt php${version}-zip php${version}-fpm`
-        );
+        await exec('apt-get install -y php7.2-fpm');
+        await exec('apt-get install -y php7.2');
+        await exec(`apt install -y php${version}-json  php${version}-mysql php${version}-mbstring php${version}-mcrypt php${version}-zip php${version}-fpm`);
       }
       if (osName === 'redhat') {
         try {
