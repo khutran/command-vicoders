@@ -1,15 +1,12 @@
 import Install from './Install';
-import path from 'path';
 import { Exception } from '@nsilly/exceptions/dist/src/Exceptions/Exception';
 import Linux from '../Os/Linux';
 import fs from 'fs';
-import { App } from '@nsilly/container';
 import _ from 'lodash';
 import of from 'await-of';
 import { spawn } from 'child-process-promise';
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
-const mv = util.promisify(require('mv'));
 
 export default class installPhp extends Install {
   async service(version) {
@@ -26,11 +23,13 @@ export default class installPhp extends Install {
           console.log(err);
         }
 
-        const [ls, err2] = await of(spawn('ls', ['-l'], { capture: ['stdout'] }));
+        const [, err2] = await of(spawn('add-apt-repository', ['ppa:ondrej/php'], { capture: ['stdout'] }));
         if (err2) {
           console.log(err2);
         }
-        console.log(ls.stdout);
+        process.stdin.on('data', key => {
+          console.log(key);
+        });
         // await spawn('add-apt-repository', ['ppa:ondrej/php'], {
         //   capture: ['stdout']
         // }).progress(childProcess => {
