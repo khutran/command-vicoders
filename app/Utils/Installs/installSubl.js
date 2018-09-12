@@ -40,7 +40,7 @@ export default class InstallSubl extends Install {
             if (!fs.existsSync('/usr/bin/wget')) {
               await exec('apt install -y wget');
             }
-            if (linux.CheckExists('subl')) {
+            if (await linux.CheckExists('subl')) {
               resolve({ message: 'subl exitis install !', code: 1 });
             } else {
               const data = 'deb https://download.sublimetext.com/ apt/stable/';
