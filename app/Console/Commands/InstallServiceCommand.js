@@ -6,7 +6,6 @@ import InstallSubl from '../../Utils/Installs/installSubl';
 import installNginx from '../../Utils/Installs/installNginx';
 import installAPache from '../../Utils/Installs/installApache';
 import installPhp from '../../Utils/Installs/InstallPhp';
-import of from 'await-of';
 
 export default class VscodeCommand extends Command {
   signature() {
@@ -83,16 +82,18 @@ export default class VscodeCommand extends Command {
         }
         break;
       case 'php':
-        let version = '7.2';
-        if (!_.isUndefined(data.version)) {
-          version = data.version;
+        try {
+          let version = '7.2';
+          if (!_.isUndefined(data.version)) {
+            version = data.version;
+          }
+          const install = new installPhp();
+          await install.service(version);
+
+          console.log(colors.green('success .. !'));
+        } catch (e) {
+          console.log(colors.red(e.message));
         }
-        const install = new installPhp();
-        const [result, err] = await of(install.service(version));
-        if (err) {
-          console.log(err);
-        }
-        console.log(colors.green('success .. !'));
         break;
       default:
         break;
