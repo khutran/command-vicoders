@@ -32,6 +32,10 @@ export default class installAPache extends Install {
         config.apache.dir_systemd = '/lib/systemd/system';
       }
 
+      if (_.isEmpty(config.apache.dir_etc) || !config.apache.dir_etc) {
+        config.apache.dir_systemd = '/usr/local/httpd';
+      }
+
       if (osName === 'debian') {
         try {
           console.log('Install module ... !');

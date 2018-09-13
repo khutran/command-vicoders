@@ -24,7 +24,7 @@ export default class CreateProjectCommand extends Command {
 
   async handle(project) {
     try {
-      if (_.isEmpty(config.nginx.dir_home) || _.isEmpty(config.apache.dir_home)) {
+      if (_.isEmpty(config.nginx.dir_etc) || _.isEmpty(config.apache.dir_home)) {
         dd('vcc config --dir_home_apache "/path" --dir_home_nginx "/paths"  || vcc init');
       }
       const repository = new ProjectRepository();
