@@ -89,7 +89,7 @@ export default class VscodeCommand extends Command {
       case 'apache':
         try {
           const install = new installApache();
-          await install.service();
+          await install.service('2.4.34');
           console.log(colors.green('success .. !'));
         } catch (e) {
           console.log(colors.red(e.message));
