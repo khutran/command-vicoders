@@ -120,7 +120,7 @@ export default class installNginx extends Install {
           const dest = path.dirname('/tmp/master.zip');
           const extral = await decompress('/tmp/master.zip', dest);
           await rimraf(`${config.nginx.dir_etc}/nginx.conf`);
-          await mv(`${dest}/${extral[0].path}nginx.conf`, `${config.nginx.dir_etc}/`);
+          await mv(`${dest}/${extral[0].path}nginx.conf`, `${config.nginx.dir_etc}/nginx.conf`);
           if (!fs.existsSync(`${config.nginx.dir_etc}/conf.d/ssl`)) {
             await mv(`${dest}/${extral[0].path}ssl`, `${config.nginx.dir_etc}/conf.d/`);
           }
