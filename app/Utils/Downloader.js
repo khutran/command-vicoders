@@ -21,15 +21,15 @@ export class Downloader {
     return new Promise((resolve, reject) => {
       const len = parseInt(response.data.headers['content-length'], 10);
       let cur = 0;
-      const total = len / 1048576;
+      // const total = len / 1048576;
       process.stdout.write('Downloading ...');
 
       response.data.on('data', function(chunk) {
         cur += chunk.length;
-        const percent = cur / len;
+        // const percent = cur / len;
         process.stdout.clearLine();
         process.stdout.cursorTo(0);
-        process.stdout.write(`Downloading ${percent}% of ${total}MB`);
+        process.stdout.write(`Downloading ${cur}% of ${len}MB`);
       });
 
       response.data.on('end', () => {
