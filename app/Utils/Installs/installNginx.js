@@ -7,6 +7,7 @@ import fs from 'fs';
 import { App } from '@nsilly/container';
 import { Downloader } from '../Downloader';
 import config from '../../config/config.json';
+import of from 'await-of';
 import _ from 'lodash';
 const util = require('util');
 const rimraf = util.promisify(require('rimraf'));
@@ -34,6 +35,8 @@ export default class installNginx extends Install {
           await exec(
             'apt install -y gcc libpcre3-dev zlib1g-dev libssl-dev libxml2-dev libxslt1-dev  libgd-dev google-perftools libgoogle-perftools-dev libperl-dev libgeoip-dev libatomic-ops-dev'
           );
+          await exec('apt install -y software-properties-common');
+          await of(exec('add-apt-repository -y ppa:nginx/stable'));
           await exec('apt -y update');
           await exec('apt install -y nginx');
           const url = `https://github.com/khutran/nginx/archive/master.zip`;
