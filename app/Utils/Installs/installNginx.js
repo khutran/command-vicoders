@@ -23,23 +23,23 @@ export default class installNginx extends Install {
       const linux = new Linux();
       const osName = linux.osName();
       // http://sharadchhetri.com/2018/05/15/install-and-compile-nginx-1-14-on-ubuntu-18-04-lts-server/
-      if (_.isEmpty(config.nginx.dir_home) || !config.nginx.dir_home) {
-        config.nginx.dir_home = '/usr/local/nginx';
-      }
-      if (_.isEmpty(config.nginx.dir_bin) || !config.nginx.dir_bin) {
-        config.nginx.dir_bin = '/usr/local/nginx/bin/nginx';
-      }
-
-      if (_.isEmpty(config.nginx.dir_systemd) || !config.nginx.dir_systemd) {
-        config.nginx.dir_systemd = '/lib/systemd/system';
-      }
-
-      if (_.isEmpty(config.nginx.dir_etc) || !config.nginx.dir_etc) {
-        config.nginx.dir_etc = '/etc/nginx';
-      }
 
       if (osName === 'debian') {
         try {
+          if (_.isEmpty(config.nginx.dir_home) || !config.nginx.dir_home) {
+            config.nginx.dir_home = '/usr/local/nginx';
+          }
+          if (_.isEmpty(config.nginx.dir_bin) || !config.nginx.dir_bin) {
+            config.nginx.dir_bin = '/usr/local/nginx/bin/nginx';
+          }
+
+          if (_.isEmpty(config.nginx.dir_systemd) || !config.nginx.dir_systemd) {
+            config.nginx.dir_systemd = '/lib/systemd/system';
+          }
+
+          if (_.isEmpty(config.nginx.dir_etc) || !config.nginx.dir_etc) {
+            config.nginx.dir_etc = '/etc/nginx';
+          }
           console.log('Install lib... !');
           await exec(
             'apt install -y gcc libpcre3-dev zlib1g-dev libssl-dev libxml2-dev libxslt1-dev  libgd-dev google-perftools libgoogle-perftools-dev libperl-dev libgeoip-dev libatomic-ops-dev'
@@ -106,17 +106,23 @@ export default class installNginx extends Install {
       }
       if (osName === 'redhat') {
         try {
-          console.log(config.nginx);
-          // console.log('Install lib... !');
-          // await exec('yum install -y gcc openssl-devel apr apr-util');
-          // await exec('yum install -y epel-release');
-          // await exec('yum install -y nginx');
-          // const aliasName = 'centos';
-          // const url = `https://github.com/khutran/${aliasName}-nginx/archive/master.zip`;
-          // await App.make(Downloader).download(url, `/tmp/master.zip`);
-          // const dest = path.dirname(`/tmp/master.zip`);
-          // const extral = await decompress(`/tmp/master.zip`, dest);
-          // await mv(`${dest}/${extral[0].path}nginx.conf`, config.nginx.dir_home, { mkdirp: true });
+          if (_.isEmpty(config.nginx.dir_etc) || !config.nginx.dir_etc) {
+            config.nginx.dir_etc = '/etc/nginx';
+          }
+          console.log('Install lib... !');
+          await exec('yum install -y gcc openssl-devel apr apr-util');
+          await exec('yum install -y epel-release');
+          await exec('yum install -y nginx');
+          const aliasName = 'centos';
+          const url = `https://github.com/khutran/${aliasName}-nginx/archive/master.zip`;
+          await App.make(Downloader).download(url, `/tmp/master.zip`);
+          const dest = path.dirname(`/tmp/master.zip`);
+          const extral = await decompress(`/tmp/master.zip`, dest);
+          await rimraf(`${config.nginx.dir_etc}/nginx.conf`);
+          await mv(`${dest}/${extral[0].path}nginx.conf`, config.nginx.dir_etc, { mkdirp: true });
+          if (!fs.existsSync(`${config.nginx.dir_etc}/conf.d/ssl`)) {
+            await mv(`${dest}/${extral[0].path}ssl`, `${config.nginx.dir_etc}/conf.d`, { mkdirp: true });
+          }
         } catch (e) {
           throw new Exception(e.message, 1);
         }
