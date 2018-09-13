@@ -30,7 +30,7 @@ export class Downloader {
         const percent = ((cur * 10000) / len).toFixed(2);
         process.stdout.clearLine();
         process.stdout.cursorTo(0);
-        process.stdout.write(`Downloading ${percent}% of ${total.toFixed(2) / 10000}MB`);
+        process.stdout.write(`Downloading ${percent}% of ${total.toFixed(2)}`);
       });
 
       response.data.on('end', () => {
