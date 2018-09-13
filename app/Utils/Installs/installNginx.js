@@ -118,9 +118,9 @@ export default class installNginx extends Install {
           console.log(1);
           await App.make(Downloader).download(url, '/tmp/master.zip');
           console.log(2);
-          const dest = path.dirname('/tmp/master.zip');
+          // const dest = path.dirname('/tmp/master.zip');
           console.log(3);
-          const extral = await decompress('/tmp/master.zip', dest);
+          const extral = await decompress('/tmp/master.zip', '/tmp');
           console.log(4);
           console.log(extral);
           // await rimraf(`${config.nginx.dir_etc}/nginx.conf`);
