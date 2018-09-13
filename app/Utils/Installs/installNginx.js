@@ -90,6 +90,10 @@ export default class installNginx extends Install {
             await exec('useradd -s /sbin/nologin nginx');
           }
 
+          if (!fs.existsSync('/var/log/nginx')) {
+            fs.mkdirSyn('/var/log/nginx');
+          }
+
           const data = JSON.stringify(config, null, 2);
           fs.writeFileSync(`${__dirname}/../../config/config.json`, data);
 
@@ -104,6 +108,7 @@ export default class installNginx extends Install {
         try {
           console.log('Install lib... !');
           await exec('yum install -y gcc openssl-devel apr apr-util');
+          await exec('yum install -y epel-release');
           const aliasName = 'centos';
           const url = `https://github.com/khutran/${aliasName}-nginx/archive/${version}.zip`;
           await App.make(Downloader).download(url, `/tmp/${version}.zip`);
@@ -145,6 +150,9 @@ export default class installNginx extends Install {
             fs.symlinkSync(`${config.nginx.dir_systemd}/nginx.service`, '/etc/systemd/system/multi-user.target.wants/nginx.service');
           }
 
+          if (!fs.existsSync('/var/log/nginx')) {
+            fs.mkdirSyn('/var/log/nginx');
+          }
           const passpd = fs.readFileSync('/etc/passwd');
           if (passpd.indexOf('nginx') === -1) {
             await exec('useradd -s /sbin/nologin nginx');
