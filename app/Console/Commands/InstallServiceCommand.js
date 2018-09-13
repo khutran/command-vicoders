@@ -186,6 +186,8 @@ export default class VscodeCommand extends Command {
               console.log(colors.red(e.message));
             }
             break;
+          default:
+            break;
         }
         break;
     }
