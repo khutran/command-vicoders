@@ -116,7 +116,7 @@ export default class installNginx extends Install {
           const aliasName = 'centos';
           const url = `https://github.com/khutran/${aliasName}-nginx/archive/master.zip`;
           console.log(1);
-          await App.make(Downloader).download(url, '/tmp/master.zip');
+          // await App.make(Downloader).download(url, '/tmp/master.zip');
           console.log(2);
           const dest = path.dirname('/tmp/master.zip');
           console.log(3);
