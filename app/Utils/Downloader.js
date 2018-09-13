@@ -18,12 +18,11 @@ export class Downloader {
     const response = await axios(options);
 
     response.data.pipe(fs.createWriteStream(dest));
-    console.log('test');
     return new Promise((resolve, reject) => {
       const len = parseInt(response.data.headers['content-length'], 10);
       let cur = 0;
       const total = len / 1048576;
-
+      console.log(total);
       process.stdout.write('Downloading ...');
 
       response.data.on('data', function(chunk) {
