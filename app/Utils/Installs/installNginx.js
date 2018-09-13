@@ -40,20 +40,20 @@ export default class installNginx extends Install {
           console.log('install nginx ... !');
           await exec('apt install -y nginx');
           const nginx = await exec('curl https://raw.githubusercontent.com/khutran/config_web/master/nginx.conf');
-          fs.unlinkSync(`${config.nginx.dir_etc}/nginx.conf`);
+          await rimraf(`${config.nginx.dir_etc}/nginx.conf`);
 
           fs.writeFileSync(`${config.nginx.dir_etc}/nginx.conf`, nginx.stdout);
-          // if (!fs.existsSync(`${config.nginx.dir_etc}/conf.d/ssl/certificate.pem`)) {
-          //   if (!fs.existsSync(`${config.nginx.dir_etc}/conf.d/ssl`)) {
-          //     fs.mkdirSync(`${config.nginx.dir_etc}/conf.d/ssl`);
-          //   }
-          //   const certificate = await exec('curl https://raw.githubusercontent.com/khutran/config_web/master/ssl/certificate.pem');
-          //   fs.writeFileSync(`${config.nginx.dir_etc}/conf.d/ssl/certificate.pem`, certificate.stdout);
-          // }
-          // if (!fs.existsSync(!fs.existsSync(`${config.nginx.dir_etc}/conf.d/ssl/key.pem`))) {
-          //   const key = await exec('curl https://raw.githubusercontent.com/khutran/config_web/master/ssl/key.pem');
-          //   fs.writeFileSync(`${config.nginx.dir_etc}/conf.d/ssl/key.pem`, key.stdout);
-          // }
+          if (!fs.existsSync(`${config.nginx.dir_etc}/conf.d/ssl/certificate.pem`)) {
+            if (!fs.existsSync(`${config.nginx.dir_etc}/conf.d/ssl`)) {
+              fs.mkdirSync(`${config.nginx.dir_etc}/conf.d/ssl`);
+            }
+            const certificate = await exec('curl https://raw.githubusercontent.com/khutran/config_web/master/ssl/certificate.pem');
+            fs.writeFileSync(`${config.nginx.dir_etc}/conf.d/ssl/certificate.pem`, certificate.stdout);
+          }
+          if (!fs.existsSync(!fs.existsSync(`${config.nginx.dir_etc}/conf.d/ssl/key.pem`))) {
+            const key = await exec('curl https://raw.githubusercontent.com/khutran/config_web/master/ssl/key.pem');
+            fs.writeFileSync(`${config.nginx.dir_etc}/conf.d/ssl/key.pem`, key.stdout);
+          }
           console.log('install .... OK 1');
           const data = JSON.stringify(config, null, 2);
           fs.writeFileSync(`${__dirname}/../../config/config.json`, data);
