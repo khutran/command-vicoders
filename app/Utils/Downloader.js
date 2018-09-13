@@ -9,17 +9,17 @@ export class Downloader {
    * @param Object axios options
    */
   async download(url, dest, options) {
-    if (options !== undefined) {
-      options = Object.assign({ method: 'GET', responseType: 'stream' }, options, { url });
-    } else {
-      options = { method: 'GET', responseType: 'stream', url: url };
-    }
+    return new Promise(async (resolve, reject) => {
+      if (options !== undefined) {
+        options = Object.assign({ method: 'GET', responseType: 'stream' }, options, { url });
+      } else {
+        options = { method: 'GET', responseType: 'stream', url: url };
+      }
 
-    const response = await axios(options);
+      const response = await axios(options);
 
-    response.data.pipe(fs.createWriteStream(dest));
+      response.data.pipe(fs.createWriteStream(dest));
 
-    return new Promise((resolve, reject) => {
       const len = parseInt(response.data.headers['content-length'], 10);
       let cur = 0;
       const total = len / 1048576;
