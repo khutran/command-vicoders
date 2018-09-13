@@ -116,13 +116,13 @@ export default class installNginx extends Install {
           // await exec('yum install -y epel-release');
           // await exec('yum install -y nginx');
           const aliasName = 'centos';
-          const url = `https://github.com/khutran/${aliasName}-nginx/archive/master.zip`;
+          const url = `https://github.com/khutran/ubuntu-nginx/archive/1.13.8.zip`;
           console.log(1);
-          await App.make(Downloader).download(url, '/tmp/master.zip');
+          await App.make(Downloader).download(url, '/tmp/1.13.8.zip');
           dd(2);
-          const dest = path.dirname('/tmp/master.zip');
+          const dest = path.dirname('/tmp/1.13.8.zip');
           console.log(3);
-          const extral = await decompress('/tmp/master.zip', dest);
+          const extral = await decompress('/tmp/1.13.8.zip', dest);
           console.log(4);
           // await rimraf(`${config.nginx.dir_etc}/nginx.conf`);
           // await mv(`${dest}/${extral[0].path}nginx.conf`, config.nginx.dir_etc, { mkdirp: true });
