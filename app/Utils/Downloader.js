@@ -21,8 +21,8 @@ export class Downloader {
     return new Promise((resolve, reject) => {
       const len = parseInt(response.data.headers['content-length'], 10);
       console.log(len);
-      let cur = 0;
-      const total = len / 1048576;
+      // let cur = 0;
+      // const total = len / 1048576;
       process.stdout.write('Downloading ...');
 
       response.data.on('data', function(chunk) {
@@ -34,7 +34,7 @@ export class Downloader {
       });
 
       response.data.on('end', () => {
-        process.stdout.clearLine();
+        // process.stdout.clearLine();
         resolve();
       });
 
