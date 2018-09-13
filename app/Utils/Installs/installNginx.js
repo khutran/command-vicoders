@@ -109,61 +109,62 @@ export default class installNginx extends Install {
           console.log('Install lib... !');
           await exec('yum install -y gcc openssl-devel apr apr-util');
           await exec('yum install -y epel-release');
-          const aliasName = 'centos';
-          const url = `https://github.com/khutran/${aliasName}-nginx/archive/${version}.zip`;
-          await App.make(Downloader).download(url, `/tmp/${version}.zip`);
-          const dest = path.dirname(`/tmp/${version}.zip`);
-          const extral = await decompress(`/tmp/${version}.zip`, dest);
+          await exec('yum install -y nginx');
+          // const aliasName = 'centos';
+          // const url = `https://github.com/khutran/${aliasName}-nginx/archive/${version}.zip`;
+          // await App.make(Downloader).download(url, `/tmp/${version}.zip`);
+          // const dest = path.dirname(`/tmp/${version}.zip`);
+          // const extral = await decompress(`/tmp/${version}.zip`, dest);
 
-          if (fs.existsSync(`${config.nginx.dir_home}`)) {
-            await rimraf(`${config.nginx.dir_home}`);
-          }
+          // if (fs.existsSync(`${config.nginx.dir_home}`)) {
+          //   await rimraf(`${config.nginx.dir_home}`);
+          // }
 
-          if (fs.existsSync(`${config.nginx.dir_systemd}/nginx.service`)) {
-            await rimraf(`${config.nginx.dir_systemd}/nginx.service`);
-          }
+          // if (fs.existsSync(`${config.nginx.dir_systemd}/nginx.service`)) {
+          //   await rimraf(`${config.nginx.dir_systemd}/nginx.service`);
+          // }
 
-          if (fs.existsSync('/usr/sbin/nginx')) {
-            await rimraf('/usr/sbin/nginx');
-          }
+          // if (fs.existsSync('/usr/sbin/nginx')) {
+          //   await rimraf('/usr/sbin/nginx');
+          // }
 
-          await mv(`${dest}/${extral[0].path}usr-nginx`, config.nginx.dir_home, { mkdirp: true });
+          // await mv(`${dest}/${extral[0].path}usr-nginx`, config.nginx.dir_home, { mkdirp: true });
 
-          await mv(`${dest}/${extral[0].path}nginx.service`, `${config.nginx.dir_systemd}/nginx.service`, { mkdirp: true });
+          // await mv(`${dest}/${extral[0].path}nginx.service`, `${config.nginx.dir_systemd}/nginx.service`, { mkdirp: true });
 
-          if (fs.existsSync(config.nginx.dir_etc)) {
-            await mv(config.nginx.dir_etc, '/tmp/nginx_old', { mkdirp: true });
-            await mv(`${dest}/${extral[0].path}etc-nginx`, config.nginx.dir_etc, { mkdirp: true });
-            await rimraf(`${config.nginx.dir_etc}/conf.d/`);
-            await rimraf(`${config.nginx.dir_etc}/nginx.conf`);
-            await mv('/tmp/nginx_old/conf.d', `${config.nginx.dir_etc}/conf.d`, { mkdirp: true });
-            await mv('/tmp/nginx_old/nginx.conf', `${config.nginx.dir_etc}/nginx.conf`, { mkdirp: true });
-            await rimraf('/tmp/nginx_old/');
-          } else {
-            await mv(`${dest}/${extral[0].path}etc-nginx`, config.nginx.dir_etc, { mkdirp: true });
-          }
-          if (!fs.existsSync('/usr/sbin/nginx')) {
-            fs.symlinkSync(config.nginx.dir_bin, '/usr/sbin/nginx');
-          }
+          // if (fs.existsSync(config.nginx.dir_etc)) {
+          //   await mv(config.nginx.dir_etc, '/tmp/nginx_old', { mkdirp: true });
+          //   await mv(`${dest}/${extral[0].path}etc-nginx`, config.nginx.dir_etc, { mkdirp: true });
+          //   await rimraf(`${config.nginx.dir_etc}/conf.d/`);
+          //   await rimraf(`${config.nginx.dir_etc}/nginx.conf`);
+          //   await mv('/tmp/nginx_old/conf.d', `${config.nginx.dir_etc}/conf.d`, { mkdirp: true });
+          //   await mv('/tmp/nginx_old/nginx.conf', `${config.nginx.dir_etc}/nginx.conf`, { mkdirp: true });
+          //   await rimraf('/tmp/nginx_old/');
+          // } else {
+          //   await mv(`${dest}/${extral[0].path}etc-nginx`, config.nginx.dir_etc, { mkdirp: true });
+          // }
+          // if (!fs.existsSync('/usr/sbin/nginx')) {
+          //   fs.symlinkSync(config.nginx.dir_bin, '/usr/sbin/nginx');
+          // }
 
-          if (!fs.existsSync(`${config.nginx.dir_systemd}/multi-user.target.wants/nginx.service`)) {
-            fs.symlinkSync(`${config.nginx.dir_systemd}/nginx.service`, '/etc/systemd/system/multi-user.target.wants/nginx.service');
-          }
+          // if (!fs.existsSync(`${config.nginx.dir_systemd}/multi-user.target.wants/nginx.service`)) {
+          //   fs.symlinkSync(`${config.nginx.dir_systemd}/nginx.service`, '/etc/systemd/system/multi-user.target.wants/nginx.service');
+          // }
 
-          if (!fs.existsSync('/var/log/nginx')) {
-            fs.mkdirSync('/var/log/nginx');
-          }
-          const passpd = fs.readFileSync('/etc/passwd');
-          if (passpd.indexOf('nginx') === -1) {
-            await exec('useradd -s /sbin/nologin nginx');
-          }
+          // if (!fs.existsSync('/var/log/nginx')) {
+          //   fs.mkdirSync('/var/log/nginx');
+          // }
+          // const passpd = fs.readFileSync('/etc/passwd');
+          // if (passpd.indexOf('nginx') === -1) {
+          //   await exec('useradd -s /sbin/nologin nginx');
+          // }
 
-          const data = JSON.stringify(config, null, 2);
-          fs.writeFileSync(`${__dirname}/../../config/config.json`, data);
+          // const data = JSON.stringify(config, null, 2);
+          // fs.writeFileSync(`${__dirname}/../../config/config.json`, data);
 
-          await exec('systemctl daemon-reload');
-          await rimraf(`/tmp/${version}.zip`);
-          await rimraf(`${dest}/${extral[0].path}`);
+          // await exec('systemctl daemon-reload');
+          // await rimraf(`/tmp/${version}.zip`);
+          // await rimraf(`${dest}/${extral[0].path}`);
         } catch (e) {
           throw new Exception(e.message, 1);
         }
