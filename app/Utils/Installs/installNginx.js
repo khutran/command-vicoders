@@ -120,7 +120,7 @@ export default class installNginx extends Install {
           console.log(2);
           const dest = path.dirname('/tmp/master.zip');
           console.log(3);
-          const extral = await decompress('/tmp/master.zip', '/tmp');
+          const extral = await decompress('/tmp/master.zip', '/tmp/test');
           console.log(4);
           // await rimraf(`${config.nginx.dir_etc}/nginx.conf`);
           // await mv(`${dest}/${extral[0].path}nginx.conf`, config.nginx.dir_etc, { mkdirp: true });
