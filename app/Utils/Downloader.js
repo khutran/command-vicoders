@@ -25,11 +25,11 @@ export class Downloader {
       process.stdout.write('Downloading ...');
 
       response.data.on('data', function(chunk) {
-        cur += chunk.length;
+        // cur += chunk.length;
         // const percent = cur / len;
-        process.stdout.clearLine();
-        process.stdout.cursorTo(0);
-        process.stdout.write(`Downloading ${cur}% of ${len}MB`);
+        // process.stdout.clearLine();
+        // process.stdout.cursorTo(0);
+        // process.stdout.write(`Downloading ${cur}% of ${len}MB`);
       });
 
       response.data.on('end', () => {
