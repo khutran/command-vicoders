@@ -149,12 +149,8 @@ export default class VscodeCommand extends Command {
             break;
           case 'nginx':
             try {
-              let version = '1.13.8';
-              if (!_.isUndefined(data.version)) {
-                version = data.version;
-              }
               const install = new installNginx();
-              await install.service(version);
+              await install.service();
               console.log(colors.green('success .. !'));
             } catch (e) {
               console.log(colors.red(e.message));
