@@ -7,7 +7,7 @@ import installNginx from '../../Utils/Installs/installNginx';
 import installApache from '../../Utils/Installs/installApache';
 import installPhp from '../../Utils/Installs/InstallPhp';
 import inquirer from 'inquirer';
-import of from 'await-of';
+// import of from 'await-of';
 
 export default class VscodeCommand extends Command {
   signature() {
@@ -40,10 +40,6 @@ export default class VscodeCommand extends Command {
         name: 'php'
       }
     };
-    const data = {
-      version: option.versions,
-      installExtentions: option.installExtentions
-    };
 
     _.mapKeys(listService, (value, key) => {
       console.log(`${key} : ${value.name}`);
@@ -73,7 +69,8 @@ export default class VscodeCommand extends Command {
           if (result.code === 1) {
             console.log(colors.green(result.message));
           }
-          if (!_.isUndefined(data.installExtentions)) {
+          const extention = await inquirer.prompt({ type: 'confirm', name: 'extention', message: 'you want install extentions : ', default: true });
+          if (extention.extention) {
             await install.extentions();
           }
         } catch (e) {
