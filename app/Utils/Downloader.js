@@ -27,14 +27,14 @@ export class Downloader {
 
       response.data.on('data', function(chunk) {
         cur += chunk.length;
-        const percent = ((100.0 * cur) / len).toFixed(2);
+        const percent = (cur / len).toFixed(2);
         process.stdout.clearLine();
         process.stdout.cursorTo(0);
         process.stdout.write(`Downloading ${percent}% of ${len.toFixed(2)}MB`);
       });
 
       response.data.on('end', () => {
-        // process.stdout.clearLine();
+        process.stdout.clearLine();
         resolve();
       });
 
