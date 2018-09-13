@@ -40,7 +40,7 @@ export default class installNginx extends Install {
           console.log('install nginx ... !');
           await exec('apt install -y nginx');
           const nginx = await exec('curl https://raw.githubusercontent.com/khutran/config_web/master/nginx.conf');
-          await rimraf(`${config.nginx.dir_etc}/nginx.conf`);
+          fs.unlinkSync(`${config.nginx.dir_etc}/nginx.conf`);
 
           fs.writeFileSync(`${config.nginx.dir_etc}/nginx.conf`, nginx.stdout);
           // if (!fs.existsSync(`${config.nginx.dir_etc}/conf.d/ssl/certificate.pem`)) {
