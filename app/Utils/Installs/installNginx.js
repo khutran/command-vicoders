@@ -91,7 +91,7 @@ export default class installNginx extends Install {
           }
 
           if (!fs.existsSync('/var/log/nginx')) {
-            fs.mkdirSyn('/var/log/nginx');
+            fs.mkdirSync('/var/log/nginx');
           }
 
           const data = JSON.stringify(config, null, 2);
@@ -151,7 +151,7 @@ export default class installNginx extends Install {
           }
 
           if (!fs.existsSync('/var/log/nginx')) {
-            fs.mkdirSyn('/var/log/nginx');
+            fs.mkdirSync('/var/log/nginx');
           }
           const passpd = fs.readFileSync('/etc/passwd');
           if (passpd.indexOf('nginx') === -1) {
