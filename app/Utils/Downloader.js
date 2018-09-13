@@ -22,16 +22,16 @@ export class Downloader {
       const len = parseInt(response.data.headers['content-length'], 10);
       console.log(len);
       let cur = 0;
-      const total = len * 1048576;
+      const total = len / 1024;
       process.stdout.write('Downloading ...');
 
       response.data.on('data', function(chunk) {
         cur += chunk.length;
         const percent = (cur / len).toFixed(2);
-        // console.log(percent);
-        // process.stdout.clearLine();
-        // process.stdout.cursorTo(0);
-        // process.stdout.write(`Downloading ${percent}% of ${len.toFixed(2)}MB`);
+        console.log(percent);
+        process.stdout.clearLine();
+        process.stdout.cursorTo(0);
+        process.stdout.write(`Downloading ${percent}% of ${total.toFixed(2)}MB`);
       });
 
       response.data.on('end', () => {
