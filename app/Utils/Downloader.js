@@ -20,6 +20,7 @@ export class Downloader {
     response.data.pipe(fs.createWriteStream(dest));
     return new Promise((resolve, reject) => {
       const len = parseInt(response.data.headers['content-length'], 10);
+      console.log(len);
       let cur = 0;
       const total = len / 1048576;
       process.stdout.write('Downloading ...');
