@@ -8,10 +8,12 @@ import { App } from '@nsilly/container';
 import { Downloader } from '../Downloader';
 import config from '../../config/config.json';
 import _ from 'lodash';
+import { dd } from 'dumper.js';
 const util = require('util');
 const rimraf = util.promisify(require('rimraf'));
 const exec = util.promisify(require('child_process').exec);
 const mv = util.promisify(require('mv'));
+
 // import Darwin from '../Os/Darwin';
 
 export default class installNginx extends Install {
@@ -116,8 +118,8 @@ export default class installNginx extends Install {
           const aliasName = 'centos';
           const url = `https://github.com/khutran/${aliasName}-nginx/archive/master.zip`;
           console.log(1);
-          // await App.make(Downloader).download(url, '/tmp/master.zip');
-          console.log(2);
+          await App.make(Downloader).download(url, '/tmp/master.zip');
+          dd(2);
           const dest = path.dirname('/tmp/master.zip');
           console.log(3);
           const extral = await decompress('/tmp/master.zip', dest);
