@@ -22,7 +22,7 @@ export class Downloader {
       const len = parseInt(response.data.headers['content-length'], 10);
       console.log(len);
       let cur = 0;
-      const total = len / 1048576;
+      // const total = len / 1048576;
       process.stdout.write('Downloading ...');
 
       response.data.on('data', function(chunk) {
@@ -30,7 +30,7 @@ export class Downloader {
         const percent = ((100.0 * cur) / len).toFixed(2);
         process.stdout.clearLine();
         process.stdout.cursorTo(0);
-        process.stdout.write(`Downloading ${percent}% of ${total.toFixed(2)}MB`);
+        process.stdout.write(`Downloading ${percent}% of ${len.toFixed(2)}MB`);
       });
 
       response.data.on('end', () => {
