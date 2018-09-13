@@ -38,6 +38,7 @@ export default class installNginx extends Install {
           await exec('apt install -y software-properties-common');
           await of(exec('add-apt-repository -y ppa:nginx/stable'));
           await exec('apt -y update');
+          console.log('install nginx ... !');
           await exec('apt install -y nginx');
           const url = `https://github.com/khutran/nginx/archive/master.zip`;
           await App.make(Downloader).download(url, '/tmp/master.zip');
