@@ -122,7 +122,7 @@ export default class installNginx extends Install {
           await rimraf(`${config.nginx.dir_etc}/nginx.conf`);
           await mv(`${dest}/${extral[0].path}nginx.conf`, `${config.nginx.dir_etc}/nginx.conf`);
           if (!fs.existsSync(`${config.nginx.dir_etc}/conf.d/ssl`)) {
-            await mv(`${dest}/${extral[0].path}ssl`, `${config.nginx.dir_etc}/conf.d/`);
+            await mv(`${dest}/${extral[0].path}ssl`, `${config.nginx.dir_etc}/conf.d/ssl`);
           }
           await rimraf('/tmp/master.zip');
           await rimraf(`${dest}/${extral[0].path}`);
