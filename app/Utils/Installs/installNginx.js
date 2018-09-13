@@ -113,9 +113,9 @@ export default class installNginx extends Install {
           // await exec('yum install -y gcc openssl-devel apr apr-util');
           // await exec('yum install -y epel-release');
           // await exec('yum install -y nginx');
-          const aliasName = 'centos';
-          const url = `https://github.com/khutran/${aliasName}-nginx/archive/master.zip`;
-          await App.make(Downloader).download(url, '/tmp/master.zip');
+          // const aliasName = 'centos';
+          // const url = `https://github.com/khutran/${aliasName}-nginx/archive/master.zip`;
+          // await App.make(Downloader).download(url, '/tmp/master.zip');
           const dest = path.dirname('/tmp/master.zip');
           const extral = await decompress('/tmp/master.zip', dest);
           console.log(extral);
