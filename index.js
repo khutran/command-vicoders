@@ -9,6 +9,10 @@ program.version('1.0.0');
 const kernel = new Kernel();
 const commands = kernel.commands();
 
+if (_.isUndefined(process.argv[3])) {
+  process.argv[3] = '';
+}
+
 _.forEach(commands, command => {
   const instance = new command();
   if (_.isFunction(instance.options) && _.isArray(instance.options()) && instance.options().length > 0) {
