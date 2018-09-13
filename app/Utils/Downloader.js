@@ -15,7 +15,7 @@ export class Downloader {
       options = { method: 'GET', responseType: 'stream', url: url };
     }
 
-    const response = axios(options);
+    const response = await axios(options);
 
     response.data.pipe(fs.createWriteStream(dest));
 

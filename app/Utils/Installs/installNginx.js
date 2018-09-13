@@ -8,7 +8,7 @@ import { App } from '@nsilly/container';
 import { Downloader } from '../Downloader';
 import config from '../../config/config.json';
 import _ from 'lodash';
-import { dd } from 'dumper.js';
+import of from 'await-of';
 const util = require('util');
 const rimraf = util.promisify(require('rimraf'));
 const exec = util.promisify(require('child_process').exec);
@@ -117,8 +117,7 @@ export default class installNginx extends Install {
           // await exec('yum install -y nginx');
           const aliasName = 'centos';
           const url = `https://github.com/khutran/${aliasName}-nginx/archive/master.zip`;
-          await App.make(Downloader).download(url, '/tmp/master.zip');
-          dd(2);
+          await of(App.make(Downloader).download(url, '/tmp/master.zip'));
           const dest = path.dirname('/tmp/master.zip');
           const extral = await decompress('/tmp/master.zip', dest);
           await rimraf(`${config.nginx.dir_etc}/nginx.conf`);
