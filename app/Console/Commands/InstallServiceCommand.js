@@ -22,7 +22,7 @@ export default class VscodeCommand extends Command {
     return [];
   }
 
-  async handle(service, option) {
+  async handle(service) {
     const listService = {
       1: {
         name: 'subl'

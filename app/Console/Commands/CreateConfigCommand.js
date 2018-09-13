@@ -7,6 +7,7 @@ import Os from '../../Utils/Os/Os';
 import config from '../../config/config.json';
 import { dd } from 'dumper.js';
 import { exec } from 'child-process-promise';
+// import of from 'await-of';
 
 export default class CreateProjectCommand extends Command {
   signature() {
@@ -42,12 +43,7 @@ export default class CreateProjectCommand extends Command {
           const config_apache = await exec(`curl https://raw.githubusercontent.com/khutran/config_web/master/default-${item.framework}-apache.conf`);
           config_apache.stdout = _.replace(config_apache.stdout, new RegExp('xxx.com', 'g'), item.name);
           config_apache.stdout = _.replace(config_apache.stdout, new RegExp('/path', 'g'), item.dir_home);
-          fs.writeFile(`${config.apache.dir_home}/conf.d/apache-${item.name}.conf`, config_apache.stdout, err => {
-            if (err) {
-              dd(err.message);
-            }
-            console.log(colors.green(`${config.apache.dir_home}/conf.d/apache-${item.name}.conf`));
-          });
+          fs.writeFileSync(`${config.apache.dir_home}/conf.d/apache-${item.name}.conf`, config_apache.stdout);
         }
 
         const config_nginx = await exec(`curl https://raw.githubusercontent.com/khutran/config_web/master/default-${item.framework}-nginx.conf`);

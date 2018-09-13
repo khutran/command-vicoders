@@ -12,7 +12,6 @@ import _ from 'lodash';
 const util = require('util');
 const rimraf = util.promisify(require('rimraf'));
 const exec = util.promisify(require('child_process').exec);
-const mv = util.promisify(require('mv'));
 
 // import Darwin from '../Os/Darwin';
 
@@ -40,18 +39,22 @@ export default class installNginx extends Install {
           await exec('apt -y update');
           console.log('install nginx ... !');
           await exec('apt install -y nginx');
-          const url = `https://github.com/khutran/nginx/archive/master.zip`;
-          await App.make(Downloader).download(url, '/tmp/master.zip');
-          const dest = path.dirname('/tmp/master.zip');
-          const extral = await decompress('/tmp/master.zip', dest);
+          const nginx = await exec('curl https://raw.githubusercontent.com/khutran/config_web/master/nginx.conf');
           await rimraf(`${config.nginx.dir_etc}/nginx.conf`);
-          await mv(`${dest}/${extral[0].path}nginx.conf`, `${config.nginx.dir_etc}/nginx.conf`);
-          if (!fs.existsSync(`${config.nginx.dir_etc}/conf.d/ssl`)) {
-            await mv(`${dest}/${extral[0].path}ssl`, `${config.nginx.dir_etc}/conf.d/ssl`);
+          fs.writeFileSync(`${config.nginx.dir_etc}/nginx.conf`, nginx.stdout);
+          if (!fs.existsSync(`${config.nginx.dir_etc}/conf.d/ssl/certificate.pem`)) {
+            if (!fs.existsSync(`${config.nginx.dir_etc}/conf.d/ssl`)) {
+              fs.mkdirSync(`${config.nginx.dir_etc}/conf.d/ssl`);
+            }
+            const certificate = await exec('curl https://raw.githubusercontent.com/khutran/config_web/master/ssl/certificate.pem');
+            fs.writeFileSync(`${config.nginx.dir_etc}/conf.d/ssl/certificate.pem`, certificate.stdout);
+          }
+          if (!fs.existsSync(!fs.existsSync(`${config.nginx.dir_etc}/conf.d/ssl/key.pem`))) {
+            const key = await exec('curl https://raw.githubusercontent.com/khutran/config_web/master/ssl/key.pem');
+            fs.writeFileSync(`${config.nginx.dir_etc}/conf.d/ssl/key.pem`, key.stdout);
           }
           console.log('install .... OK 1');
-          await rimraf('/tmp/master.zip');
-          await rimraf(`${dest}/${extral[0].path}`);
+
           const data = JSON.stringify(config, null, 2);
           fs.writeFileSync(`${__dirname}/../../config/config.json`, data);
         } catch (e) {
@@ -67,17 +70,20 @@ export default class installNginx extends Install {
           await exec('yum install -y gcc openssl-devel apr apr-util');
           await exec('yum install -y epel-release');
           await exec('yum install -y nginx');
-          const url = `https://github.com/khutran/nginx/archive/master.zip`;
-          await App.make(Downloader).download(url, '/tmp/master.zip');
-          const dest = path.dirname('/tmp/master.zip');
-          const extral = await decompress('/tmp/master.zip', dest);
+          const nginx = await exec('curl https://raw.githubusercontent.com/khutran/config_web/master/nginx.conf');
           await rimraf(`${config.nginx.dir_etc}/nginx.conf`);
-          await mv(`${dest}/${extral[0].path}nginx.conf`, `${config.nginx.dir_etc}/nginx.conf`);
-          if (!fs.existsSync(`${config.nginx.dir_etc}/conf.d/ssl`)) {
-            await mv(`${dest}/${extral[0].path}ssl`, `${config.nginx.dir_etc}/conf.d/ssl`);
+          fs.writeFileSync(`${config.nginx.dir_etc}/nginx.conf`, nginx.stdout);
+          if (!fs.existsSync(`${config.nginx.dir_etc}/conf.d/ssl/certificate.pem`)) {
+            if (!fs.existsSync(`${config.nginx.dir_etc}/conf.d/ssl`)) {
+              fs.mkdirSync(`${config.nginx.dir_etc}/conf.d/ssl`);
+            }
+            const certificate = await exec('curl https://raw.githubusercontent.com/khutran/config_web/master/ssl/certificate.pem');
+            fs.writeFileSync(`${config.nginx.dir_etc}/conf.d/ssl/certificate.pem`, certificate.stdout);
           }
-          await rimraf('/tmp/master.zip');
-          await rimraf(`${dest}/${extral[0].path}`);
+          if (!fs.existsSync(!fs.existsSync(`${config.nginx.dir_etc}/conf.d/ssl/key.pem`))) {
+            const key = await exec('curl https://raw.githubusercontent.com/khutran/config_web/master/ssl/key.pem');
+            fs.writeFileSync(`${config.nginx.dir_etc}/conf.d/ssl/key.pem`, key.stdout);
+          }
           const data = JSON.stringify(config, null, 2);
           fs.writeFileSync(`${__dirname}/../../config/config.json`, data);
         } catch (e) {
