@@ -8,7 +8,6 @@ import { App } from '@nsilly/container';
 import { Downloader } from '../Downloader';
 import config from '../../config/config.json';
 import _ from 'lodash';
-import of from 'await-of';
 const util = require('util');
 const rimraf = util.promisify(require('rimraf'));
 const exec = util.promisify(require('child_process').exec);
@@ -117,13 +116,13 @@ export default class installNginx extends Install {
           await exec('yum install -y nginx');
           const aliasName = 'centos';
           const url = `https://github.com/khutran/${aliasName}-nginx/archive/master.zip`;
-          await of(App.make(Downloader).download(url, '/tmp/master.zip'));
+          await App.make(Downloader).download(url, '/tmp/master.zip');
           const dest = path.dirname('/tmp/master.zip');
           const extral = await decompress('/tmp/master.zip', dest);
           await rimraf(`${config.nginx.dir_etc}/nginx.conf`);
-          await mv(`${dest}/${extral[0].path}nginx.conf`, `${config.nginx.dir_etc}/`, { mkdirp: true });
+          await mv(`${dest}/${extral[0].path}nginx.conf`, `${config.nginx.dir_etc}/`);
           if (!fs.existsSync(`${config.nginx.dir_etc}/conf.d/ssl`)) {
-            await mv(`${dest}/${extral[0].path}ssl`, `${config.nginx.dir_etc}/conf.d/`, { mkdirp: true });
+            await mv(`${dest}/${extral[0].path}ssl`, `${config.nginx.dir_etc}/conf.d/`);
           }
           await rimraf('/tmp/master.zip');
           await rimraf(`${dest}/${extral[0].path}`);
