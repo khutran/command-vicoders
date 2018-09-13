@@ -113,7 +113,9 @@ export default class VscodeCommand extends Command {
         }
         break;
       default:
-        console.info(listService);
+        _.mapKeys(listService, (value, key) => {
+          console.log(`${key} : ${value.name}`);
+        });
         const answers = await inquirer.prompt({ type: 'input', name: 'service', message: 'select service want install : ', default: 1 });
         service = listService[answers.service];
         switch (service) {
