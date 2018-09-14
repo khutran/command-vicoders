@@ -11,7 +11,9 @@ export default class installMysql extends Install {
       const linux = new Linux();
       const osName = linux.osName();
       if (osName === 'debian') {
-        dd(colors.green('apt install mysql-server'));
+        console.log(colors.green('apt -y update'));
+        console.log(colors.green('apt install mysql-server'));
+        console.log(colors.green('mysql_secure_installation'));
       }
       if (osName === 'redhat') {
         dd(colors.green('yum install -y mysql-server'));
