@@ -3,7 +3,7 @@ import ProjectRepository from '../../Repositories/ProjectRepository';
 import colors from 'colors';
 import _ from 'lodash';
 import fs from 'fs';
-// import Os from '../../Utils/Os/Os';
+import Os from '../../Utils/Os/Os';
 import config from '../../config/config.json';
 import { dd } from 'dumper.js';
 import { exec } from 'child-process-promise';
@@ -11,6 +11,8 @@ import inquirer from 'inquirer';
 import installAPache from '../../Utils/Installs/installApache';
 import of from 'await-of';
 import installNginx from '../../Utils/Installs/installNginx';
+import Darwin from '../../Utils/Os/Darwin';
+import Linux from '../../Utils/Os/Linux';
 
 export default class CreateProjectCommand extends Command {
   signature() {
@@ -27,6 +29,15 @@ export default class CreateProjectCommand extends Command {
 
   async handle(project) {
     try {
+      const os = new Os().platform();
+      let platform;
+      if (os === 'darwin') {
+        platform = new Darwin();
+      }
+      if (os === 'linux') {
+        platform = new Linux();
+      }
+
       const repository = new ProjectRepository();
       const item = await repository
         .orWhere('name', 'like', project)
@@ -37,7 +48,7 @@ export default class CreateProjectCommand extends Command {
         dd(`Project ${project} not exitis`);
       }
 
-      if (config.service_nginx === 'false') {
+      if (config.service_nginx === 'false' && !platform.CheckExists('nginx')) {
         const answers = await inquirer.prompt({ type: 'confirm', name: 'install', message: 'you want install nginx : ', default: true });
         if (answers.install) {
           const install = new installNginx();
@@ -45,7 +56,7 @@ export default class CreateProjectCommand extends Command {
         }
       }
 
-      if (config.service_apache === 'false') {
+      if (config.service_apache === 'false' && !platform.CheckExists('httpd')) {
         const answers = await inquirer.prompt({ type: 'confirm', name: 'install', message: 'you want install apache : ', default: true });
         if (answers.install) {
           const install = new installAPache();
