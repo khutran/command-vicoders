@@ -67,6 +67,7 @@ export default class CreateProjectCommand extends Command {
         });
         const answers = await inquirer.prompt({ type: 'input', name: 'key', message: 'select frame of project' });
         item.framework = framework[answers.key];
+        await item.update({ framework: item.framework });
       }
 
       if (item.framework !== 'nodejs') {
