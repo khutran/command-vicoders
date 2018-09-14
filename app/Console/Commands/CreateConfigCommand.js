@@ -27,6 +27,7 @@ export default class CreateProjectCommand extends Command {
 
   async handle(project) {
     try {
+      console.log(config);
       const repository = new ProjectRepository();
       const item = await repository
         .orWhere('name', 'like', project)
