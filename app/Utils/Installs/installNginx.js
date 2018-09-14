@@ -57,6 +57,8 @@ export default class installNginx extends Install {
           }
           console.log('install .... OK 1');
 
+          config.nginx.dir_etc = '/etc/nginx';
+          config.nginx.dir_conf = '/etc/nginx/conf.d';
           config.service_nginx = 'true';
           const data = JSON.stringify(config, null, 2);
           fs.writeFileSync(`${__dirname}/../../config/config.json`, data);
@@ -95,6 +97,8 @@ export default class installNginx extends Install {
           }
           console.log('install .... OK 1');
 
+          config.nginx.dir_etc = '/etc/nginx';
+          config.nginx.dir_conf = '/etc/nginx/conf.d';
           config.service_nginx = 'true';
           const data = JSON.stringify(config, null, 2);
           fs.writeFileSync(`${__dirname}/../../config/config.json`, data);
