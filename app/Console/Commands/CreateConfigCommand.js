@@ -69,7 +69,8 @@ export default class CreateProjectCommand extends Command {
         item.framework = framework[answers.key];
         await item.update({ framework: item.framework });
       }
-
+      console.log(item.framework);
+      console.log(apache);
       if (item.framework !== 'nodejs') {
         if (apache === 'enable') {
           const config_apache = await exec(`curl https://raw.githubusercontent.com/khutran/config_web/master/default-${item.framework}-apache.conf`);
