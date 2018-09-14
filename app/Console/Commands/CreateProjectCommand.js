@@ -55,6 +55,11 @@ export default class CreateProjectCommand extends Command {
         url: 'https://github.com/codersvn/kit_nodejs/archive/master.zip',
         name: 'kit-nodejs',
         description: 'Create a kit for nodejs module development'
+      },
+      {
+        url: 'https://github.com/codersvn/kit-tsx/archive/master.zip',
+        name: 'kit-tsx',
+        description: 'Create a kit for react library development'
       }
     ];
     return new Promise(async function(resolve, reject) {
