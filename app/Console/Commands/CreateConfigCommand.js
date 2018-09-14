@@ -85,6 +85,7 @@ export default class CreateProjectCommand extends Command {
         config_nginx.stdout = _.replace(config_nginx.stdout, new RegExp('3000', 'g'), item.port);
       }
       if (apache === 'enable') {
+        console.log(apache);
         config_nginx.stdout = _.replace(config_nginx.stdout, new RegExp('#includeApache', 'g'), 'proxy_pass http://apache;');
         if (item.framework === 'angular') {
           const answers = await inquirer.prompt({ type: 'confirm', name: 'bool', message: 'you want use apache', default: true });
