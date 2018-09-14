@@ -13,7 +13,7 @@ export default class installMysql extends Install {
       const linux = new Linux();
       const osName = linux.osName();
       if (osName === 'debian') {
-        if (!(await linux.CheckExists('mysql')) && !fs.existsSync('/var/lib/mysql')) {
+        if (!fs.existsSync('/var/lib/mysql')) {
           await exec('apt-get -y update');
           await exec('apt-get install -y mysql-server');
           await exec('/etc/init.d/mysql start');
