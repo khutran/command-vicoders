@@ -37,7 +37,7 @@ export default class installPhp extends Install {
 
           let file = fs.readFileSync(`/etc/php/${version}/fpm/php-fpm.d/www.conf`);
           file = _.replace(file, `listen = /var/run/php-fpm/php${version}-fpm.sock', 'listen = /var/run/php-fpm/php-fpm.sock`);
-          await rimraf(`/etc/php/${version}/fpm/php-fpm.d/www.conf`);
+          await rimraf(`/etc/php/${version}/fpm/pool.d/www.conf`);
           fs.writeFileSync(`/etc/php/${version}/fpm/pool.d/www.conf`, file);
 
           config.service_php = 'true';
