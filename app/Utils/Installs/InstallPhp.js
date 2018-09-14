@@ -5,7 +5,7 @@ import { exec } from 'child-process-promise';
 import { dd } from 'dumper.js';
 import _ from 'lodash';
 import fs from 'fs';
-import config from '../../../database/config.json';
+import config from '../../config/config.json';
 
 const util = require('util');
 const rimraf = util.promisify(require('rimraf'));
