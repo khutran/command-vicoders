@@ -6,7 +6,9 @@ module.exports = (sequelize, DataTypes) => {
     {
       name: DataTypes.STRING,
       dir_home: DataTypes.STRING,
-      git_remote: DataTypes.STRING
+      git_remote: DataTypes.STRING,
+      framework: DataTypes.STRING,
+      port: DataTypes.INTEGER
     },
     {
       underscored: true

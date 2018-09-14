@@ -3,6 +3,7 @@ import _ from 'lodash';
 import colors from 'colors';
 import InstallVscode from '../../Utils/Installs/InstallVscode';
 import InstallSubl from '../../Utils/Installs/installSubl';
+import { dd } from 'dumper.js';
 
 export default class VscodeCommand extends Command {
   signature() {
@@ -34,6 +35,7 @@ export default class VscodeCommand extends Command {
             try {
               const install = new InstallVscode();
               await install.service();
+              dd(colors.green('install success ... !'));
             } catch (e) {
               console.log(colors.red(e.message));
             }
@@ -42,6 +44,7 @@ export default class VscodeCommand extends Command {
             try {
               const install = new InstallSubl();
               await install.service();
+              dd(colors.green('install success ... !'));
             } catch (e) {
               console.log(colors.red(e.message));
             }
@@ -56,6 +59,7 @@ export default class VscodeCommand extends Command {
             try {
               const install = new InstallVscode();
               await install.extentions();
+              dd(colors.green('install success ... !'));
             } catch (e) {
               console.log(colors.red(e.message));
             }

@@ -6,12 +6,11 @@ import Os from '../../Utils/Os/Os';
 import Darwin from '../../Utils/Os/Darwin';
 import Linux from '../../Utils/Os/Linux';
 import { Exception } from '@nsilly/exceptions';
-const util = require('util');
-const exec = util.promisify(require('child_process').exec);
+import { exec } from 'child-process-promise';
 
 export default class OpenCommand extends Command {
   signature() {
-    return 'open <<project>>';
+    return 'open <project>';
   }
 
   description() {
@@ -45,7 +44,10 @@ export default class OpenCommand extends Command {
         }
       }
       const repository = new ProjectRepository();
-      const item = await repository.where('name', project).first();
+      const item = await repository
+        .orWhere('name', 'like', project)
+        .orWhere('id', 'like', project)
+        .first();
       if (!item) {
         throw new Exception('Project not exists  !', 1);
       }
@@ -57,6 +59,7 @@ export default class OpenCommand extends Command {
         }
       }
       exec(`${editer} ${item.dir_home}`);
+      exec(`cd ${item.dir_home}`);
     } catch (e) {
       console.log(colors.red(e.message));
     }

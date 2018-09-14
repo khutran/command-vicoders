@@ -4,13 +4,15 @@ import fs from 'fs';
 
 export default class Linux extends Os {
   CheckExists(name) {
-    const folder = [`/usr/local/bin/${name}`, `/usr/bin/${name}`, `/usr/sbin/${name}`, `/usr/local/sbin/${name}`];
-    let result = false;
-    _.forEach(folder, item => {
-      if (fs.existsSync(item)) {
-        result = true;
-      }
+    return new Promise(resolve => {
+      const folder = [`/usr/local/bin/${name}`, `/usr/bin/${name}`, `/usr/sbin/${name}`, `/usr/local/sbin/${name}`];
+      let result = false;
+      _.forEach(folder, item => {
+        if (fs.existsSync(item)) {
+          result = true;
+        }
+      });
+      resolve(result);
     });
-    return result;
   }
 }
