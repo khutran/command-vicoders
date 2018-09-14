@@ -37,20 +37,20 @@ export default class CreateProjectCommand extends Command {
         dd(`Project ${project} not exitis`);
       }
 
+      if (config.service_nginx === 'false') {
+        const answers = await inquirer.prompt({ type: 'confirm', name: 'install', message: 'you want install nginx : ', default: true });
+        if (answers.install) {
+          const install = new installNginx();
+          await of(install.service());
+        }
+      }
+
       if (config.service_apache === 'false') {
         const answers = await inquirer.prompt({ type: 'confirm', name: 'install', message: 'you want install apache : ', default: true });
         if (answers.install) {
           const install = new installAPache();
           config.service_apache = 'true';
           await of(install.service('2.4.34'));
-        }
-      }
-
-      if (config.service_nginx === 'false') {
-        const answers = await inquirer.prompt({ type: 'confirm', name: 'install', message: 'you want install nginx : ', default: true });
-        if (answers.install) {
-          const install = new installNginx();
-          await of(install.service());
         }
       }
 
