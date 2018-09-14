@@ -5,6 +5,8 @@ import { Downloader } from '../Downloader';
 import fs from 'fs';
 import { App } from '@nsilly/container';
 import path from 'path';
+import colors from 'colors';
+import { dd } from 'dumper.js';
 
 export default class installMysql extends Install {
   async service() {
@@ -18,6 +20,8 @@ export default class installMysql extends Install {
           const url = 'https://github.com/khutran/mysql/archive/ubuntu.zip';
           const dest = path.dirname(`/tmp/ubuntu.zip`);
           await App.make(Downloader).download(url, dest);
+        } else {
+          dd(colors.green('your computer installed mysql'));
         }
       }
       if (osName === 'redhat') {
