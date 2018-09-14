@@ -20,8 +20,8 @@ export default class installMysql extends Install {
           const url = 'https://github.com/khutran/mysql/archive/ubuntu.zip';
           const dest = path.dirname(`/tmp/ubuntu.zip`);
           await App.make(Downloader).download(url, dest);
-        } else if (!(await linux.CheckExists('mysql')) && fs.existsSync('/var/lib/mysql')) {
-          dd(colors.green('your computer installed mysql'));
+        } else if ((await linux.CheckExists('mysql')) && fs.existsSync('/var/lib/mysql')) {
+          dd(colors.green('your computer installed mysql - run "apt install mysql"'));
         }
       }
       if (osName === 'redhat') {
