@@ -87,6 +87,7 @@ export default class installAPache extends Install {
             await exec('useradd -s /sbin/nologin apache');
           }
 
+          config.service_apache = 'true';
           const data = JSON.stringify(config, null, 2);
           fs.writeFileSync(`${__dirname}/../../config/config.json`, data);
 
@@ -141,6 +142,7 @@ export default class installAPache extends Install {
             await exec('useradd -s /sbin/nologin apache');
           }
 
+          config.service_apache = 'true';
           const data = JSON.stringify(config, null, 2);
           fs.writeFileSync(`${__dirname}/../../config/config.json`, data);
 

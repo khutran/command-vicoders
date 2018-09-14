@@ -1,10 +1,19 @@
 {
   "use_db_commands": ["project", "open", "create-config"],
+  "service_apache": "false",
+  "service_mysql": "false",
+  "service_nginx": "false",
+  "service_php": "false",
   "apache": {
-    "dir_home": "",
+    "dir_conf": "",
     "dir_bin": "",
     "dir_systemd": "",
     "dir_etc": ""
   },
-  "nginx": { "dir_home": "", "dir_bin": "", "dir_systemd": "", "dir_etc": "" }
+  "nginx": { "dir_conf": "/usr/local/etc/nginx/servers", "dir_bin": "", "dir_systemd": "", "dir_etc": "/usr/local/etc/nginx/" },
+  "mysql": {
+    "user_root": "root",
+    "pass_root": "",
+    "localhost": "127.0.0.1"
+  }
 }

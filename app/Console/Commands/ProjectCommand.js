@@ -6,6 +6,8 @@ import ProjectTransformer from '../../Transformers/ProjectTranformer';
 import ApiResponse from '../../Responses/ApiResponse';
 import ManagerProjects from '../../Utils/ManagerProjects';
 import { exec } from 'child-process-promise';
+// import { dd } from 'dumper.js';
+
 const path = require('path');
 
 export default class ProjectCommand extends Command {
