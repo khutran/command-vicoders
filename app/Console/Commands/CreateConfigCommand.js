@@ -69,8 +69,15 @@ export default class CreateProjectCommand extends Command {
         await item.update({ framework: item.framework });
       }
 
+      let apache = 'disable';
+      if (config.service_apache === 'true') {
+        apache = 'enable';
+      }
+
+      console.log(apache);
+
       if (item.framework !== 'nodejs') {
-        if (config.service_apache === 'true') {
+        if (apache === 'enable') {
           const config_apache = await exec(`curl https://raw.githubusercontent.com/khutran/config_web/master/default-${item.framework}-apache.conf`);
           config_apache.stdout = _.replace(config_apache.stdout, new RegExp('xxx.com', 'g'), item.name);
           config_apache.stdout = _.replace(config_apache.stdout, new RegExp('/path', 'g'), item.dir_home);
@@ -84,7 +91,7 @@ export default class CreateProjectCommand extends Command {
       if (item.port !== 80) {
         config_nginx.stdout = _.replace(config_nginx.stdout, new RegExp('3000', 'g'), item.port);
       }
-      if (config.service_apache === 'true') {
+      if (apache === 'enable') {
         config_nginx.stdout = _.replace(config_nginx.stdout, new RegExp('#includeApache', 'g'), 'proxy_pass http://apache;');
         if (item.framework === 'angular') {
           const answers = await inquirer.prompt({ type: 'confirm', name: 'bool', message: 'you want use apache', default: true });
