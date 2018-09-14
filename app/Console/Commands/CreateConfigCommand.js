@@ -70,7 +70,7 @@ export default class CreateProjectCommand extends Command {
       }
 
       if (item.framework !== 'nodejs') {
-        if (apache === 'entable') {
+        if (apache === 'enable') {
           const config_apache = await exec(`curl https://raw.githubusercontent.com/khutran/config_web/master/default-${item.framework}-apache.conf`);
           config_apache.stdout = _.replace(config_apache.stdout, new RegExp('xxx.com', 'g'), item.name);
           config_apache.stdout = _.replace(config_apache.stdout, new RegExp('/path', 'g'), item.dir_home);
