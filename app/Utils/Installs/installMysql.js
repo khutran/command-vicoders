@@ -7,7 +7,7 @@ import { App } from '@nsilly/container';
 import path from 'path';
 import colors from 'colors';
 import { dd } from 'dumper.js';
-
+import decompress from 'decompress';
 export default class installMysql extends Install {
   async service() {
     if (this.os === 'darwin') {
@@ -18,8 +18,9 @@ export default class installMysql extends Install {
       if (osName === 'debian') {
         if (!(await linux.CheckExists('mysql')) && !fs.existsSync('/var/lib/mysql')) {
           const url = 'https://github.com/khutran/mysql/archive/ubuntu.zip';
-          // const dest = path.dirname('/tmp/ubuntu.zip');
+          const dest = path.dirname('/tmp/ubuntu.zip');
           await App.make(Downloader).download(url, '/tmp/ubuntu.zip');
+          const extral = await decompress(`/tmp/ubuntu.zip`, dest);
         } else if ((await linux.CheckExists('mysql')) && fs.existsSync('/var/lib/mysql')) {
           dd(colors.green('your computer installed mysql - run "apt install mysql-server"'));
         }
