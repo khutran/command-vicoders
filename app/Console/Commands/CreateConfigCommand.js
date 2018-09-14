@@ -3,13 +3,13 @@ import ProjectRepository from '../../Repositories/ProjectRepository';
 import colors from 'colors';
 import _ from 'lodash';
 import fs from 'fs';
-import Os from '../../Utils/Os/Os';
+// import Os from '../../Utils/Os/Os';
 import config from '../../config/config.json';
 import { dd } from 'dumper.js';
 import { exec } from 'child-process-promise';
 import inquirer from 'inquirer';
 import installAPache from '../../Utils/Installs/installApache';
-import of from 'await-of';
+// import of from 'await-of';
 import installNginx from '../../Utils/Installs/installNginx';
 
 export default class CreateProjectCommand extends Command {
@@ -27,7 +27,6 @@ export default class CreateProjectCommand extends Command {
 
   async handle(project) {
     try {
-      console.log(config);
       const repository = new ProjectRepository();
       const item = await repository
         .orWhere('name', 'like', project)
@@ -44,7 +43,7 @@ export default class CreateProjectCommand extends Command {
         if (answers.install) {
           const install = new installAPache();
           apache = 'enable';
-          await of(install.service());
+          await install.service('2.4.34');
         }
       }
 
@@ -52,7 +51,7 @@ export default class CreateProjectCommand extends Command {
         const answers = await inquirer.prompt({ type: 'confirm', name: 'install', message: 'you want install nginx : ', default: true });
         if (answers.install) {
           const install = new installNginx();
-          await of(install.service());
+          await install.service();
         }
       }
 
