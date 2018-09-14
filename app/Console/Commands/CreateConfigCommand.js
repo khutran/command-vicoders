@@ -9,7 +9,7 @@ import { dd } from 'dumper.js';
 import { exec } from 'child-process-promise';
 import inquirer from 'inquirer';
 import installAPache from '../../Utils/Installs/installApache';
-// import of from 'await-of';
+import of from 'await-of';
 import installNginx from '../../Utils/Installs/installNginx';
 
 export default class CreateProjectCommand extends Command {
@@ -43,7 +43,7 @@ export default class CreateProjectCommand extends Command {
         if (answers.install) {
           const install = new installAPache();
           apache = 'enable';
-          await install.service('2.4.34');
+          await of(install.service('2.4.34'));
         }
       }
 
@@ -51,7 +51,7 @@ export default class CreateProjectCommand extends Command {
         const answers = await inquirer.prompt({ type: 'confirm', name: 'install', message: 'you want install nginx : ', default: true });
         if (answers.install) {
           const install = new installNginx();
-          await install.service();
+          await of(install.service());
         }
       }
 
