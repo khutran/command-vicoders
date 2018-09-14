@@ -28,7 +28,7 @@ export default class installNginx extends Install {
           }
 
           if (_.isEmpty(config.nginx.dir_conf) || !config.nginx.dir_conf) {
-            config.nginx.dir_conf = '/usr/local/etc/nginx/servers';
+            config.nginx.dir_conf = '/etc/nginx/conf.d';
           }
 
           console.log('Install lib... !');
