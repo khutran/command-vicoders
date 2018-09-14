@@ -10,7 +10,7 @@
     "dir_systemd": "",
     "dir_etc": ""
   },
-  "nginx": { "dir_conf": "/usr/local/etc/nginx/servers", "dir_bin": "", "dir_systemd": "", "dir_etc": "/usr/local/etc/nginx/" },
+  "nginx": { "dir_conf": "", "dir_bin": "", "dir_systemd": "", "dir_etc": "" },
   "mysql": {
     "user_root": "root",
     "pass_root": "",
