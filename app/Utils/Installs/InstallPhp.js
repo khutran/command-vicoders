@@ -5,6 +5,8 @@ import { exec } from 'child-process-promise';
 import { dd } from 'dumper.js';
 import _ from 'lodash';
 import fs from 'fs';
+import config from '../../config/config.json';
+
 const util = require('util');
 const rimraf = util.promisify(require('rimraf'));
 
@@ -33,10 +35,14 @@ export default class installPhp extends Install {
             `apt-get install -y php${version}-curl php${version}-mysql php${version}-json php${version}-mbstring php${version}-gd php${version}-intl php${version}-xml php${version}-imagick php${version}-redis php${version}-zip`
           );
 
-          let file = fs.readFileSync(`/etc/php/${version}/fpm/php-fpm.d/www.conf`);
+          let file = fs.readFileSync(`/etc/php/${version}/fpm/pool.d/www.conf`);
           file = _.replace(file, `listen = /var/run/php-fpm/php${version}-fpm.sock', 'listen = /var/run/php-fpm/php-fpm.sock`);
-          await rimraf(`/etc/php/${version}/fpm/php-fpm.d/www.conf`);
-          fs.writeFileSync(`/etc/php/${version}/fpm/php-fpm.d/www.conf`, file);
+          await rimraf(`/etc/php/${version}/fpm/pool.d/www.conf`);
+          fs.writeFileSync(`/etc/php/${version}/fpm/pool.d/www.conf`, file);
+
+          config.service_php = 'true';
+          const data = JSON.stringify(config, null, 2);
+          fs.writeFileSync(`${__dirname}/../../config/config.json`, data);
         } catch (e) {
           dd(e.message);
         }
@@ -56,6 +62,9 @@ export default class installPhp extends Install {
           file = _.replace(file, 'listen = 127.0.0.1:9000', 'listen = /var/run/php-fpm/php-fpm.sock');
           await rimraf('/etc/php-fpm.d/www.conf');
           fs.writeFileSync('/etc/php-fpm.d/www.conf', file);
+
+          const data = JSON.stringify(config, null, 2);
+          fs.writeFileSync(`${__dirname}/../../config/config.json`, data);
         } catch (e) {
           dd(e.message);
         }

@@ -8,6 +8,7 @@ import installApache from '../../Utils/Installs/installApache';
 import installPhp from '../../Utils/Installs/InstallPhp';
 import inquirer from 'inquirer';
 // import of from 'await-of';
+import installMysql from '../../Utils/Installs/installMysql';
 
 export default class VscodeCommand extends Command {
   signature() {
@@ -38,12 +39,16 @@ export default class VscodeCommand extends Command {
       },
       5: {
         name: 'php'
+      },
+      6: {
+        name: 'mysql'
       }
     };
 
     _.mapKeys(listService, (value, key) => {
       console.log(`${key} : ${value.name}`);
     });
+
     const answers = await inquirer.prompt({ type: 'input', name: 'service', message: 'select service want install : ', default: 1 });
     service = listService[answers.service];
     switch (service.name) {
@@ -100,6 +105,15 @@ export default class VscodeCommand extends Command {
           const version = '7.2';
           const install = new installPhp();
           await install.service(version);
+          console.log(colors.green('success .. !'));
+        } catch (e) {
+          console.log(colors.red(e.message));
+        }
+        break;
+      case 'mysql':
+        try {
+          const install = new installMysql();
+          await install.service();
           console.log(colors.green('success .. !'));
         } catch (e) {
           console.log(colors.red(e.message));

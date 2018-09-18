@@ -4,46 +4,34 @@ import Linux from '../../Utils/Os/Linux';
 import Darwin from '../../Utils/Os/Darwin';
 import fs from 'fs';
 import inquirer from 'inquirer';
+import { dd } from 'dumper.js';
 import colors from 'colors';
-import { Exception } from '@nsilly/exceptions';
+import installAPache from '../../Utils/Installs/installApache';
+import installNginx from '../../Utils/Installs/installNginx';
+import installPhp from '../../Utils/Installs/InstallPhp';
+import _ from 'lodash';
 const util = require('util');
 const rimraf = util.promisify(require('rimraf'));
 const mv = util.promisify(require('mv'));
 const lstat = util.promisify(fs.lstat);
+const config = require(`${__dirname}/../../config/config.json`);
 
 export default class InitCommand extends Command {
   signature() {
-    // The command signature is required
-    // You may pass how many argument you want
     return 'init';
   }
 
   description() {
-    // Description is optional
     return 'AUTO setup vcc';
   }
 
-  options() {
-    // The array of your option, it's optional
-    // There are two types of options: those that receive a value and those that don't.
-    // If the option_name come with ? at the end, it mean this option don't want to receive any value, it will be boolean value
-    // Now command support max 6 options
-    // return [{ key: 'option_name?', description: 'The description for option here' }];
-  }
+  options() {}
 
   async handle() {
     try {
       const os = new Os().platform();
       if (os === 'darwin') {
         const user = new Darwin().userInfo();
-
-        if ((await lstat(`${__dirname}/../../config/config.json`)).isSymbolicLink()) {
-          throw new Exception('vcc exitis init', 1);
-        }
-
-        if ((await lstat(`${__dirname}/../../../data/vcc.db`)).isSymbolicLink()) {
-          throw new Exception('vcc exitis init', 1);
-        }
 
         if (!fs.existsSync(`${user.homedir}/.npm/vcc/config.json`)) {
           await mv(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`, { mkdirp: true });
@@ -76,8 +64,8 @@ export default class InitCommand extends Command {
         }
         const config = require(`${__dirname}/../../config/config.json`);
         config.apache.dir_etc = '/usr/local/etc/httpd';
-        config.apache.dir_home = '/usr/local/etc/httpd';
-        config.nginx.dir_home = '/usr/local/etc/nginx';
+        config.apache.dir_conf = '/usr/local/etc/httpd/servers';
+        config.nginx.dir_conf = '/usr/local/etc/nginx/servers/';
         config.nginx.dir_etc = '/usr/local/etc/nginx';
 
         const data = JSON.stringify(config, null, 2);
@@ -85,27 +73,24 @@ export default class InitCommand extends Command {
         console.log(colors.green('success ... !'));
       }
       if (os === 'linux') {
-        const user = new Linux().userInfo();
-        if ((await lstat(`${__dirname}/../../config/config.json`)).isSymbolicLink()) {
-          throw new Exception('vcc exitis init', 1);
-        }
-
-        if ((await lstat(`${__dirname}/../../../data/vcc.db`)).isSymbolicLink()) {
-          throw new Exception('vcc exitis init', 1);
-        }
+        const linux = new Linux();
+        const user = linux.userInfo();
+        const nameOs = linux.osName();
 
         if (!fs.existsSync(`${user.homedir}/.npm/vcc/config.json`)) {
           await mv(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`, { mkdirp: true });
           fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
         } else {
-          const answers = await inquirer.prompt({ type: 'confirm', name: 'config', message: 'Config exitis - you overwrite ?', default: false });
-          if (answers.config) {
-            await rimraf(`${user.homedir}/.npm/vcc/config.json`);
-            await mv(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`, { mkdirp: true });
-            fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
-          } else {
-            await rimraf(`${__dirname}/../../config/config.json`);
-            fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
+          if (!(await lstat(`${__dirname}/../../config/config.json`)).isSymbolicLink()) {
+            const answers = await inquirer.prompt({ type: 'confirm', name: 'config', message: 'Config exitis - you overwrite ?', default: false });
+            if (answers.config) {
+              await rimraf(`${user.homedir}/.npm/vcc/config.json`);
+              await mv(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`, { mkdirp: true });
+              fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
+            } else {
+              await rimraf(`${__dirname}/../../config/config.json`);
+              fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
+            }
           }
         }
 
@@ -113,32 +98,104 @@ export default class InitCommand extends Command {
           await mv(`${__dirname}/../../../data/vcc.db`, `${user.homedir}/.npm/vcc/data/vcc.db`, { mkdirp: true });
           fs.symlinkSync(`${user.homedir}/.npm/vcc/data/vcc.db`, `${__dirname}/../../../data/vcc.db`);
         } else {
-          const answers = await inquirer.prompt({ type: 'confirm', name: 'config', message: 'Database exitis - you overwrite ?', default: false });
-          if (answers.config) {
-            await rimraf(`${user.homedir}/.npm/vcc/data/vcc.db`);
-            await mv(`${__dirname}/../../../data/vcc.db`, `${user.homedir}/.npm/vcc/data/vcc.db`, { mkdirp: true });
-            fs.symlinkSync(`${user.homedir}/.npm/vcc/data/vcc.db`, `${__dirname}/../../../data/vcc.db`);
-          } else {
-            await rimraf(`${__dirname}/../../../data/vcc.db`);
-            fs.symlinkSync(`${user.homedir}/.npm/vcc/data/vcc.db`, `${__dirname}/../../../data/vcc.db`);
+          if (!(await lstat(`${__dirname}/../../../data/vcc.db`)).isSymbolicLink()) {
+            const answers = await inquirer.prompt({ type: 'confirm', name: 'config', message: 'Database exitis - you overwrite ?', default: false });
+            if (answers.config) {
+              await rimraf(`${user.homedir}/.npm/vcc/data/vcc.db`);
+              await mv(`${__dirname}/../../../data/vcc.db`, `${user.homedir}/.npm/vcc/data/vcc.db`, { mkdirp: true });
+              fs.symlinkSync(`${user.homedir}/.npm/vcc/data/vcc.db`, `${__dirname}/../../../data/vcc.db`);
+            } else {
+              await rimraf(`${__dirname}/../../../data/vcc.db`);
+              fs.symlinkSync(`${user.homedir}/.npm/vcc/data/vcc.db`, `${__dirname}/../../../data/vcc.db`);
+            }
           }
         }
-        const config = require(`${__dirname}/../../config/config.json`);
-        config.apache.dir_home = '/usr/local/httpd';
-        config.apache.dir_bin = '/usr/local/httpd/bin/httpd';
-        config.apache.dir_systemd = '/lib/systemd/system';
-        config.apache.dir_etc = '/usr/local/httpd';
-        config.nginx.dir_home = '/usr/local/nginx';
-        config.nginx.dir_bin = '/usr/local/nginx/bin/nginx';
-        config.nginx.dir_systemd = '/lib/systemd/system';
-        config.nginx.dir_etc = '/etc/nginx';
 
-        const data = JSON.stringify(config, null, 2);
-        fs.writeFileSync(`${__dirname}/../../config/config.json`, data);
-        console.log(colors.green('success ... !'));
+        if (nameOs === 'debian') {
+          if (await linux.CheckExists('apache2')) {
+            if (!fs.existsSync('/etc/apache2/conf.d')) {
+              fs.mkdirSync('/etc/apache2/conf.d');
+            }
+            config.apache.dir_etc = '/etc/apache2';
+            config.apache.dir_conf = '/etc/apache2/conf.d';
+          } else {
+            const answers = await inquirer.prompt({ type: 'confirm', name: 'install', message: 'you have want install apache2 ?', default: false });
+            if (answers.install) {
+              await new installAPache().service('2.4.34');
+              config.apache.dir_etc = '/etc/apache2';
+              config.apache.dir_conf = '/etc/apache2/sites-enabled';
+            }
+          }
+
+          if (await linux.CheckExists('nginx')) {
+            if (!fs.existsSync('/etc/nginx/conf.d')) {
+              fs.mkdirSync('/etc/nginx/conf.d');
+            }
+            config.nginx.dir_conf = '/etc/nginx/conf.d';
+            config.nginx.dir_etc = '/etc/nginx';
+          } else {
+            const answers = await inquirer.prompt({ type: 'confirm', name: 'install', message: 'you have want install nginx ?', default: false });
+            if (answers.install) {
+              await new installNginx().service();
+              config.nginx.dir_conf = '/etc/nginx/conf.d';
+              config.nginx.dir_etc = '/etc/nginx';
+            }
+          }
+
+          if (!(await linux.CheckExists('php'))) {
+            const answers = await inquirer.prompt({ type: 'confirm', name: 'install', message: 'you have want install PHP ?', default: false });
+            if (answers.install) {
+              await new installPhp().service('7.2');
+            }
+          }
+
+          const data = JSON.stringify(config, null, 2);
+          fs.writeFileSync(`${__dirname}/../../config/config.json`, data);
+          console.log(colors.green('success ... !'));
+        }
+
+        if (nameOs === 'redhat') {
+          if (await linux.CheckExists('httpd')) {
+            config.apache.dir_etc = '/usr/local/httpd';
+            config.apache.dir_conf = '/usr/local/httpd/conf/extra/web';
+          } else {
+            const answers = await inquirer.prompt({ type: 'confirm', name: 'install', message: 'you have want install apache ?', default: false });
+            if (answers.install) {
+              await new installAPache().service();
+              config.apache.dir_etc = '/usr/local/httpd';
+              config.apache.dir_conf = '/usr/local/httpd/conf/extra/web';
+            }
+          }
+
+          if (await linux.CheckExists('nginx')) {
+            if (!fs.existsSync('/etc/nginx/conf.d')) {
+              fs.mkdirSync('/etc/nginx/conf.d');
+            }
+            config.nginx.dir_conf = '/etc/nginx/conf.d';
+            config.nginx.dir_etc = '/etc/nginx';
+          } else {
+            const answers = await inquirer.prompt({ type: 'confirm', name: 'install', message: 'you have want install nginx ?', default: false });
+            if (answers.install) {
+              await new installNginx().service();
+              config.nginx.dir_conf = '/etc/nginx/conf.d';
+              config.nginx.dir_etc = '/etc/nginx';
+            }
+          }
+
+          if (!(await linux.CheckExists('php'))) {
+            const answers = await inquirer.prompt({ type: 'confirm', name: 'install', message: 'you have want install PHP ?', default: false });
+            if (answers.install) {
+              await new installPhp().service('7.2');
+            }
+          }
+
+          const data = JSON.stringify(config, null, 2);
+          fs.writeFileSync(`${__dirname}/../../config/config.json`, data);
+          console.log(colors.green('success ... !'));
+        }
       }
     } catch (e) {
-      throw new Exception(e.message, 1);
+      dd(colors.red(e.message));
     }
   }
 }

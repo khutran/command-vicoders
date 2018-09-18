@@ -1,11 +1,7 @@
 import Install from './Install';
-import decompress from 'decompress';
-import path from 'path';
 import { Exception } from '@nsilly/exceptions/dist/src/Exceptions/Exception';
 import Linux from '../Os/Linux';
 import fs from 'fs';
-import { App } from '@nsilly/container';
-import { Downloader } from '../Downloader';
 import config from '../../config/config.json';
 import of from 'await-of';
 import _ from 'lodash';
@@ -27,10 +23,10 @@ export default class installNginx extends Install {
 
       if (osName === 'debian') {
         try {
-          if (_.isEmpty(config.nginx.dir_etc) || !config.nginx.dir_etc) {
-            config.nginx.dir_etc = '/etc/nginx';
-          }
-          console.log('Install lib... !');
+          config.nginx.dir_etc = !_.isNil(config.nginx.dir_etc) ? config.nginx.dir_etc : '/etc/nginx';
+          config.nginx.dir_conf = !_.isNil(config.nginx.dir_conf) ? config.nginx.dir_conf : '/etc/nginx/conf.d';
+
+          console.log('Install module... !');
           await exec(
             'apt install -y gcc libpcre3-dev zlib1g-dev libssl-dev libxml2-dev libxslt1-dev  libgd-dev google-perftools libgoogle-perftools-dev libperl-dev libgeoip-dev libatomic-ops-dev'
           );
@@ -43,18 +39,21 @@ export default class installNginx extends Install {
           await rimraf(`${config.nginx.dir_etc}/nginx.conf`);
 
           fs.writeFileSync(`${config.nginx.dir_etc}/nginx.conf`, nginx.stdout);
-          if (!fs.existsSync(`${config.nginx.dir_etc}/conf.d/ssl/certificate.pem`)) {
-            if (!fs.existsSync(`${config.nginx.dir_etc}/conf.d/ssl`)) {
-              fs.mkdirSync(`${config.nginx.dir_etc}/conf.d/ssl`);
+          if (!fs.existsSync(`${config.nginx.dir_conf}/ssl/certificate.pem`)) {
+            if (!fs.existsSync(`${config.nginx.dir_conf}/ssl`)) {
+              fs.mkdirSync(`${config.nginx.dir_conf}/ssl`);
             }
             const certificate = await exec('curl https://raw.githubusercontent.com/khutran/config_web/master/ssl/certificate.pem');
-            fs.writeFileSync(`${config.nginx.dir_etc}/conf.d/ssl/certificate.pem`, certificate.stdout);
+            fs.writeFileSync(`${config.nginx.dir_conf}/ssl/certificate.pem`, certificate.stdout);
           }
-          if (!fs.existsSync(!fs.existsSync(`${config.nginx.dir_etc}/conf.d/ssl/key.pem`))) {
+          if (!fs.existsSync(!fs.existsSync(`${config.nginx.dir_conf}/ssl/key.pem`))) {
             const key = await exec('curl https://raw.githubusercontent.com/khutran/config_web/master/ssl/key.pem');
-            fs.writeFileSync(`${config.nginx.dir_etc}/conf.d/ssl/key.pem`, key.stdout);
+            fs.writeFileSync(`${config.nginx.dir_conf}/ssl/key.pem`, key.stdout);
           }
-          console.log('install .... OK 1');
+          console.log('install .... OK');
+
+          // config.nginx.dir_etc = '/etc/nginx';
+          // config.nginx.dir_conf = '/etc/nginx/conf.d';
           const data = JSON.stringify(config, null, 2);
           fs.writeFileSync(`${__dirname}/../../config/config.json`, data);
         } catch (e) {
@@ -63,9 +62,10 @@ export default class installNginx extends Install {
       }
       if (osName === 'redhat') {
         try {
-          if (_.isEmpty(config.nginx.dir_etc) || !config.nginx.dir_etc) {
-            config.nginx.dir_etc = '/etc/nginx';
-          }
+          config.nginx.dir_etc = !_.isNil(config.nginx.dir_etc) ? config.nginx.dir_etc : '/etc/nginx';
+
+          config.nginx.dir_conf = !_.isNil(config.nginx.dir_conf) ? config.nginx.dir_conf : '/etc/nginx/conf.d';
+
           console.log('Install lib... !');
           await exec('yum install -y gcc openssl-devel apr apr-util');
           await exec('yum install -y epel-release');
@@ -74,18 +74,21 @@ export default class installNginx extends Install {
           await rimraf(`${config.nginx.dir_etc}/nginx.conf`);
 
           fs.writeFileSync(`${config.nginx.dir_etc}/nginx.conf`, nginx.stdout);
-          if (!fs.existsSync(`${config.nginx.dir_etc}/conf.d/ssl/certificate.pem`)) {
-            if (!fs.existsSync(`${config.nginx.dir_etc}/conf.d/ssl`)) {
-              fs.mkdirSync(`${config.nginx.dir_etc}/conf.d/ssl`);
+          if (!fs.existsSync(`${config.nginx.dir_conf}/ssl/certificate.pem`)) {
+            if (!fs.existsSync(`${config.nginx.dir_conf}/ssl`)) {
+              fs.mkdirSync(`${config.nginx.dir_conf}/ssl`);
             }
             const certificate = await exec('curl https://raw.githubusercontent.com/khutran/config_web/master/ssl/certificate.pem');
-            fs.writeFileSync(`${config.nginx.dir_etc}/conf.d/ssl/certificate.pem`, certificate.stdout);
+            fs.writeFileSync(`${config.nginx.dir_conf}/ssl/certificate.pem`, certificate.stdout);
           }
-          if (!fs.existsSync(!fs.existsSync(`${config.nginx.dir_etc}/conf.d/ssl/key.pem`))) {
+          if (!fs.existsSync(!fs.existsSync(`${config.nginx.dir_conf}/ssl/key.pem`))) {
             const key = await exec('curl https://raw.githubusercontent.com/khutran/config_web/master/ssl/key.pem');
-            fs.writeFileSync(`${config.nginx.dir_etc}/conf.d/ssl/key.pem`, key.stdout);
+            fs.writeFileSync(`${config.nginx.dir_conf}/ssl/key.pem`, key.stdout);
           }
-          console.log('install .... OK 1');
+          console.log('install .... OK');
+
+          // config.nginx.dir_etc = '/etc/nginx';
+          // config.nginx.dir_conf = '/etc/nginx/conf.d';
           const data = JSON.stringify(config, null, 2);
           fs.writeFileSync(`${__dirname}/../../config/config.json`, data);
         } catch (e) {

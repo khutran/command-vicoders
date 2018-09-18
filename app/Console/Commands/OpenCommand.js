@@ -58,8 +58,8 @@ export default class OpenCommand extends Command {
           editer = option.e;
         }
       }
+      process.chdir(item.dir_home);
       exec(`${editer} ${item.dir_home}`);
-      exec(`cd ${item.dir_home}`);
     } catch (e) {
       console.log(colors.red(e.message));
     }
