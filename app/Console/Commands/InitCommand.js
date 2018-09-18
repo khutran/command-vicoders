@@ -122,6 +122,8 @@ export default class InitCommand extends Command {
             const answers = await inquirer.prompt({ type: 'confirm', name: 'install', message: 'you have want install apache2 ?', default: false });
             if (answers.install) {
               await new installAPache().service('2.4.34');
+              config.apache.dir_etc = '/etc/apache2';
+              config.apache.dir_conf = '/etc/apache2/conf.d';
             }
           }
 
@@ -135,6 +137,8 @@ export default class InitCommand extends Command {
             const answers = await inquirer.prompt({ type: 'confirm', name: 'install', message: 'you have want install nginx ?', default: false });
             if (answers.install) {
               await new installNginx().service();
+              config.nginx.dir_conf = '/etc/nginx/conf.d';
+              config.nginx.dir_etc = '/etc/nginx';
             }
           }
 
@@ -145,12 +149,7 @@ export default class InitCommand extends Command {
             }
           }
 
-          const new_config = require(`${__dirname}/../../config/config.json`);
-          dd(new_config);
-          console.log(typeof new_config);
-          const data = JSON.stringify(_.assign(config, new_config), null, 2);
-          console.log(`new config: ${data}`);
-          console.log(typeof data);
+          const data = JSON.stringify(config, null, 2);
           fs.writeFileSync(`${__dirname}/../../config/config.json`, data);
           console.log(colors.green('success ... !'));
         }
@@ -163,6 +162,8 @@ export default class InitCommand extends Command {
             const answers = await inquirer.prompt({ type: 'confirm', name: 'install', message: 'you have want install apache ?', default: false });
             if (answers.install) {
               await new installAPache().service();
+              config.apache.dir_etc = '/usr/local/httpd';
+              config.apache.dir_conf = '/usr/local/httpd/conf/extra/web';
             }
           }
 
@@ -176,6 +177,8 @@ export default class InitCommand extends Command {
             const answers = await inquirer.prompt({ type: 'confirm', name: 'install', message: 'you have want install nginx ?', default: false });
             if (answers.install) {
               await new installNginx().service();
+              config.nginx.dir_conf = '/etc/nginx/conf.d';
+              config.nginx.dir_etc = '/etc/nginx';
             }
           }
 
@@ -186,8 +189,7 @@ export default class InitCommand extends Command {
             }
           }
 
-          const new_config = require(`${__dirname}/../../config/config.json`);
-          const data = JSON.stringify(_.assign(config, new_config), null, 2);
+          const data = JSON.stringify(config, null, 2);
           fs.writeFileSync(`${__dirname}/../../config/config.json`, data);
           console.log(colors.green('success ... !'));
         }
