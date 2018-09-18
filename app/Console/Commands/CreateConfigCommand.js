@@ -48,7 +48,7 @@ export default class CreateProjectCommand extends Command {
         dd(`Project ${project} not exitis`);
       }
 
-      if (config.service_nginx === 'false' || !platform.CheckExists('nginx')) {
+      if (!platform.CheckExists('nginx')) {
         const answers = await inquirer.prompt({ type: 'confirm', name: 'install', message: 'you want install nginx : ', default: true });
         if (answers.install) {
           const install = new installNginx();
@@ -56,7 +56,7 @@ export default class CreateProjectCommand extends Command {
         }
       }
 
-      if (config.service_apache === 'false' || !platform.CheckExists('httpd')) {
+      if (!platform.CheckExists('apache2') || !platform.CheckExists('httpd')) {
         const answers = await inquirer.prompt({ type: 'confirm', name: 'install', message: 'you want install apache : ', default: true });
         if (answers.install) {
           const install = new installAPache();

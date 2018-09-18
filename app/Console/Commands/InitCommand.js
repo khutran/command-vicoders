@@ -123,7 +123,7 @@ export default class InitCommand extends Command {
             if (answers.install) {
               await new installAPache().service('2.4.34');
               config.apache.dir_etc = '/etc/apache2';
-              config.apache.dir_conf = '/etc/apache2/conf.d';
+              config.apache.dir_conf = '/etc/apache2/sites-enabled';
             }
           }
 
