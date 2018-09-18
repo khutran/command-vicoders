@@ -4,6 +4,7 @@ import Linux from '../../Utils/Os/Linux';
 import Darwin from '../../Utils/Os/Darwin';
 import fs from 'fs';
 import inquirer from 'inquirer';
+import { dd } from 'dumper.js';
 import colors from 'colors';
 import installAPache from '../../Utils/Installs/installApache';
 import installNginx from '../../Utils/Installs/installNginx';
@@ -187,7 +188,7 @@ export default class InitCommand extends Command {
         }
       }
     } catch (e) {
-      console.log(e.message);
+      dd(colors.red(e.message));
     }
   }
 }
