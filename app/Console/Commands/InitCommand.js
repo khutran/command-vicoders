@@ -32,13 +32,13 @@ export default class InitCommand extends Command {
       if (os === 'darwin') {
         const user = new Darwin().userInfo();
 
-        if ((await lstat(`${__dirname}/../../config/config.json`)).isSymbolicLink()) {
-          throw new Exception('vcc exitis init', 1);
-        }
+        // if ((await lstat(`${__dirname}/../../config/config.json`)).isSymbolicLink()) {
+        //   throw new Exception('vcc exitis init', 1);
+        // }
 
-        if ((await lstat(`${__dirname}/../../../data/vcc.db`)).isSymbolicLink()) {
-          throw new Exception('vcc exitis init', 1);
-        }
+        // if ((await lstat(`${__dirname}/../../../data/vcc.db`)).isSymbolicLink()) {
+        //   throw new Exception('vcc exitis init', 1);
+        // }
 
         if (!fs.existsSync(`${user.homedir}/.npm/vcc/config.json`)) {
           await mv(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`, { mkdirp: true });
@@ -83,13 +83,13 @@ export default class InitCommand extends Command {
         const linux = new Linux();
         const user = linux.userInfo();
         const nameOs = linux.osName();
-        if ((await lstat(`${__dirname}/../../config/config.json`)).isSymbolicLink()) {
-          throw new Exception('vcc exitis init', 1);
-        }
+        // if ((await lstat(`${__dirname}/../../config/config.json`)).isSymbolicLink()) {
+        //   throw new Exception('vcc exitis init', 1);
+        // }
 
-        if ((await lstat(`${__dirname}/../../../data/vcc.db`)).isSymbolicLink()) {
-          throw new Exception('vcc exitis init', 1);
-        }
+        // if ((await lstat(`${__dirname}/../../../data/vcc.db`)).isSymbolicLink()) {
+        //   throw new Exception('vcc exitis init', 1);
+        // }
 
         if (!fs.existsSync(`${user.homedir}/.npm/vcc/config.json`)) {
           await mv(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`, { mkdirp: true });
