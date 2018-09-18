@@ -94,7 +94,7 @@ export default class InitCommand extends Command {
         if (!fs.existsSync(`${user.homedir}/.npm/vcc/config.json`) && !(await lstat(`${__dirname}/../../config/config.json`)).isSymbolicLink()) {
           await mv(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`, { mkdirp: true });
           fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
-        } else if (await lstat(`${__dirname}/../../config/config.json`).isSymbolicLink()) {
+        } else if ((await lstat(`${__dirname}/../../config/config.json`)).isSymbolicLink()) {
           console.log('test');
         } else {
           const answers = await inquirer.prompt({ type: 'confirm', name: 'config', message: 'Config exitis - you overwrite ?', default: false });
