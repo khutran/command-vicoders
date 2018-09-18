@@ -126,6 +126,7 @@ export default class InitCommand extends Command {
         }
 
         if (nameOs === 'debian') {
+          console.log(linux.CheckExists('apache2'));
           if (linux.CheckExists('apache2')) {
             if (!fs.existsSync('/etc/apache2/conf.d')) {
               fs.mkdirSync('/etc/apache2/conf.d');
