@@ -76,8 +76,8 @@ export default class InitCommand extends Command {
         }
         const config = require(`${__dirname}/../../config/config.json`);
         config.apache.dir_etc = '/usr/local/etc/httpd';
-        config.apache.dir_home = '/usr/local/etc/httpd';
-        config.nginx.dir_home = '/usr/local/etc/nginx';
+        config.apache.dir_conf = '/usr/local/etc/httpd/servers';
+        config.nginx.dir_conf = '/usr/local/etc/nginx/servers/';
         config.nginx.dir_etc = '/usr/local/etc/nginx';
 
         const data = JSON.stringify(config, null, 2);
@@ -124,13 +124,9 @@ export default class InitCommand extends Command {
           }
         }
         const config = require(`${__dirname}/../../config/config.json`);
-        config.apache.dir_home = '/usr/local/httpd';
-        config.apache.dir_bin = '/usr/local/httpd/bin/httpd';
-        config.apache.dir_systemd = '/lib/systemd/system';
         config.apache.dir_etc = '/usr/local/httpd';
-        config.nginx.dir_home = '/usr/local/nginx';
-        config.nginx.dir_bin = '/usr/local/nginx/bin/nginx';
-        config.nginx.dir_systemd = '/lib/systemd/system';
+        config.apache.dir_conf = '/usr/local/httpd/conf/extra/web';
+        config.nginx.dir_conf = '/etc/nginx/conf.d';
         config.nginx.dir_etc = '/etc/nginx';
 
         const data = JSON.stringify(config, null, 2);

@@ -6,11 +6,9 @@
   "service_php": "false",
   "apache": {
     "dir_conf": "",
-    "dir_bin": "",
-    "dir_systemd": "",
     "dir_etc": ""
   },
-  "nginx": { "dir_conf": "", "dir_bin": "", "dir_systemd": "", "dir_etc": "" },
+  "nginx": { "dir_conf": "", "dir_etc": "" },
   "mysql": {
     "user_root": "root",
     "pass_root": "",
