@@ -112,7 +112,7 @@ export default class InitCommand extends Command {
           await mv(`${__dirname}/../../../data/vcc.db`, `${user.homedir}/.npm/vcc/data/vcc.db`, { mkdirp: true });
           fs.symlinkSync(`${user.homedir}/.npm/vcc/data/vcc.db`, `${__dirname}/../../../data/vcc.db`);
         } else {
-          if ((await lstat(`${__dirname}/../../data/vcc.db`)).isSymbolicLink()) {
+          if ((await lstat(`${__dirname}/../../../data/vcc.db`)).isSymbolicLink()) {
             const answers = await inquirer.prompt({ type: 'confirm', name: 'config', message: 'Database exitis - you overwrite ?', default: false });
             if (answers.config) {
               await rimraf(`${user.homedir}/.npm/vcc/data/vcc.db`);
