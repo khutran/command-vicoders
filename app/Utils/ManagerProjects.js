@@ -5,7 +5,7 @@ export default class ManagerProjects {
   async framework() {
     let framework;
     if (fs.existsSync('wp-admin') && fs.existsSync('wp-content') && fs.existsSync('wp-includes')) {
-      framework = 'workpress';
+      framework = 'wordpress';
     }
     if (
       fs.existsSync('app/') &&

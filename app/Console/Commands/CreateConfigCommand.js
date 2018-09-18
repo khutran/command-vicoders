@@ -115,17 +115,9 @@ export default class CreateProjectCommand extends Command {
         }
       }
 
-      if (item.framework === 'angular') {
-        config_nginx.stdout = _.replace(config_nginx.stdout, new RegExp('#includeApache', 'g'), 'proxy_pass http://web');
-      }
-
-      fs.writeFile(`${config.nginx.dir_conf}/nginx-${item.name}.conf`, config_nginx.stdout, err => {
-        if (err) {
-          dd(err.message);
-        }
-        console.log(colors.green(`${config.nginx.dir_conf}/nginx-${item.name}.conf`));
-        console.log(colors.green('Create success ... !'));
-      });
+      fs.writeFileSync(`${config.nginx.dir_conf}/nginx-${item.name}.conf`, config_nginx.stdout);
+      console.log(colors.green(`${config.nginx.dir_conf}/nginx-${item.name}.conf`));
+      console.log(colors.green('Create success ... !'));
     } catch (e) {
       dd(colors.red(e.message));
     }
