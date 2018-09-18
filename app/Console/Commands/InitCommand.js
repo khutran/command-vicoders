@@ -8,7 +8,7 @@ import { dd } from 'dumper.js';
 import colors from 'colors';
 import installAPache from '../../Utils/Installs/installApache';
 import installNginx from '../../Utils/Installs/installNginx';
-import { Exception } from '@nsilly/exceptions';
+import installPhp from '../../Utils/Installs/InstallPhp';
 const util = require('util');
 const rimraf = util.promisify(require('rimraf'));
 const mv = util.promisify(require('mv'));
@@ -31,14 +31,6 @@ export default class InitCommand extends Command {
       const os = new Os().platform();
       if (os === 'darwin') {
         const user = new Darwin().userInfo();
-
-        // if ((await lstat(`${__dirname}/../../config/config.json`)).isSymbolicLink()) {
-        //   throw new Exception('vcc exitis init', 1);
-        // }
-
-        // if ((await lstat(`${__dirname}/../../../data/vcc.db`)).isSymbolicLink()) {
-        //   throw new Exception('vcc exitis init', 1);
-        // }
 
         if (!fs.existsSync(`${user.homedir}/.npm/vcc/config.json`)) {
           await mv(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`, { mkdirp: true });
@@ -83,13 +75,6 @@ export default class InitCommand extends Command {
         const linux = new Linux();
         const user = linux.userInfo();
         const nameOs = linux.osName();
-        // if ((await lstat(`${__dirname}/../../config/config.json`)).isSymbolicLink()) {
-        //   throw new Exception('vcc exitis init', 1);
-        // }
-
-        // if ((await lstat(`${__dirname}/../../../data/vcc.db`)).isSymbolicLink()) {
-        //   throw new Exception('vcc exitis init', 1);
-        // }
 
         if (!fs.existsSync(`${user.homedir}/.npm/vcc/config.json`)) {
           await mv(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`, { mkdirp: true });
@@ -152,6 +137,14 @@ export default class InitCommand extends Command {
             }
           }
 
+          if (!(await linux.CheckExists('php'))) {
+            const answers = await inquirer.prompt({ type: 'confirm', name: 'install', message: 'you have want install PHP ?', default: false });
+            if (answers.install) {
+              await new installPhp().service();
+            }
+          }
+
+          console.log(config);
           const data = JSON.stringify(config, null, 2);
           fs.writeFileSync(`${__dirname}/../../config/config.json`, data);
           console.log(colors.green('success ... !'));
@@ -178,6 +171,13 @@ export default class InitCommand extends Command {
             const answers = await inquirer.prompt({ type: 'confirm', name: 'install', message: 'you have want install nginx ?', default: false });
             if (answers.install) {
               await new installNginx().service();
+            }
+          }
+
+          if (!(await linux.CheckExists('php'))) {
+            const answers = await inquirer.prompt({ type: 'confirm', name: 'install', message: 'you have want install PHP ?', default: false });
+            if (answers.install) {
+              await new installPhp().service();
             }
           }
 
