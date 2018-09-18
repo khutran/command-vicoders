@@ -1,9 +1,5 @@
 {
   "use_db_commands": ["project", "open", "create-config"],
-  "service_apache": "false",
-  "service_mysql": "false",
-  "service_nginx": "false",
-  "service_php": "false",
   "apache": {
     "dir_conf": "",
     "dir_etc": ""

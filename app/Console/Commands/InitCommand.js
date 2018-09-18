@@ -91,9 +91,11 @@ export default class InitCommand extends Command {
         //   throw new Exception('vcc exitis init', 1);
         // }
 
-        if (!fs.existsSync(`${user.homedir}/.npm/vcc/config.json`)) {
+        if (!fs.existsSync(`${user.homedir}/.npm/vcc/config.json`) && !(await lstat(`${__dirname}/../../config/config.json`)).isSymbolicLink()) {
           await mv(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`, { mkdirp: true });
           fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
+        } else if (fs.existsSync(`${user.homedir}/.npm/vcc/config.json`) && (await lstat(`${__dirname}/../../config/config.json`)).isSymbolicLink()) {
+          return;
         } else {
           const answers = await inquirer.prompt({ type: 'confirm', name: 'config', message: 'Config exitis - you overwrite ?', default: false });
           if (answers.config) {
@@ -126,7 +128,6 @@ export default class InitCommand extends Command {
             if (!fs.existsSync('/etc/apache2/conf.d')) {
               fs.mkdirSync('/etc/apache2/conf.d');
             }
-            config.apache.service_apache = true;
             config.apache.dir_etc = '/etc/apache2';
             config.apache.dir_conf = '/etc/apache2/conf.d';
           } else {
@@ -140,7 +141,6 @@ export default class InitCommand extends Command {
             if (!fs.existsSync('/etc/nginx/conf.d')) {
               fs.mkdirSync('/etc/nginx/conf.d');
             }
-            config.nginx.service_nginx = true;
             config.nginx.dir_conf = '/etc/nginx/conf.d';
             config.nginx.dir_etc = '/etc/nginx';
           } else {

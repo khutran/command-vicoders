@@ -63,7 +63,6 @@ export default class installPhp extends Install {
           await rimraf('/etc/php-fpm.d/www.conf');
           fs.writeFileSync('/etc/php-fpm.d/www.conf', file);
 
-          config.service_php = 'true';
           const data = JSON.stringify(config, null, 2);
           fs.writeFileSync(`${__dirname}/../../config/config.json`, data);
         } catch (e) {
