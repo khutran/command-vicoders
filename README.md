@@ -24,18 +24,19 @@ yarn global add @vicoders/cli
 
 ## Availabel Commands
 
-### Create Project
-
-> vcc create-project type --name="Project Name"
-
-Create angular admin project
-
+For the list of all availabel commands, run following command
 ```
-vcc create-project angular-admin
+vcc --help
 ```
 
-Create HTML/CSS/JS kit
+#### Create Project
 
 ```
-vcc create-project kit-html-css
+vcc create-project --name="Project Name"
 ```
+
+#### Git
+```
+vcc git
+```
+
