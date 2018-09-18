@@ -126,8 +126,7 @@ export default class InitCommand extends Command {
         }
 
         if (nameOs === 'debian') {
-          console.log(linux.CheckExists('apache2'));
-          if (linux.CheckExists('apache2')) {
+          if (await linux.CheckExists('apache2')) {
             if (!fs.existsSync('/etc/apache2/conf.d')) {
               fs.mkdirSync('/etc/apache2/conf.d');
             }
@@ -140,7 +139,7 @@ export default class InitCommand extends Command {
             }
           }
 
-          if (linux.CheckExists('nginx')) {
+          if (await linux.CheckExists('nginx')) {
             if (!fs.existsSync('/etc/nginx/conf.d')) {
               fs.mkdirSync('/etc/nginx/conf.d');
             }
@@ -159,7 +158,7 @@ export default class InitCommand extends Command {
         }
 
         if (nameOs === 'redhat') {
-          if (linux.CheckExists('httpd')) {
+          if (await linux.CheckExists('httpd')) {
             if (!fs.existsSync('/etc/httpd/conf.d')) {
               fs.mkdirSync('/etc/httpd/conf.d');
             }
@@ -172,7 +171,7 @@ export default class InitCommand extends Command {
             }
           }
 
-          if (linux.CheckExists('nginx')) {
+          if (await linux.CheckExists('nginx')) {
             if (!fs.existsSync('/etc/nginx/conf.d')) {
               fs.mkdirSync('/etc/nginx/conf.d');
             }
