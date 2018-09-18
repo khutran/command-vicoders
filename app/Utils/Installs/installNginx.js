@@ -23,15 +23,10 @@ export default class installNginx extends Install {
 
       if (osName === 'debian') {
         try {
-          if (_.isEmpty(config.nginx.dir_etc) || !config.nginx.dir_etc) {
-            config.nginx.dir_etc = '/etc/nginx';
-          }
+          config.nginx.dir_etc = !_.isNil(config.nginx.dir_etc) ? config.nginx.dir_etc : '/etc/nginx';
+          config.nginx.dir_conf = !_.isNil(config.nginx.dir_conf) ? config.nginx.dir_conf : '/etc/nginx/conf.d';
 
-          if (_.isEmpty(config.nginx.dir_conf) || !config.nginx.dir_conf) {
-            config.nginx.dir_conf = '/etc/nginx/conf.d';
-          }
-
-          console.log('Install lib... !');
+          console.log('Install module... !');
           await exec(
             'apt install -y gcc libpcre3-dev zlib1g-dev libssl-dev libxml2-dev libxslt1-dev  libgd-dev google-perftools libgoogle-perftools-dev libperl-dev libgeoip-dev libatomic-ops-dev'
           );
@@ -57,8 +52,8 @@ export default class installNginx extends Install {
           }
           console.log('install .... OK 1');
 
-          config.nginx.dir_etc = '/etc/nginx';
-          config.nginx.dir_conf = '/etc/nginx/conf.d';
+          // config.nginx.dir_etc = '/etc/nginx';
+          // config.nginx.dir_conf = '/etc/nginx/conf.d';
           const data = JSON.stringify(config, null, 2);
           fs.writeFileSync(`${__dirname}/../../config/config.json`, data);
         } catch (e) {
@@ -67,13 +62,9 @@ export default class installNginx extends Install {
       }
       if (osName === 'redhat') {
         try {
-          if (_.isEmpty(config.nginx.dir_etc) || !config.nginx.dir_etc) {
-            config.nginx.dir_etc = '/etc/nginx';
-          }
+          config.nginx.dir_etc = !_.isNil(config.nginx.dir_etc) ? config.nginx.dir_etc : '/etc/nginx';
 
-          if (_.isEmpty(config.nginx.dir_conf) || !config.nginx.dir_conf) {
-            config.nginx.dir_conf = '/etc/nginx/conf.d';
-          }
+          config.nginx.dir_conf = !_.isNil(config.nginx.dir_conf) ? config.nginx.dir_conf : '/etc/nginx/conf.d';
 
           console.log('Install lib... !');
           await exec('yum install -y gcc openssl-devel apr apr-util');
@@ -94,7 +85,7 @@ export default class installNginx extends Install {
             const key = await exec('curl https://raw.githubusercontent.com/khutran/config_web/master/ssl/key.pem');
             fs.writeFileSync(`${config.nginx.dir_conf}/ssl/key.pem`, key.stdout);
           }
-          console.log('install .... OK 1');
+          console.log('install .... OK');
 
           config.nginx.dir_etc = '/etc/nginx';
           config.nginx.dir_conf = '/etc/nginx/conf.d';

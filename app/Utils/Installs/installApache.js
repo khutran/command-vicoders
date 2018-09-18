@@ -21,16 +21,13 @@ export default class installAPache extends Install {
     if (this.os === 'linux') {
       const linux = new Linux();
       const osName = linux.osName();
-      if (_.isEmpty(config.apache.dir_etc) || !config.apache.dir_etc) {
-        config.apache.dir_etc = '/usr/local/httpd';
-      }
-
-      if (_.isEmpty(config.apache.dir_conf) || !config.apache.dir_conf) {
-        config.apache.dir_conf = '/usr/local/httpd/conf/extra/web';
-      }
 
       if (osName === 'debian') {
         try {
+          config.apache.dir_etc = !_.isNil(config.apache.dir_etc) ? config.apache.dir_etc : '/etc/apache2';
+
+          config.apache.dir_conf = !_.isNil(config.apache.dir_conf) ? config.apache.dir_conf : '/etc/apache2/conf.d';
+
           console.log('Install module ... !');
           await exec('apt-get -y update');
           await exec(
@@ -46,6 +43,10 @@ export default class installAPache extends Install {
       }
       if (osName === 'redhat') {
         try {
+          config.apache.dir_etc = !_.isNil(config.apache.dir_etc) ? config.apache.dir_etc : '/usr/local/httpd';
+
+          config.apache.dir_conf = !_.isNil(config.apache.dir_conf) ? config.apache.dir_conf : '/usr/local/httpd/conf/extra/web';
+
           console.log('Install lib... !');
           await exec('yum install -y gcc openssl-devel apr apr-util');
           const aliasName = 'centos';
