@@ -5,31 +5,25 @@ import Darwin from '../../Utils/Os/Darwin';
 import fs from 'fs';
 import inquirer from 'inquirer';
 import colors from 'colors';
+import installAPache from '../../Utils/Installs/installApache';
+import installNginx from '../../Utils/Installs/installNginx';
 import { Exception } from '@nsilly/exceptions';
 const util = require('util');
 const rimraf = util.promisify(require('rimraf'));
 const mv = util.promisify(require('mv'));
 const lstat = util.promisify(fs.lstat);
+const config = require(`${__dirname}/../../config/config.json`);
 
 export default class InitCommand extends Command {
   signature() {
-    // The command signature is required
-    // You may pass how many argument you want
     return 'init';
   }
 
   description() {
-    // Description is optional
     return 'AUTO setup vcc';
   }
 
-  options() {
-    // The array of your option, it's optional
-    // There are two types of options: those that receive a value and those that don't.
-    // If the option_name come with ? at the end, it mean this option don't want to receive any value, it will be boolean value
-    // Now command support max 6 options
-    // return [{ key: 'option_name?', description: 'The description for option here' }];
-  }
+  options() {}
 
   async handle() {
     try {
@@ -85,7 +79,9 @@ export default class InitCommand extends Command {
         console.log(colors.green('success ... !'));
       }
       if (os === 'linux') {
-        const user = new Linux().userInfo();
+        const linux = new Linux();
+        const user = linux.userInfo();
+        const nameOs = linux.osName();
         if ((await lstat(`${__dirname}/../../config/config.json`)).isSymbolicLink()) {
           throw new Exception('vcc exitis init', 1);
         }
@@ -123,15 +119,70 @@ export default class InitCommand extends Command {
             fs.symlinkSync(`${user.homedir}/.npm/vcc/data/vcc.db`, `${__dirname}/../../../data/vcc.db`);
           }
         }
-        const config = require(`${__dirname}/../../config/config.json`);
-        config.apache.dir_etc = '/usr/local/httpd';
-        config.apache.dir_conf = '/usr/local/httpd/conf/extra/web';
-        config.nginx.dir_conf = '/etc/nginx/conf.d';
-        config.nginx.dir_etc = '/etc/nginx';
 
-        const data = JSON.stringify(config, null, 2);
-        fs.writeFileSync(`${__dirname}/../../config/config.json`, data);
-        console.log(colors.green('success ... !'));
+        if (nameOs === 'debian') {
+          if (linux.CheckExists('apache2')) {
+            if (!fs.existsSync('/etc/apache2/conf.d')) {
+              fs.mkdirSync('/etc/apache2/conf.d');
+            }
+            config.apache.dir_etc = '/etc/apache2';
+            config.apache.dir_conf = '/etc/apache2/conf.d';
+          } else {
+            const answers = await inquirer.prompt({ type: 'confirm', name: 'install', message: 'you have want install apache2 ?', default: false });
+            if (answers.install) {
+              await new installAPache().service();
+            }
+          }
+
+          if (linux.CheckExists('nginx')) {
+            if (!fs.existsSync('/etc/nginx/conf.d')) {
+              fs.mkdirSync('/etc/nginx/conf.d');
+            }
+            config.nginx.dir_conf = '/etc/nginx/conf.d';
+            config.nginx.dir_etc = '/etc/nginx';
+          } else {
+            const answers = await inquirer.prompt({ type: 'confirm', name: 'install', message: 'you have want install nginx ?', default: false });
+            if (answers.install) {
+              await new installNginx().service();
+            }
+          }
+
+          const data = JSON.stringify(config, null, 2);
+          fs.writeFileSync(`${__dirname}/../../config/config.json`, data);
+          console.log(colors.green('success ... !'));
+        }
+
+        if (nameOs === 'redhat') {
+          if (linux.CheckExists('httpd')) {
+            if (!fs.existsSync('/etc/httpd/conf.d')) {
+              fs.mkdirSync('/etc/httpd/conf.d');
+            }
+            config.apache.dir_etc = '/etc/httpd';
+            config.apache.dir_conf = '/etc/httpd/conf.d';
+          } else {
+            const answers = await inquirer.prompt({ type: 'confirm', name: 'install', message: 'you have want install apache ?', default: false });
+            if (answers.install) {
+              await new installAPache().service();
+            }
+          }
+
+          if (linux.CheckExists('nginx')) {
+            if (!fs.existsSync('/etc/nginx/conf.d')) {
+              fs.mkdirSync('/etc/nginx/conf.d');
+            }
+            config.nginx.dir_conf = '/etc/nginx/conf.d';
+            config.nginx.dir_etc = '/etc/nginx';
+          } else {
+            const answers = await inquirer.prompt({ type: 'confirm', name: 'install', message: 'you have want install nginx ?', default: false });
+            if (answers.install) {
+              await new installNginx().service();
+            }
+          }
+
+          const data = JSON.stringify(config, null, 2);
+          fs.writeFileSync(`${__dirname}/../../config/config.json`, data);
+          console.log(colors.green('success ... !'));
+        }
       }
     } catch (e) {
       throw new Exception(e.message, 1);

@@ -32,61 +32,15 @@ export default class installAPache extends Install {
       if (osName === 'debian') {
         try {
           console.log('Install module ... !');
+          await exec('apt-get -y update');
           await exec(
-            'apt install -y gcc libapr1 libapr1-dev libaprutil1-dev libpcre3-dev zlib1g-dev libssl-dev libxml2-dev libxslt1-dev  libgd-dev google-perftools libgoogle-perftools-dev libperl-dev libgeoip-dev libatomic-ops-dev'
+            'apt-get install -y gcc libapr1 libapr1-dev libaprutil1-dev libpcre3-dev zlib1g-dev libssl-dev libxml2-dev libxslt1-dev  libgd-dev google-perftools libgoogle-perftools-dev libperl-dev libgeoip-dev libatomic-ops-dev'
           );
-          const aliasName = 'ubuntu';
-          const url = `https://github.com/khutran/${aliasName}-httpd/archive/${version}.zip`;
-          await App.make(Downloader).download(url, `/tmp/${version}.zip`);
-          const dest = path.dirname(`/tmp/${version}.zip`);
-          const extral = await decompress(`/tmp/${version}.zip`, dest);
 
-          if (fs.existsSync('/etc/systemd/system/multi-user.target.wants/httpd.service')) {
-            await rimraf('/etc/systemd/system/multi-user.target.wants/httpd.service');
-          }
-
-          if (fs.existsSync('/lib/systemd/system/httpd.service')) {
-            await rimraf('/lib/systemd/system/httpd.service');
-          }
-
-          if (fs.existsSync('/usr/sbin/httpd')) {
-            await rimraf('/usr/sbin/httpd');
-          }
-
-          if (fs.existsSync(config.apache.dir_etc)) {
-            await mv(config.apache.dir_etc, '/tmp/apache_old', { mkdirp: true });
-            await mv(`${dest}/${extral[0].path}`, config.apache.dir_etc, { mkdirp: true });
-            await rimraf(config.apache.dir_conf);
-            await rimraf(`${config.apache.dir_etc}/conf/httpd.conf`);
-            await mv('/tmp/apache_old/conf/httpd.conf', `${config.apache.dir_etc}/conf/httpd.conf`, { mkdirp: true });
-            await mv('/tmp/apache_old/conf/extra/web', config.apache.dir_conf, { mkdirp: true });
-            await rimraf('/tmp/apache_old/');
-          } else {
-            await mv(`${dest}/${extral[0].path}`, config.apache.dir_etc, { mkdirp: true });
-          }
-
-          await mv(`${config.apache.dir_etc}/service/httpd.service`, '/lib/systemd/system/httpd.service', { mkdirp: true });
-
-          if (!fs.existsSync('/usr/sbin/httpd')) {
-            fs.symlinkSync(`${config.apache.dir_etc}/bin/httpd`, '/usr/sbin/httpd');
-          }
-
-          if (!fs.existsSync('/etc/systemd/system/multi-user.target.wants/httpd.service')) {
-            fs.symlinkSync('/lib/systemd/system/httpd.service', '/etc/systemd/system/multi-user.target.wants/httpd.service');
-          }
-
-          const passpd = fs.readFileSync('/etc/passwd');
-          if (passpd.indexOf('apache') === -1) {
-            await exec('useradd -s /sbin/nologin apache');
-          }
-
+          await exec('apt-get install apache2');
           config.service_apache = 'true';
           const data = JSON.stringify(config, null, 2);
           fs.writeFileSync(`${__dirname}/../../config/config.json`, data);
-
-          await exec('systemctl daemon-reload');
-          await rimraf(`/tmp/${version}.zip`);
-          await rimraf(`${dest}/${extral[0].path}`);
         } catch (e) {
           throw new Exception(e.message, 1);
         }
