@@ -26,7 +26,7 @@ export default class installAPache extends Install {
         try {
           config.apache.dir_etc = !_.isNil(config.apache.dir_etc) ? config.apache.dir_etc : '/etc/apache2';
 
-          config.apache.dir_conf = !_.isNil(config.apache.dir_conf) ? config.apache.dir_conf : '/etc/apache2/conf.d';
+          config.apache.dir_conf = !_.isNil(config.apache.dir_conf) ? config.apache.dir_conf : '/etc/apache2/sites-enabled';
 
           console.log('Install module ... !');
           await exec('apt-get -y update');
@@ -35,6 +35,8 @@ export default class installAPache extends Install {
           );
           console.log('install apache2 ... !');
           await exec('apt-get -y install apache2');
+
+          console.log('install ... OK');
           const data = JSON.stringify(config, null, 2);
           fs.writeFileSync(`${__dirname}/../../config/config.json`, data);
         } catch (e) {
