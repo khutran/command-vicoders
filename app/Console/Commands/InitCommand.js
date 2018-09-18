@@ -187,7 +187,7 @@ export default class InitCommand extends Command {
         }
       }
     } catch (e) {
-      throw new Exception(e.message, 1);
+      console.log(e.message);
     }
   }
 }
