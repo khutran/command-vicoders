@@ -4,7 +4,6 @@ import _ from 'lodash';
 import opn from 'opn';
 import remoteOriginUrl from 'remote-origin-url';
 import GitUrlParse from 'git-url-parse';
-import URL from 'url';
 
 export default class GitCommand extends Command {
   signature() {
@@ -44,10 +43,21 @@ export default class GitCommand extends Command {
       }
       opn(url);
     };
+
+    const openNewPullRequestPage = async () => {
+      let url = urlParser();
+      if (url.indexOf('github.com') > -1) {
+        url += '/compare';
+      } else if (url.indexOf('bitbucket.org') > -1) {
+        url += '/pull-requests/new';
+      }
+      opn(url);
+    };
     const availbleCommands = [
       { description: 'Open repository on your browser', handle: openRepositoryPage },
       { description: 'Open commits page', handle: openCommitPage },
-      { description: 'Open pull request page', handle: openPullRequestPage }
+      { description: 'Open pull request page', handle: openPullRequestPage },
+      { description: 'New pull request', handle: openNewPullRequestPage }
     ];
     let message = 'Select task that you want \n\n';
     availbleCommands.forEach((item, key) => {
