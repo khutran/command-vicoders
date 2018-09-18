@@ -33,7 +33,7 @@ export default class installAPache extends Install {
           await exec(
             'apt-get install -y gcc libapr1 libapr1-dev libaprutil1-dev libpcre3-dev zlib1g-dev libssl-dev libxml2-dev libxslt1-dev  libgd-dev google-perftools libgoogle-perftools-dev libperl-dev libgeoip-dev libatomic-ops-dev'
           );
-          console.log('install apache2');
+          console.log('install apache2 ... !');
           await exec('apt-get -y install apache2');
           const data = JSON.stringify(config, null, 2);
           fs.writeFileSync(`${__dirname}/../../config/config.json`, data);
@@ -47,8 +47,11 @@ export default class installAPache extends Install {
 
           config.apache.dir_conf = !_.isNil(config.apache.dir_conf) ? config.apache.dir_conf : '/usr/local/httpd/conf/extra/web';
 
-          console.log('Install lib... !');
+          console.log('Install module ... !');
           await exec('yum install -y gcc openssl-devel apr apr-util');
+
+          console.log('Install apache... !');
+
           const aliasName = 'centos';
           const url = `https://github.com/khutran/${aliasName}-httpd/archive/${version}.zip`;
           await App.make(Downloader).download(url, `/tmp/${version}.zip`);

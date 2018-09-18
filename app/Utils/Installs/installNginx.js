@@ -50,8 +50,9 @@ export default class installNginx extends Install {
             const key = await exec('curl https://raw.githubusercontent.com/khutran/config_web/master/ssl/key.pem');
             fs.writeFileSync(`${config.nginx.dir_conf}/ssl/key.pem`, key.stdout);
           }
-          console.log('install .... OK 1');
+          console.log('install .... OK');
 
+          console.log(config);
           // config.nginx.dir_etc = '/etc/nginx';
           // config.nginx.dir_conf = '/etc/nginx/conf.d';
           const data = JSON.stringify(config, null, 2);

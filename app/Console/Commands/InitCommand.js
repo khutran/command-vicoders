@@ -144,7 +144,6 @@ export default class InitCommand extends Command {
             }
           }
 
-          console.log(config);
           const data = JSON.stringify(config, null, 2);
           fs.writeFileSync(`${__dirname}/../../config/config.json`, data);
           console.log(colors.green('success ... !'));
