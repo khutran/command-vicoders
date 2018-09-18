@@ -140,7 +140,7 @@ export default class InitCommand extends Command {
           if (!(await linux.CheckExists('php'))) {
             const answers = await inquirer.prompt({ type: 'confirm', name: 'install', message: 'you have want install PHP ?', default: false });
             if (answers.install) {
-              await new installPhp().service();
+              await new installPhp().service('7.2');
             }
           }
 
@@ -177,7 +177,7 @@ export default class InitCommand extends Command {
           if (!(await linux.CheckExists('php'))) {
             const answers = await inquirer.prompt({ type: 'confirm', name: 'install', message: 'you have want install PHP ?', default: false });
             if (answers.install) {
-              await new installPhp().service();
+              await new installPhp().service('7.2');
             }
           }
 
