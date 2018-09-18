@@ -108,7 +108,7 @@ export default class InitCommand extends Command {
           }
         }
 
-        if (!fs.existsSync(`${user.homedir}/.npm/vcc/data/vcc.db`)) {
+        if (!fs.existsSync(`${user.homedir}/.npm/vcc/data/vcc.db`) && !(await lstat(`${__dirname}/../../../data/vcc.db`)).isSymbolicLink()) {
           await mv(`${__dirname}/../../../data/vcc.db`, `${user.homedir}/.npm/vcc/data/vcc.db`, { mkdirp: true });
           fs.symlinkSync(`${user.homedir}/.npm/vcc/data/vcc.db`, `${__dirname}/../../../data/vcc.db`);
         } else {
