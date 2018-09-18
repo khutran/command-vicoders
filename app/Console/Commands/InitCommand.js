@@ -135,7 +135,7 @@ export default class InitCommand extends Command {
           } else {
             const answers = await inquirer.prompt({ type: 'confirm', name: 'install', message: 'you have want install apache2 ?', default: false });
             if (answers.install) {
-              await new installAPache().service();
+              await new installAPache().service('2.4.34');
             }
           }
 
