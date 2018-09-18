@@ -146,7 +146,7 @@ export default class InitCommand extends Command {
           }
 
           const new_config = require(`${__dirname}/../../config/config.json`);
-          console.log(`new config: ${new_config}`);
+          dd(`new config: ${new_config}`);
           console.log(typeof new_config);
           const data = JSON.stringify(_.assign(config, new_config), null, 2);
           console.log(`new config: ${data}`);
