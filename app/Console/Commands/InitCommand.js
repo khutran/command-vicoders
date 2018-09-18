@@ -146,8 +146,8 @@ export default class InitCommand extends Command {
           }
 
           const new_config = require(`${__dirname}/../../config/config.json`);
-          const data = JSON.stringify(config, null, 2);
-          fs.writeFileSync(`${__dirname}/../../config/config.json`, _.assign(data, new_config));
+          const data = JSON.stringify(_.assign(config, new_config), null, 2);
+          fs.writeFileSync(`${__dirname}/../../config/config.json`, data);
           console.log(colors.green('success ... !'));
         }
 
@@ -183,8 +183,8 @@ export default class InitCommand extends Command {
           }
 
           const new_config = require(`${__dirname}/../../config/config.json`);
-          const data = JSON.stringify(config, null, 2);
-          fs.writeFileSync(`${__dirname}/../../config/config.json`, _.assign(data, new_config));
+          const data = JSON.stringify(_.assign(config, new_config), null, 2);
+          fs.writeFileSync(`${__dirname}/../../config/config.json`, data);
           console.log(colors.green('success ... !'));
         }
       }
