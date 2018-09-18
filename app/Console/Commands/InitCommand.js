@@ -9,6 +9,7 @@ import colors from 'colors';
 import installAPache from '../../Utils/Installs/installApache';
 import installNginx from '../../Utils/Installs/installNginx';
 import installPhp from '../../Utils/Installs/InstallPhp';
+import _ from 'lodash';
 const util = require('util');
 const rimraf = util.promisify(require('rimraf'));
 const mv = util.promisify(require('mv'));
@@ -144,8 +145,9 @@ export default class InitCommand extends Command {
             }
           }
 
+          const new_config = require(`${__dirname}/../../config/config.json`);
           const data = JSON.stringify(config, null, 2);
-          fs.writeFileSync(`${__dirname}/../../config/config.json`, data);
+          fs.writeFileSync(`${__dirname}/../../config/config.json`, _.assign(data, new_config));
           console.log(colors.green('success ... !'));
         }
 
@@ -180,8 +182,9 @@ export default class InitCommand extends Command {
             }
           }
 
+          const new_config = require(`${__dirname}/../../config/config.json`);
           const data = JSON.stringify(config, null, 2);
-          fs.writeFileSync(`${__dirname}/../../config/config.json`, data);
+          fs.writeFileSync(`${__dirname}/../../config/config.json`, _.assign(data, new_config));
           console.log(colors.green('success ... !'));
         }
       }

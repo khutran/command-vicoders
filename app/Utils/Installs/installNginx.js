@@ -52,7 +52,6 @@ export default class installNginx extends Install {
           }
           console.log('install .... OK');
 
-          console.log(config);
           // config.nginx.dir_etc = '/etc/nginx';
           // config.nginx.dir_conf = '/etc/nginx/conf.d';
           const data = JSON.stringify(config, null, 2);
