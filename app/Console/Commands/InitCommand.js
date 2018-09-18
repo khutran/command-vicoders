@@ -125,6 +125,7 @@ export default class InitCommand extends Command {
             if (!fs.existsSync('/etc/apache2/conf.d')) {
               fs.mkdirSync('/etc/apache2/conf.d');
             }
+            config.apache.service_apache = true;
             config.apache.dir_etc = '/etc/apache2';
             config.apache.dir_conf = '/etc/apache2/conf.d';
           } else {
@@ -138,6 +139,7 @@ export default class InitCommand extends Command {
             if (!fs.existsSync('/etc/nginx/conf.d')) {
               fs.mkdirSync('/etc/nginx/conf.d');
             }
+            config.nginx.service_nginx = true;
             config.nginx.dir_conf = '/etc/nginx/conf.d';
             config.nginx.dir_etc = '/etc/nginx';
           } else {
