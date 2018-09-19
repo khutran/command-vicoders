@@ -45,6 +45,10 @@ export default class installAPache extends Install {
           fs.writeFileSync(`${config.apache.dir_etc}/apache2.conf`, file);
           fs.appendFileSync(`${config.apache.dir_etc}/apache2.conf`, 'ServerName "http://localhost"');
 
+          let file2 = fs.readFileSync(`${config.apache.dir_etc}/conf-available/other-vhosts-access-log.conf`);
+          file2 = _.replace(file2, new RegExp(`\\\${APACHE_LOG_DIR}`, 'g'), '/var/log/apache2');
+          fs.writeFileSync(`${config.apache.dir_etc}/conf-available/other-vhosts-access-log.conf`, file2);
+
           if (!fs.existsSync('/var/lock/apache2')) {
             fs.mkdirSync('/var/lock/apache2');
           }
