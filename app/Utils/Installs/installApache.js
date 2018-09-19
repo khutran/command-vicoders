@@ -5,6 +5,8 @@ import fs from 'fs';
 import config from '../../config/config.json';
 import _ from 'lodash';
 import { exec } from 'child-process-promise';
+const util = require('util');
+const rimraf = util.promisify(require('rimraf'));
 
 export default class installAPache extends Install {
   async service() {
@@ -46,6 +48,7 @@ export default class installAPache extends Install {
           if (!fs.existsSync('/var/lock/apache2')) {
             fs.mkdirSync('/var/lock/apache2');
           }
+          await rimraf('/etc/apache2/sites-enabled/000-default.conf');
           await exec('apache2 -k start');
           await exec('systemctl enable apache2');
           console.log('install ... OK');
