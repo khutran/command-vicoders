@@ -115,6 +115,19 @@ export default class CreateProjectCommand extends Command {
         }
       }
 
+      const addHost = await inquirer.prompt({ type: 'confirm', name: 'add', message: 'you want add domain to file host "/etc/hosts" : ', default: true });
+      if (addHost.add) {
+        fs.appendFileSync('/etc/hosts', `127.0.0.1 ${item.name}`);
+      }
+
+      if (platform.osName() === 'debian') {
+        await exec('nginx -s reload');
+        await exec('apache2 -k restart');
+      } else if (platform.osName() === 'redhat') {
+        await exec('nginx -s reload');
+        await exec('httpd -k restart');
+      }
+
       fs.writeFileSync(`${config.nginx.dir_conf}/nginx-${item.name}.conf`, config_nginx.stdout);
       console.log(colors.green(`${config.nginx.dir_conf}/nginx-${item.name}.conf`));
       console.log(colors.green('Create success ... !'));
