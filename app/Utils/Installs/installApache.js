@@ -33,7 +33,12 @@ export default class installAPache extends Install {
           fs.writeFileSync(`${config.apache.dir_etc}/ports.conf`, file);
           fs.appendFileSync(`${config.apache.dir_etc}/apache2.conf`, 'ServerName "http://localhost"');
 
-          await exec('sh /etc/apache2/envvars');
+          await exec('APACHE_LOCK_DIR=/var/lock/apache2');
+          await exec('APACHE_LOG_DIR=/var/log/apache2');
+          await exec('APACHE_PID_FILE=/var/run/apache2/apache2.pid');
+          await exec('APACHE_RUN_DIR=/var/run/apache2');
+          await exec('APACHE_RUN_GROUP=www-data');
+          await exec('APACHE_RUN_USER=www-data');
           if (!fs.existsSync('/var/lock/apache2')) {
             fs.mkdirSync('/var/lock/apache2');
           }
