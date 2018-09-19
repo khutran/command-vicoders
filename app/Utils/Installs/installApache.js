@@ -55,7 +55,7 @@ export default class installAPache extends Install {
           await exec('wget https://repo.codeit.guru/codeit.el`rpm -q --qf "%{VERSION}" $(rpm -q --whatprovides redhat-release)`.repo -P /etc/yum.repos.d');
           await exec('yum install -y httpd');
 
-          let file = fs.readdirSync(`${config.apache.dir_etc}/conf/httpd.conf`);
+          let file = fs.readFileSync(`${config.apache.dir_etc}/conf/httpd.conf`);
           file = _.replace(file, '80', '6669');
           fs.writeFileSync(`${config.apache.dir_etc}/conf/httpd.conf`, file);
           await exec('httpd -k start');
