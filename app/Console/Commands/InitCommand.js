@@ -156,14 +156,14 @@ export default class InitCommand extends Command {
 
         if (nameOs === 'redhat') {
           if (await linux.CheckExists('httpd')) {
-            config.apache.dir_etc = '/usr/local/httpd';
-            config.apache.dir_conf = '/usr/local/httpd/conf/extra/web';
+            config.apache.dir_etc = '/etc/httpd';
+            config.apache.dir_conf = '/etc/httpd/conf.d';
           } else {
             const answers = await inquirer.prompt({ type: 'confirm', name: 'install', message: 'you have want install apache ?', default: false });
             if (answers.install) {
-              await of(new installAPache().service('2.4.34'));
-              config.apache.dir_etc = '/usr/local/httpd';
-              config.apache.dir_conf = '/usr/local/httpd/conf/extra/web';
+              await new installAPache().service();
+              config.apache.dir_etc = '/etc/httpd';
+              config.apache.dir_conf = '/etc/httpd/conf.d';
             }
           }
 

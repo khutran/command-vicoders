@@ -1,20 +1,13 @@
 import Install from './Install';
-import decompress from 'decompress';
-import path from 'path';
 import { Exception } from '@nsilly/exceptions/dist/src/Exceptions/Exception';
 import Linux from '../Os/Linux';
 import fs from 'fs';
-import { App } from '@nsilly/container';
-import { Downloader } from '../Downloader';
 import config from '../../config/config.json';
 import _ from 'lodash';
 import { exec } from 'child-process-promise';
-const util = require('util');
-const rimraf = util.promisify(require('rimraf'));
-const mv = util.promisify(require('mv'));
 
 export default class installAPache extends Install {
-  async service(version) {
+  async service() {
     if (this.os === 'darwin') {
       return 'https://www.sylvaindurand.org/setting-up-a-apache-web-server-on-macos/';
     }
