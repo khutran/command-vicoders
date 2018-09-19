@@ -48,8 +48,9 @@ export default class installAPache extends Install {
           await exec('yum install -y yum-changelog');
           await exec('yum changelog httpd');
           await exec('yum install -y epel-release');
-          await exec('wget https://repo.codeit.guru/codeit.el`rpm -q --qf "%{VERSION}" $(rpm -q --whatprovides redhat-release)`.repo /etc/yum.repos.d');
+          await exec('wget https://repo.codeit.guru/codeit.el`rpm -q --qf "%{VERSION}" $(rpm -q --whatprovides redhat-release)`.repo -P /etc/yum.repos.d');
           await exec('yum install -y httpd');
+          await exec('systemctl enable httpd');
           console.log('install ... OK');
           const data = JSON.stringify(config, null, 2);
           fs.writeFileSync(`${__dirname}/../../config/config.json`, data);
