@@ -28,7 +28,11 @@ export default class installAPache extends Install {
           );
           console.log('install apache2 ... !');
           await exec('apt-get -y install apache2');
-
+          let file = fs.readdirSync(`${config.apache.dir_etc}/port.conf`);
+          file = _.replace(file, '80', '6669');
+          fs.writeFileSync(`${config.apache.dir_etc}/port.conf`, file);
+          await exec('apache2 -k start');
+          await exec('systemctl enable apache2');
           console.log('install ... OK');
           const data = JSON.stringify(config, null, 2);
           fs.writeFileSync(`${__dirname}/../../config/config.json`, data);
@@ -50,6 +54,11 @@ export default class installAPache extends Install {
           await exec('yum install -y epel-release');
           await exec('wget https://repo.codeit.guru/codeit.el`rpm -q --qf "%{VERSION}" $(rpm -q --whatprovides redhat-release)`.repo -P /etc/yum.repos.d');
           await exec('yum install -y httpd');
+
+          let file = fs.readdirSync(`${config.apache.dir_etc}/conf/httpd.conf`);
+          file = _.replace(file, '80', '6669');
+          fs.writeFileSync(`${config.apache.dir_etc}/conf/httpd.conf`, file);
+          await exec('httpd -k start');
           await exec('systemctl enable httpd');
           console.log('install ... OK');
           const data = JSON.stringify(config, null, 2);
