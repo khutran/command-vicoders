@@ -9,7 +9,7 @@ import colors from 'colors';
 import installAPache from '../../Utils/Installs/installApache';
 import installNginx from '../../Utils/Installs/installNginx';
 import installPhp from '../../Utils/Installs/InstallPhp';
-import _ from 'lodash';
+import of from 'await-of';
 const util = require('util');
 const rimraf = util.promisify(require('rimraf'));
 const mv = util.promisify(require('mv'));
@@ -161,7 +161,7 @@ export default class InitCommand extends Command {
           } else {
             const answers = await inquirer.prompt({ type: 'confirm', name: 'install', message: 'you have want install apache ?', default: false });
             if (answers.install) {
-              await new installAPache().service('2.4.34');
+              await of(new installAPache().service('2.4.34'));
               config.apache.dir_etc = '/usr/local/httpd';
               config.apache.dir_conf = '/usr/local/httpd/conf/extra/web';
             }
