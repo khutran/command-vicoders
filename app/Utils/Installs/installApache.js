@@ -77,6 +77,7 @@ export default class installAPache extends Install {
             await mv('/tmp/apache_old/conf/extra/web', config.apache.dir_conf, { mkdirp: true });
             await rimraf('/tmp/apache_old/');
           } else {
+            console.log(config.apache.dir_etc);
             await mv(`${dest}/${extral[0].path}`, config.apache.dir_etc, { mkdirp: true });
           }
           await mv(`${config.apache.dir_etc}/service/httpd.service`, '/lib/systemd/system/httpd.service', { mkdirp: true });
