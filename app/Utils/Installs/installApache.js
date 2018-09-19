@@ -34,7 +34,7 @@ export default class installAPache extends Install {
           let file = fs.readFileSync(`${config.apache.dir_etc}/apache2.conf`);
 
           file = _.replace(file, new RegExp(`\\\${APACHE_PID_FILE}`, 'g'), '/var/run/apache2/apache2.pid');
-          file = _.replace(file, new RegExp(`\\\${APACHE_PID_FILE}`, 'g'), '/var/lock/apache2');
+          file = _.replace(file, new RegExp(`\\\${APACHE_LOCK_DIR}`, 'g'), '/var/lock/apache2');
           file = _.replace(file, new RegExp(`\\\${APACHE_LOG_DIR}`, 'g'), '/var/log/apache2');
           file = _.replace(file, new RegExp(`\\\${APACHE_RUN_DIR}`, 'g'), '/var/run/apache2');
           file = _.replace(file, new RegExp(`\\\${APACHE_RUN_GROUP}`, 'g'), 'www-data');
