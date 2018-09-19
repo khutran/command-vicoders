@@ -23,8 +23,8 @@ export default class installNginx extends Install {
 
       if (osName === 'debian') {
         try {
-          config.nginx.dir_etc = !_.isNil(config.nginx.dir_etc) ? config.nginx.dir_etc : '/etc/nginx';
-          config.nginx.dir_conf = !_.isNil(config.nginx.dir_conf) ? config.nginx.dir_conf : '/etc/nginx/conf.d';
+          config.nginx.dir_etc = !_.isEmpty(config.nginx.dir_etc) ? config.nginx.dir_etc : '/etc/nginx';
+          config.nginx.dir_conf = !_.isEmpty(config.nginx.dir_conf) ? config.nginx.dir_conf : '/etc/nginx/conf.d';
 
           console.log('Install module... !');
           await exec(
@@ -62,9 +62,9 @@ export default class installNginx extends Install {
       }
       if (osName === 'redhat') {
         try {
-          config.nginx.dir_etc = !_.isNil(config.nginx.dir_etc) ? config.nginx.dir_etc : '/etc/nginx';
+          config.nginx.dir_etc = !_.isEmpty(config.nginx.dir_etc) ? config.nginx.dir_etc : '/etc/nginx';
 
-          config.nginx.dir_conf = !_.isNil(config.nginx.dir_conf) ? config.nginx.dir_conf : '/etc/nginx/conf.d';
+          config.nginx.dir_conf = !_.isEmpty(config.nginx.dir_conf) ? config.nginx.dir_conf : '/etc/nginx/conf.d';
 
           console.log('Install lib... !');
           await exec('yum install -y gcc openssl-devel apr apr-util');
