@@ -28,9 +28,9 @@ export default class installAPache extends Install {
           );
           console.log('install apache2 ... !');
           await exec('apt-get -y install apache2');
-          let file = fs.readFileSync(`${config.apache.dir_etc}/port.conf`);
+          let file = fs.readFileSync(`${config.apache.dir_etc}/ports.conf`);
           file = _.replace(file, new RegExp('80', 'g'), '6669');
-          fs.writeFileSync(`${config.apache.dir_etc}/port.conf`, file);
+          fs.writeFileSync(`${config.apache.dir_etc}/ports.conf`, file);
           await exec('apache2 -k start');
           await exec('systemctl enable apache2');
           console.log('install ... OK');
