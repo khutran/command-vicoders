@@ -28,17 +28,19 @@ export default class installAPache extends Install {
           );
           console.log('install apache2 ... !');
           await exec('apt-get -y install apache2');
-          let file = fs.readFileSync(`${config.apache.dir_etc}/ports.conf`);
-          file = _.replace(file, new RegExp('80', 'g'), '6669');
-          fs.writeFileSync(`${config.apache.dir_etc}/ports.conf`, file);
+          let port = fs.readFileSync(`${config.apache.dir_etc}/ports.conf`);
+          port = _.replace(port, new RegExp('80', 'g'), '6669');
+          fs.writeFileSync(`${config.apache.dir_etc}/ports.conf`, port);
+          let file = fs.readFileSync(`${config.apache.dir_etc}/apache2.conf`);
+          file = _.replace(file, new RegExp('${APACHE_PID_FILE}', 'g'), '/var/run/apache2/apache2.pid');
+          file = _.replace(file, new RegExp('${APACHE_LOCK_DIR}', 'g'), '/var/lock/apache2');
+          file = _.replace(file, new RegExp('${APACHE_LOG_DIR}', 'g'), '/var/log/apache2');
+          file = _.replace(file, new RegExp('${APACHE_RUN_DIR}', 'g'), '/var/run/apache2');
+          file = _.replace(file, new RegExp('${APACHE_RUN_GROUP}', 'g'), 'www-data');
+          file = _.replace(file, new RegExp('${APACHE_RUN_USER}', 'g'), 'www-data');
+          fs.writeFileSync(`${config.apache.dir_etc}/apache2.conf`, file);
           fs.appendFileSync(`${config.apache.dir_etc}/apache2.conf`, 'ServerName "http://localhost"');
 
-          await exec('export APACHE_LOCK_DIR="/var/lock/apache2"');
-          await exec('export APACHE_LOG_DIR="/var/log/apache2"');
-          await exec('export APACHE_PID_FILE="/var/run/apache2/apache2.pid"');
-          await exec('export APACHE_RUN_DIR="/var/run/apache2"');
-          await exec('export APACHE_RUN_GROUP="www-data"');
-          await exec('export APACHE_RUN_USER="www-data"');
           if (!fs.existsSync('/var/lock/apache2')) {
             fs.mkdirSync('/var/lock/apache2');
           }
