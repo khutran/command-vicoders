@@ -45,9 +45,9 @@ export default class installAPache extends Install {
       }
       if (osName === 'redhat') {
         try {
-          config.apache.dir_etc = !_.isEmpty(config.apache.dir_etc) ? config.apache.dir_etc : '/usr/local/httpd';
+          config.apache.dir_etc = !_.isEmpty(config.apache.dir_etc) ? config.apache.dir_etc : '/etc/httpd';
 
-          config.apache.dir_conf = !_.isEmpty(config.apache.dir_conf) ? config.apache.dir_conf : '/usr/local/httpd/conf/extra/web';
+          config.apache.dir_conf = !_.isEmpty(config.apache.dir_conf) ? config.apache.dir_conf : '/etc/httpd/conf.d';
           console.log('Install module ... !');
           await exec('yum install -y gcc openssl-devel apr apr-util wget');
 
@@ -57,6 +57,9 @@ export default class installAPache extends Install {
           await exec('yum install -y epel-release');
           await exec('wget https://repo.codeit.guru/codeit.el`rpm -q --qf "%{VERSION}" $(rpm -q --whatprovides redhat-release)`.repo /etc/yum.repos.d');
           await exec('yum install -y httpd');
+          console.log('install ... OK');
+          const data = JSON.stringify(config, null, 2);
+          fs.writeFileSync(`${__dirname}/../../config/config.json`, data);
         } catch (e) {
           throw new Exception(e.message, 1);
         }
