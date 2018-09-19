@@ -45,9 +45,9 @@ export default class installAPache extends Install {
       }
       if (osName === 'redhat') {
         try {
-          config.apache.dir_etc = !_.isNil(config.apache.dir_etc) || !_.isEmpty(config.apache.dir_etc) ? config.apache.dir_etc : '/usr/local/httpd';
+          config.apache.dir_etc = !_.isEmpty(config.apache.dir_etc) ? config.apache.dir_etc : '/usr/local/httpd';
 
-          config.apache.dir_conf = !_.isNil(config.apache.dir_conf) || !_.isEmpty(config.apache.dir_conf) ? config.apache.dir_conf : '/usr/local/httpd/conf/extra/web';
+          config.apache.dir_conf = !_.isEmpty(config.apache.dir_conf) ? config.apache.dir_conf : '/usr/local/httpd/conf/extra/web';
           console.log(config.apache);
           // console.log('Install module ... !');
           // await exec('yum install -y gcc openssl-devel apr apr-util');
