@@ -32,8 +32,8 @@ export default class installAPache extends Install {
           file = _.replace(file, new RegExp('80', 'g'), '6669');
           fs.writeFileSync(`${config.apache.dir_etc}/ports.conf`, file);
           fs.appendFileSync(`${config.apache.dir_etc}/apache2.conf`, 'ServerName "http://localhost"');
-          
-          await exec('source /etc/apache2/envvars');
+
+          await exec('sh /etc/apache2/envvars');
           if (!fs.existsSync('/var/lock/apache2')) {
             fs.mkdirSync('/var/lock/apache2');
           }
