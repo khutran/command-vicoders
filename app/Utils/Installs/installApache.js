@@ -38,7 +38,7 @@ export default class installAPache extends Install {
           // file = _.replace(file, new RegExp(`\$\{APACHE\_RUN\_DIR\}`, 'g'), '/var/run/apache2');
           // file = _.replace(file, new RegExp(`\$\{APACHE\_RUN\_GROUP\}`, 'g'), 'www-data');
           // file = _.replace(file, new RegExp(`\$\{APACHE\_RUN\_USER\}`, 'g'), 'www-data');
-          console.log(file);
+          console.log(file.toString());
           // fs.writeFileSync(`${config.apache.dir_etc}/apache2.conf`, file);
           fs.appendFileSync(`${config.apache.dir_etc}/apache2.conf`, 'ServerName "http://localhost"');
 
