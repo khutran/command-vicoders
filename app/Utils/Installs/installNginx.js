@@ -51,6 +51,7 @@ export default class installNginx extends Install {
             fs.writeFileSync(`${config.nginx.dir_conf}/ssl/key.pem`, key.stdout);
           }
 
+          await exec('nginx');
           await exec('systemctl enable nginx');
           console.log('install .... OK');
 
@@ -86,6 +87,7 @@ export default class installNginx extends Install {
             fs.writeFileSync(`${config.nginx.dir_conf}/ssl/key.pem`, key.stdout);
           }
 
+          await exec('nginx');
           await exec('systemctl enable nginx');
           console.log('install .... OK');
 

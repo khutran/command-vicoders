@@ -5,6 +5,8 @@ import fs from 'fs';
 import config from '../../config/config.json';
 import _ from 'lodash';
 import { exec } from 'child-process-promise';
+const util = require('util');
+const rimraf = util.promisify(require('rimraf'));
 
 export default class installAPache extends Install {
   async service() {
@@ -28,11 +30,29 @@ export default class installAPache extends Install {
           );
           console.log('install apache2 ... !');
           await exec('apt-get -y install apache2');
-          let file = fs.readFileSync(`${config.apache.dir_etc}/ports.conf`);
-          file = _.replace(file, new RegExp('80', 'g'), '6669');
-          fs.writeFileSync(`${config.apache.dir_etc}/ports.conf`, file);
-          fs.appendFileSync(`${config.apache.dir_etc}/ports.conf`, 'ServerName "http://localhost"');
-          await exec('source /etc/apache2/envvars');
+          let port = fs.readFileSync(`${config.apache.dir_etc}/ports.conf`);
+          port = _.replace(port, new RegExp('80', 'g'), '6669');
+          fs.writeFileSync(`${config.apache.dir_etc}/ports.conf`, port);
+          let file = fs.readFileSync(`${config.apache.dir_etc}/apache2.conf`);
+
+          file = _.replace(file, new RegExp(`\\\${APACHE_PID_FILE}`, 'g'), '/var/run/apache2/apache2.pid');
+          file = _.replace(file, new RegExp(`\\\${APACHE_LOCK_DIR}`, 'g'), '/var/lock/apache2');
+          file = _.replace(file, new RegExp(`\\\${APACHE_LOG_DIR}`, 'g'), '/var/log/apache2');
+          file = _.replace(file, new RegExp(`\\\${APACHE_RUN_DIR}`, 'g'), '/var/run/apache2');
+          file = _.replace(file, new RegExp(`\\\${APACHE_RUN_GROUP}`, 'g'), 'www-data');
+          file = _.replace(file, new RegExp(`\\\${APACHE_RUN_USER}`, 'g'), 'www-data');
+
+          fs.writeFileSync(`${config.apache.dir_etc}/apache2.conf`, file);
+          fs.appendFileSync(`${config.apache.dir_etc}/apache2.conf`, 'ServerName "http://localhost"');
+
+          let file2 = fs.readFileSync(`${config.apache.dir_etc}/conf-available/other-vhosts-access-log.conf`);
+          file2 = _.replace(file2, new RegExp(`\\\${APACHE_LOG_DIR}`, 'g'), '/var/log/apache2');
+          fs.writeFileSync(`${config.apache.dir_etc}/conf-available/other-vhosts-access-log.conf`, file2);
+
+          if (!fs.existsSync('/var/lock/apache2')) {
+            fs.mkdirSync('/var/lock/apache2');
+          }
+          await rimraf('/etc/apache2/sites-enabled/000-default.conf');
           await exec('apache2 -k start');
           await exec('systemctl enable apache2');
           console.log('install ... OK');
