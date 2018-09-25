@@ -94,7 +94,7 @@ export default class CreateConfigCommand extends Command {
         item.name = answers.domain;
       }
 
-      if (!platform.CheckExists('nginx')) {
+      if (!(await platform.CheckExists('nginx'))) {
         const answers = await inquirer.prompt({ type: 'confirm', name: 'install', message: 'you want install nginx : ', default: true });
         if (answers.install) {
           const install = new installNginx();
@@ -102,7 +102,7 @@ export default class CreateConfigCommand extends Command {
         }
       }
 
-      if (!platform.CheckExists('apache2') || !platform.CheckExists('httpd')) {
+      if (!(await platform.CheckExists('apache2')) || !(await platform.CheckExists('httpd'))) {
         const answers = await inquirer.prompt({ type: 'confirm', name: 'install', message: 'you want install apache : ', default: true });
         if (answers.install) {
           const install = new installAPache();
