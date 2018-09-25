@@ -75,7 +75,6 @@ export default class OpenCommand extends Command {
         }
       }
       await exec(`${editer} ${item.dir_home}`);
-      process.chdir(item.dir_home);
     } catch (e) {
       console.log(colors.red(e.message));
     }
