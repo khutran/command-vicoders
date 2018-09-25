@@ -161,6 +161,9 @@ export default class CreateConfigCommand extends Command {
           const config_apache = await exec(`curl https://raw.githubusercontent.com/khutran/config_web/master/default-${item.framework}-apache.conf`);
           config_apache.stdout = _.replace(config_apache.stdout, new RegExp('xxx.com', 'g'), item.name);
           config_apache.stdout = _.replace(config_apache.stdout, new RegExp('/path', 'g'), item.dir_home);
+          if (platform.osName === 'debian') {
+            config_apache.stdout = _.replace(config_apache.stdout, new RegExp('httpd', 'g'), 'apache2');
+          }
           fs.writeFileSync(`${config.apache.dir_conf}/apache-${item.name}.conf`, config_apache.stdout);
           console.log(colors.green(`${config.apache.dir_conf}/apache-${item.name}.conf`));
         }
