@@ -26,12 +26,12 @@ export default class GitCommand extends Command {
 
     const openRepositoryPage = async () => {
       const url = urlParser();
-      opn(url);
+      await opn(url);
     };
 
     const openCommitPage = async () => {
       const url = urlParser() + '/commits';
-      opn(url);
+      await opn(url);
     };
 
     const openPullRequestPage = async () => {
@@ -41,7 +41,7 @@ export default class GitCommand extends Command {
       } else if (url.indexOf('bitbucket.org') > -1) {
         url += '/pull-requests';
       }
-      opn(url);
+      await opn(url);
     };
 
     const openNewPullRequestPage = async () => {
@@ -51,7 +51,7 @@ export default class GitCommand extends Command {
       } else if (url.indexOf('bitbucket.org') > -1) {
         url += '/pull-requests/new';
       }
-      opn(url);
+      await opn(url);
     };
     const availbleCommands = [
       { description: 'Open repository on your browser', handle: openRepositoryPage },

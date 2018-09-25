@@ -40,3 +40,11 @@ vcc create-project --name="Project Name"
 vcc git
 ```
 
+#### PWD
+
+Print current working directory and copy it to clipboard
+
+```
+vcc pwd
+```
+
