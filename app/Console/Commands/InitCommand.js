@@ -9,7 +9,7 @@ import colors from 'colors';
 import installAPache from '../../Utils/Installs/installApache';
 import installNginx from '../../Utils/Installs/installNginx';
 import installPhp from '../../Utils/Installs/InstallPhp';
-import of from 'await-of';
+// import of from 'await-of';
 const util = require('util');
 const rimraf = util.promisify(require('rimraf'));
 const mv = util.promisify(require('mv'));

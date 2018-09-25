@@ -14,7 +14,7 @@ import installNginx from '../../Utils/Installs/installNginx';
 import Darwin from '../../Utils/Os/Darwin';
 import Linux from '../../Utils/Os/Linux';
 
-export default class CreateProjectCommand extends Command {
+export default class CreateConfigCommand extends Command {
   signature() {
     return 'create-config <project>';
   }
