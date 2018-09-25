@@ -163,7 +163,6 @@ export default class CreateConfigCommand extends Command {
           config_apache.stdout = _.replace(config_apache.stdout, new RegExp('/path', 'g'), item.dir_home);
           if (platform.osName() === 'debian') {
             config_apache.stdout = _.replace(config_apache.stdout, new RegExp('httpd', 'g'), 'apache2');
-            console.log(config_apache.stdout);
           }
 
           fs.writeFileSync(`${config.apache.dir_conf}/apache-${item.name}.conf`, config_apache.stdout);
