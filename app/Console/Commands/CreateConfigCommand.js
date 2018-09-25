@@ -42,7 +42,7 @@ export default class CreateConfigCommand extends Command {
       const repository = new ProjectRepository();
       const list = await repository.get();
       _.mapKeys(list, (value, key) => {
-        listproject[key] = value.name;
+        listproject[parseInt(key + 1)] = value.name;
       });
       console.log(listproject);
       // const item = await repository
