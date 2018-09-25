@@ -84,6 +84,14 @@ export default class CreateConfigCommand extends Command {
         }
       }
 
+      if (!(await platform.CheckExists('nginx'))) {
+        const answers = await inquirer.prompt({ type: 'confirm', name: 'install', message: 'you want install nginx : ', default: true });
+        if (answers.install) {
+          const install = new installNginx();
+          await of(install.service());
+        }
+      }
+
       const repository = new ProjectRepository();
 
       if (!project) {
@@ -112,14 +120,6 @@ export default class CreateConfigCommand extends Command {
 
       if (answers.domain) {
         item.name = answers.domain;
-      }
-
-      if (!(await platform.CheckExists('nginx'))) {
-        const answers = await inquirer.prompt({ type: 'confirm', name: 'install', message: 'you want install nginx : ', default: true });
-        if (answers.install) {
-          const install = new installNginx();
-          await of(install.service());
-        }
       }
 
       if (_.isNil(item.framework)) {
