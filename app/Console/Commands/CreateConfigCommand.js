@@ -162,7 +162,7 @@ export default class CreateConfigCommand extends Command {
       }
 
       if (apache.status) {
-        config_nginx.stdout = _.replace(config_nginx.stdout, new RegExp('#includeApache', 'g'), 'proxy_pass http://apache;');
+        config_nginx.stdout = _.replace(config_nginx.stdout, new RegExp('#includeApache', 'g'), 'proxy_pass http://apache');
         if (item.framework === 'angular') {
           const answers = await inquirer.prompt({ type: 'confirm', name: 'bool', message: 'you want use apache', default: true });
           if (!answers.bool) {
@@ -173,7 +173,7 @@ export default class CreateConfigCommand extends Command {
 
       const addHost = await inquirer.prompt({ type: 'confirm', name: 'add', message: 'you want add domain to file host "/etc/hosts" : ', default: true });
       if (addHost.add) {
-        fs.appendFileSync('/etc/hosts', `127.0.0.1 ${item.name}`);
+        fs.appendFileSync('/etc/hosts', `\n127.0.0.1 ${item.name}`);
       }
 
       fs.writeFileSync(`${config.nginx.dir_conf}/nginx-${item.name}.conf`, config_nginx.stdout);
