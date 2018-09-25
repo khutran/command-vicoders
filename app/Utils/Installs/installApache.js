@@ -30,6 +30,19 @@ export default class installAPache extends Install {
           );
           console.log('install apache2 ... !');
           await exec('apt-get -y install apache2');
+
+          if (!fs.existsSync('/var/run/apache2')) {
+            fs.mkdirSync('/var/run/apache2');
+          }
+
+          if (!fs.existsSync('/var/lock/apache2')) {
+            fs.mkdirSync('/var/lock/apache2');
+          }
+
+          if (!fs.existsSync('/var/log/apache2')) {
+            fs.mkdirSync('/var/log/apache2');
+          }
+
           let port = fs.readFileSync(`${config.apache.dir_etc}/ports.conf`);
           port = _.replace(port, new RegExp('80', 'g'), '6669');
           fs.writeFileSync(`${config.apache.dir_etc}/ports.conf`, port);
