@@ -62,7 +62,7 @@ export default class ProjectCommand extends Command {
           break;
         case 'list':
           _.mapKeys(await repository.get(), (value, key) => {
-            console.log(`${parseInt(key + 1)} : ${colors.green(value.name)} - (${colors.gray(value.framework)}) -> ${colors.yellow(value.dir_home)}`);
+            console.log(`${parseInt(key) + 1} : ${colors.green(value.name)} - (${colors.gray(value.framework)}) -> ${colors.yellow(value.dir_home)}`);
           });
           break;
         default:

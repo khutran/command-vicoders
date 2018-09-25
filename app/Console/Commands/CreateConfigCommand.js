@@ -97,7 +97,7 @@ export default class CreateConfigCommand extends Command {
       if (!project) {
         const list = await repository.get();
         _.mapKeys(list, (value, key) => {
-          console.log(`${parseInt(key + 1)} : ${value.name}`);
+          console.log(`${parseInt(key) + 1} : ${value.name}`);
         });
 
         const as = await inquirer.prompt({ type: 'input', name: 'project', message: 'Select project  : ' });

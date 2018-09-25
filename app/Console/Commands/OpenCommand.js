@@ -50,7 +50,7 @@ export default class OpenCommand extends Command {
       if (!project) {
         const list = await repository.get();
         _.mapKeys(list, (value, key) => {
-          console.log(`${parseInt(key + 1)} : ${value.name}`);
+          console.log(`${parseInt(key) + 1} : ${value.name}`);
         });
 
         const as = await inquirer.prompt({ type: 'input', name: 'project', message: 'Select project  : ' });
@@ -74,7 +74,8 @@ export default class OpenCommand extends Command {
           editer = option.e;
         }
       }
-      exec(`${editer} ${item.dir_home}`);
+      await exec(`${editer} ${item.dir_home}`);
+      process.chdir(item.dir_home);
     } catch (e) {
       console.log(colors.red(e.message));
     }
