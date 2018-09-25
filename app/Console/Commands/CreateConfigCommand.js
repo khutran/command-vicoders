@@ -142,16 +142,16 @@ export default class CreateConfigCommand extends Command {
         fs.writeFileSync(`${config.nginx.dir_conf}/upstream.conf`, upstream.stdout);
       }
 
-      if (!fs.existsSync(`${config.nginx.dir_conf}/ssl/certificate.pem`)) {
-        if (!fs.existsSync(`${config.nginx.dir_conf}/ssl`)) {
-          fs.mkdirSync(`${config.nginx.dir_conf}/ssl`);
+      if (!fs.existsSync(`${config.nginx.dir_etc}/ssl/certificate.pem`)) {
+        if (!fs.existsSync(`${config.nginx.dir_etc}/ssl`)) {
+          fs.mkdirSync(`${config.nginx.dir_etc}/ssl`);
         }
         const certificate = await exec('curl https://raw.githubusercontent.com/khutran/config_web/master/ssl/certificate.pem');
-        fs.writeFileSync(`${config.nginx.dir_conf}/ssl/certificate.pem`, certificate.stdout);
+        fs.writeFileSync(`${config.nginx.dir_etc}/ssl/certificate.pem`, certificate.stdout);
       }
-      if (!fs.existsSync(!fs.existsSync(`${config.nginx.dir_conf}/ssl/key.pem`))) {
+      if (!fs.existsSync(!fs.existsSync(`${config.nginx.dir_etc}/ssl/key.pem`))) {
         const key = await exec('curl https://raw.githubusercontent.com/khutran/config_web/master/ssl/key.pem');
-        fs.writeFileSync(`${config.nginx.dir_conf}/ssl/key.pem`, key.stdout);
+        fs.writeFileSync(`${config.nginx.dir_etc}/ssl/key.pem`, key.stdout);
       }
 
       const apache = await inquirer.prompt({ type: 'confirm', name: 'status', message: 'You have want use apache : ', default: true });
