@@ -50,6 +50,26 @@ export default class CreateConfigCommand extends Command {
       if (os === 'linux') {
         platform = new Linux();
 
+        if (platform.osName === 'debian') {
+          if (!(await platform.CheckExists('apache2'))) {
+            const answers = await inquirer.prompt({ type: 'confirm', name: 'install', message: 'you want install apache : ', default: true });
+            if (answers.install) {
+              const install = new installAPache();
+              await of(install.service('2.4.34'));
+            }
+          }
+        }
+
+        if (platform.osName === 'redhat') {
+          if (!(await platform.CheckExists('httpd'))) {
+            const answers = await inquirer.prompt({ type: 'confirm', name: 'install', message: 'you want install apache : ', default: true });
+            if (answers.install) {
+              const install = new installAPache();
+              await of(install.service('2.4.34'));
+            }
+          }
+        }
+
         if (_.isEmpty(config.nginx.dir_conf)) {
           config.nginx.dir_conf = '/etc/nginx/conf.d';
         }
@@ -99,14 +119,6 @@ export default class CreateConfigCommand extends Command {
         if (answers.install) {
           const install = new installNginx();
           await of(install.service());
-        }
-      }
-
-      if (!(await platform.CheckExists('apache2'))) {
-        const answers = await inquirer.prompt({ type: 'confirm', name: 'install', message: 'you want install apache : ', default: true });
-        if (answers.install) {
-          const install = new installAPache();
-          await of(install.service('2.4.34'));
         }
       }
 
