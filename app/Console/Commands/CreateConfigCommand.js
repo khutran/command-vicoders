@@ -40,7 +40,7 @@ export default class CreateConfigCommand extends Command {
 
       const repository = new ProjectRepository();
       const list = await repository.get();
-      const test = _.groupBy(list, 'id');
+      const test = _.map(list, 'id');
       console.log(test);
       // const item = await repository
       //   .orWhere('name', 'like', project)
