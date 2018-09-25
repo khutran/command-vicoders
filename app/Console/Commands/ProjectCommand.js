@@ -2,11 +2,10 @@ import { Command } from './Command';
 import _ from 'lodash';
 import colors from 'colors';
 import ProjectRepository from '../../Repositories/ProjectRepository';
-// import ProjectTransformer from '../../Transformers/ProjectTranformer';
 import ApiResponse from '../../Responses/ApiResponse';
 import ManagerProjects from '../../Utils/ManagerProjects';
 import { exec } from 'child-process-promise';
-// import { dd } from 'dumper.js';
+import inquirer from 'inquirer';
 
 const path = require('path');
 
@@ -44,7 +43,18 @@ export default class ProjectCommand extends Command {
           }
           const item = await repository.where('name', data.name).first();
           if (item) {
-            await item.update(data);
+            let update_project = {};
+            const name = await inquirer.prompt({ type: 'input', name: 'value', message: 'Update name project  : ', default: item.name });
+            const framework = await inquirer.prompt({ type: 'input', name: 'value', message: 'Update framework project  : ', default: item.framework });
+            const dir_home = await inquirer.prompt({ type: 'input', name: 'value', message: 'Update dir_home project  : ', default: item.dir_home });
+            const git_remote = await inquirer.prompt({ type: 'input', name: 'value', message: 'Update git_remote project  : ', default: item.git_remote });
+            const port = await inquirer.prompt({ type: 'input', name: 'value', message: 'Update port project  : ', default: item.port });
+            update_project.name = name.value;
+            update_project.framework = framework.value;
+            update_project.dir_home = dir_home.value;
+            update_project.git_remote = git_remote.value;
+            update_project.port = port.value;
+            await item.update(update_project);
           } else {
             await repository.create(data);
           }
@@ -52,13 +62,7 @@ export default class ProjectCommand extends Command {
           break;
         case 'list':
           _.mapKeys(await repository.get(), (value, key) => {
-            const obj = {
-              name: value.name,
-              git_remote: value.git_remote,
-              dir_home: value.dir_home,
-              framework: value.framework
-            };
-            console.log(`${parseInt(key + 1)} : ${colors.green(obj.name)}`);
+            console.log(`${parseInt(key + 1)} : ${colors.green(value.name)} - (${colors.gray(value.framework)}) -> ${colors.yellow(value.dir_home)}`);
           });
           break;
         default:

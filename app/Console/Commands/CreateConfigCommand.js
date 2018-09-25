@@ -164,6 +164,9 @@ export default class CreateConfigCommand extends Command {
         fs.appendFileSync('/etc/hosts', `127.0.0.1 ${item.name}`);
       }
 
+      fs.writeFileSync(`${config.nginx.dir_conf}/nginx-${item.name}.conf`, config_nginx.stdout);
+      console.log(colors.green(`${config.nginx.dir_conf}/nginx-${item.name}.conf`));
+
       if (platform.osName() === 'debian') {
         await exec('nginx -s reload');
         await exec('apache2 -k restart');
@@ -172,8 +175,6 @@ export default class CreateConfigCommand extends Command {
         await exec('httpd -k restart');
       }
 
-      fs.writeFileSync(`${config.nginx.dir_conf}/nginx-${item.name}.conf`, config_nginx.stdout);
-      console.log(colors.green(`${config.nginx.dir_conf}/nginx-${item.name}.conf`));
       console.log(colors.green('Create success ... !'));
     } catch (e) {
       dd(colors.red(e.message));
