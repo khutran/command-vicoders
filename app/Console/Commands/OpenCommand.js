@@ -7,6 +7,7 @@ import Darwin from '../../Utils/Os/Darwin';
 import Linux from '../../Utils/Os/Linux';
 import { Exception } from '@nsilly/exceptions';
 import { exec } from 'child-process-promise';
+import inquirer from 'inquirer';
 
 export default class OpenCommand extends Command {
   signature() {
@@ -43,7 +44,22 @@ export default class OpenCommand extends Command {
           editer = 'subl';
         }
       }
+
       const repository = new ProjectRepository();
+
+      if (!project) {
+        const list = await repository.get();
+        _.mapKeys(list, (value, key) => {
+          console.log(`${parseInt(key + 1)} : ${value.name}`);
+        });
+
+        const as = await inquirer.prompt({ type: 'input', name: 'project', message: 'Select project  : ' });
+
+        if (as.project) {
+          project = as.project;
+        }
+      }
+
       const item = await repository
         .orWhere('name', 'like', project)
         .orWhere('id', 'like', project)
@@ -58,7 +74,6 @@ export default class OpenCommand extends Command {
           editer = option.e;
         }
       }
-      process.chdir(item.dir_home);
       exec(`${editer} ${item.dir_home}`);
     } catch (e) {
       console.log(colors.red(e.message));

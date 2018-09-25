@@ -2,7 +2,7 @@ import { Command } from './Command';
 import _ from 'lodash';
 import colors from 'colors';
 import ProjectRepository from '../../Repositories/ProjectRepository';
-import ProjectTransformer from '../../Transformers/ProjectTranformer';
+// import ProjectTransformer from '../../Transformers/ProjectTranformer';
 import ApiResponse from '../../Responses/ApiResponse';
 import ManagerProjects from '../../Utils/ManagerProjects';
 import { exec } from 'child-process-promise';
@@ -51,7 +51,15 @@ export default class ProjectCommand extends Command {
           console.log(colors.green(ApiResponse.success()));
           break;
         case 'list':
-          console.info(ApiResponse.collection(await repository.get(), new ProjectTransformer()));
+          _.mapKeys(await repository.get(), (value, key) => {
+            const obj = {
+              name: value.name,
+              git_remote: value.git_remote,
+              dir_home: value.dir_home,
+              framework: value.framework
+            };
+            console.log(`${parseInt(key + 1)} : ${colors.green(obj.name)}`);
+          });
           break;
         default:
           break;
