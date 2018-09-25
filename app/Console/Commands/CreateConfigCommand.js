@@ -50,7 +50,7 @@ export default class CreateConfigCommand extends Command {
       if (os === 'linux') {
         platform = new Linux();
 
-        if (platform.osName === 'debian') {
+        if (platform.osName() === 'debian') {
           if (!(await platform.CheckExists('apache2'))) {
             const answers = await inquirer.prompt({ type: 'confirm', name: 'install', message: 'you want install apache : ', default: true });
             if (answers.install) {
@@ -60,7 +60,7 @@ export default class CreateConfigCommand extends Command {
           }
         }
 
-        if (platform.osName === 'redhat') {
+        if (platform.osName() === 'redhat') {
           if (!(await platform.CheckExists('httpd'))) {
             const answers = await inquirer.prompt({ type: 'confirm', name: 'install', message: 'you want install apache : ', default: true });
             if (answers.install) {
@@ -161,8 +161,7 @@ export default class CreateConfigCommand extends Command {
           const config_apache = await exec(`curl https://raw.githubusercontent.com/khutran/config_web/master/default-${item.framework}-apache.conf`);
           config_apache.stdout = _.replace(config_apache.stdout, new RegExp('xxx.com', 'g'), item.name);
           config_apache.stdout = _.replace(config_apache.stdout, new RegExp('/path', 'g'), item.dir_home);
-          console.log(platform.osName);
-          if (platform.osName === 'debian') {
+          if (platform.osName() === 'debian') {
             console.log(config_apache.stdout);
             config_apache.stdout = _.replace(config_apache.stdout, new RegExp('httpd', 'g'), 'apache2');
           }
