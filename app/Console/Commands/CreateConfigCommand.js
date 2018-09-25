@@ -33,9 +33,35 @@ export default class CreateConfigCommand extends Command {
       let platform;
       if (os === 'darwin') {
         platform = new Darwin();
+
+        if (_.isEmpty(config.nginx.dir_conf)) {
+          config.nginx.dir_conf = '/usr/local/etc/nginx/servers';
+        }
+        if (_.isEmpty(config.nginx.dir_etc)) {
+          config.nginx.dir_etc = '/usr/local/etc/nginx';
+        }
+        if (_.isEmpty(config.apache.dir_conf)) {
+          config.apache.dir_conf = '/usr/local/etc/apache2/servers';
+        }
+        if (_.isEmpty(config.apache.dir_etc)) {
+          config.apache.dir_etc = '/usr/local/etc/apache2/servers';
+        }
       }
       if (os === 'linux') {
         platform = new Linux();
+
+        if (_.isEmpty(config.nginx.dir_conf)) {
+          config.nginx.dir_conf = '/etc/nginx/conf.d';
+        }
+        if (_.isEmpty(config.nginx.dir_etc)) {
+          config.nginx.dir_etc = '/etc/nginx';
+        }
+        if (_.isEmpty(config.apache.dir_conf)) {
+          config.apache.dir_conf = '/etc/apache2';
+        }
+        if (_.isEmpty(config.apache.dir_etc)) {
+          config.apache.dir_etc = '/etc/apache2/sites-enabled';
+        }
       }
 
       const repository = new ProjectRepository();
@@ -82,19 +108,6 @@ export default class CreateConfigCommand extends Command {
           const install = new installAPache();
           await of(install.service('2.4.34'));
         }
-      }
-
-      if (_.isEmpty(config.nginx.dir_conf)) {
-        config.nginx.dir_conf = '/etc/nginx/conf.d';
-      }
-      if (_.isEmpty(config.nginx.dir_etc)) {
-        config.nginx.dir_etc = '/etc/nginx';
-      }
-      if (_.isEmpty(config.apache.dir_conf)) {
-        config.apache.dir_conf = '/etc/apache2';
-      }
-      if (_.isEmpty(config.apache.dir_etc)) {
-        config.apache.dir_etc = '/etc/apache2/sites-enabled';
       }
 
       if (_.isNil(item.framework)) {
