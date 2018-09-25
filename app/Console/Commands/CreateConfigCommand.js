@@ -80,9 +80,21 @@ export default class CreateConfigCommand extends Command {
         const answers = await inquirer.prompt({ type: 'confirm', name: 'install', message: 'you want install apache : ', default: true });
         if (answers.install) {
           const install = new installAPache();
-          config.service_apache = 'true';
           await of(install.service('2.4.34'));
         }
+      }
+
+      if (_.isEmpty(config.nginx.dir_conf)) {
+        config.nginx.dir_conf = '/etc/nginx/conf.d';
+      }
+      if (_.isEmpty(config.nginx.dir_etc)) {
+        config.nginx.dir_etc = '/etc/nginx';
+      }
+      if (_.isEmpty(config.apache.dir_conf)) {
+        config.apache.dir_conf = '/etc/apache2';
+      }
+      if (_.isEmpty(config.apache.dir_etc)) {
+        config.apache.dir_etc = '/etc/apache2/sites-enabled';
       }
 
       if (_.isNil(item.framework)) {
