@@ -102,7 +102,7 @@ export default class CreateConfigCommand extends Command {
         }
       }
 
-      if (!(await platform.CheckExists('apache2')) || !(await platform.CheckExists('httpd'))) {
+      if (!(await platform.CheckExists('apache2'))) {
         const answers = await inquirer.prompt({ type: 'confirm', name: 'install', message: 'you want install apache : ', default: true });
         if (answers.install) {
           const install = new installAPache();
