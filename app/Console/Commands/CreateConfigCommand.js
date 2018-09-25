@@ -183,13 +183,13 @@ export default class CreateConfigCommand extends Command {
         }
       }
 
+      fs.writeFileSync(`${config.nginx.dir_conf}/nginx-${item.name}.conf`, config_nginx.stdout);
+      console.log(colors.green(`${config.nginx.dir_conf}/nginx-${item.name}.conf`));
+
       const addHost = await inquirer.prompt({ type: 'confirm', name: 'add', message: 'you want add domain to file host "/etc/hosts" : ', default: true });
       if (addHost.add) {
         fs.appendFileSync('/etc/hosts', `\n127.0.0.1 ${item.name}`);
       }
-
-      fs.writeFileSync(`${config.nginx.dir_conf}/nginx-${item.name}.conf`, config_nginx.stdout);
-      console.log(colors.green(`${config.nginx.dir_conf}/nginx-${item.name}.conf`));
 
       if (platform.osName() === 'debian') {
         await exec('nginx -s reload');
