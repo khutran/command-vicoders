@@ -57,10 +57,10 @@ export default class CreateConfigCommand extends Command {
           config.nginx.dir_etc = '/etc/nginx';
         }
         if (_.isEmpty(config.apache.dir_conf)) {
-          config.apache.dir_conf = '/etc/apache2';
+          config.apache.dir_conf = '/etc/apache2/sites-enabled';
         }
         if (_.isEmpty(config.apache.dir_etc)) {
-          config.apache.dir_etc = '/etc/apache2/sites-enabled';
+          config.apache.dir_etc = '/etc/apache2';
         }
       }
 
