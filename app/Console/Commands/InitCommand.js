@@ -32,7 +32,6 @@ export default class InitCommand extends Command {
       const os = new Os().platform();
       if (os === 'darwin') {
         const user = new Darwin().userInfo();
-
         if (!fs.existsSync(`${user.homedir}/.npm/vcc/config.json`)) {
           await mv(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`, { mkdirp: true });
           fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
@@ -76,7 +75,7 @@ export default class InitCommand extends Command {
         const linux = new Linux();
         const user = linux.userInfo();
         const nameOs = linux.osName();
-
+        await linux.getPhpSock();
         if (!fs.existsSync(`${user.homedir}/.npm/vcc/config.json`)) {
           await mv(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`, { mkdirp: true });
           fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);

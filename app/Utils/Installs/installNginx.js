@@ -30,11 +30,11 @@ export default class installNginx extends Install {
           await exec(
             'apt install -y gcc libpcre3-dev zlib1g-dev libssl-dev libxml2-dev libxslt1-dev  libgd-dev google-perftools libgoogle-perftools-dev libperl-dev libgeoip-dev libatomic-ops-dev'
           );
-          await exec('apt install -y software-properties-common');
+          await exec('apt-get install -y software-properties-common');
           await of(exec('add-apt-repository -y ppa:nginx/stable'));
-          await exec('apt -y update');
+          await exec('apt-get -y update');
           console.log('install nginx ... !');
-          await exec('apt install -y nginx');
+          await exec('apt-get install -y nginx');
           const nginx = await exec('curl https://raw.githubusercontent.com/khutran/config_web/master/nginx.conf');
           await rimraf(`${config.nginx.dir_etc}/nginx.conf`);
 

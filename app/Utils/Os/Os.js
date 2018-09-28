@@ -1,5 +1,6 @@
 import fs from 'fs';
 import os from 'os';
+import * as _ from 'lodash';
 // const util = require('util');
 // const exec = util.promisify(require('child_process').exec);
 // const readFile = util.promisify(fs.readFile);
@@ -20,5 +21,18 @@ export default class Os {
   }
   platform() {
     return os.platform();
+  }
+
+  getPhpSock() {
+    let path_sock;
+    const forder = ['/var/run/php', '/run/php', '/var/run/php'];
+    _.forEach(forder, item => {
+      fs.readdirSync(item).filter(sock => {
+        if (sock.includes('php')) {
+          path_sock = sock;
+        }
+      });
+    });
+    console.log(path_sock);
   }
 }

@@ -9,5 +9,6 @@
     "user_root": "root",
     "pass_root": "",
     "localhost": "127.0.0.1"
-  }
+  },
+  "connectPhp": ""
 }

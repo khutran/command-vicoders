@@ -25,7 +25,7 @@ export default class installPhp extends Install {
           await of(exec('add-apt-repository -y ppa:ondrej/php'));
           console.log('update ... !');
           await exec('apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4F4EA0AAE5267A6C');
-          await exec('apt -y update');
+          await exec('apt-get -y update');
           await exec('apt list --upgradable');
 
           console.log(`Install php ${version}`);

@@ -22,7 +22,7 @@ export default class InstallVscode extends Install {
             const answers = await inquirer.prompt({ type: 'confirm', name: 'brew', message: 'Brew not install  - Do you want insatll brew?', default: true });
             if (answers.brew) {
               if (!fs.existsSync('/usr/bin/curl')) {
-                await exec('apt install -y curl');
+                await exec('apt-get install -y curl');
               }
               const curl = await exec('curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install');
               await spawn('ruby', ['-e', curl.stdout]);
@@ -51,7 +51,7 @@ export default class InstallVscode extends Install {
               resolve({ code: 1, message: 'service vscode exitis install' });
             } else {
               if (!fs.existsSync('/usr/bin/curl')) {
-                await exec('apt install -y curl');
+                await exec('apt-get install -y curl');
               }
               const data = 'deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main';
               const microsoft = await spawn('curl', ['https://packages.microsoft.com/keys/microsoft.asc'], { capture: ['stdout', 'stderr'] });

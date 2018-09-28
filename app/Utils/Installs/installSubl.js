@@ -39,7 +39,7 @@ export default class InstallSubl extends Install {
           try {
             if (!fs.existsSync('/usr/bin/wget')) {
               console.log('install wget ... !');
-              await exec('apt install -y wget');
+              await exec('apt-get install -y wget');
             }
             if (await linux.CheckExists('subl')) {
               resolve({ message: 'subl exitis install !', code: 1 });
@@ -53,7 +53,7 @@ export default class InstallSubl extends Install {
 
               console.log(colors.green('down sublime-text success ... done !'));
               fs.writeFileSync('/etc/apt/sources.list.d/sublime-text.list', data);
-              await exec('apt -y update');
+              await exec('apt-get -y update');
               await spawn('apt-get', ['-y', 'install', 'sublime-text']);
               resolve({ message: 'install success !', code: 0 });
             }
