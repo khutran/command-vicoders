@@ -21,5 +21,4 @@ export default class Os {
   platform() {
     return os.platform();
   }
-  osVersion() {}
 }
