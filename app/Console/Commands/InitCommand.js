@@ -67,7 +67,7 @@ export default class InitCommand extends Command {
         const config = require(`${__dirname}/../../config/config.json`);
         config.connectPhp = await darwin.getPhpSock();
 
-        if (_.isNil(config.connectPhp)) {
+        if (_.isEmpty(config.connectPhp)) {
           const answers = await inquirer.prompt({ type: 'input', name: 'path', message: 'input method connect php-fpm' });
           config.connectPhp = answers.path;
         }
@@ -159,7 +159,7 @@ export default class InitCommand extends Command {
             }
           }
 
-          if (_.isNil(config.connectPhp)) {
+          if (_.isEmpty(config.connectPhp)) {
             const answers = await inquirer.prompt({ type: 'input', name: 'path', message: 'input method connect php-fpm' });
             config.connectPhp = answers.path;
           }
@@ -204,7 +204,7 @@ export default class InitCommand extends Command {
             }
           }
 
-          if (_.isNil(config.connectPhp)) {
+          if (_.isEmpty(config.connectPhp)) {
             const answers = await inquirer.prompt({ type: 'input', name: 'path', message: 'input method connect php-fpm' });
             config.connectPhp = answers.path;
           }
