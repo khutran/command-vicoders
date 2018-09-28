@@ -25,16 +25,19 @@ export default class Os {
 
   async getPhpSock() {
     let path_sock;
-    const forder = ['/var/run/php', '/run/php'];
+    const forder = ['/var/run/php', '/var/run/php-fpm'];
     if (await this.CheckExists('php')) {
       _.forEach(forder, item => {
+        if (!fs.existsSync(item)) {
+          fs.mkdirSync(item);
+        }
         fs.readdirSync(item).filter(sock => {
           if (sock.includes('php')) {
-            path_sock = `${item}/${sock}`;
+            path_sock = `unix:${item}/${sock}`;
           }
         });
       });
     }
-    console.log(path_sock);
+    return path_sock;
   }
 }

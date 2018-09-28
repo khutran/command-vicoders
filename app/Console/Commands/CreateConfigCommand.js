@@ -188,6 +188,12 @@ export default class CreateConfigCommand extends Command {
       } else {
         config_nginx.stdout = _.replace(config_nginx.stdout, new RegExp('#includeNginx', 'g'), 'try_files $uri $uri/ /index.php?$query_string');
       }
+      if (_.isNil(config.connectPhp)) {
+        const answers = await inquirer.prompt({ type: 'input', name: 'path', message: 'input method connect php-fpm' });
+        config.connectPhp = answers.path;
+      }
+
+      config_nginx.stdout = _.replace(config_nginx.stdout, new RegExp('#connectPhp', 'g'), config.connectPhp);
 
       fs.writeFileSync(`${config.nginx.dir_conf}/nginx-${item.name}.conf`, config_nginx.stdout);
       console.log(colors.green(`${config.nginx.dir_conf}/nginx-${item.name}.conf`));

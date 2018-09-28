@@ -35,12 +35,10 @@ export default class installPhp extends Install {
             `apt-get install -y php${version}-curl php${version}-mysql php${version}-json php${version}-mbstring php${version}-gd php${version}-intl php${version}-xml php${version}-imagick php${version}-redis php${version}-zip`
           );
 
-          let file = fs.readFileSync(`/etc/php/${version}/fpm/pool.d/www.conf`);
-          file = _.replace(file, `listen = /var/run/php-fpm/php${version}-fpm.sock', 'listen = /var/run/php-fpm/php-fpm.sock`);
-          await rimraf(`/etc/php/${version}/fpm/pool.d/www.conf`);
-          fs.writeFileSync(`/etc/php/${version}/fpm/pool.d/www.conf`, file);
+          config.connectPhp = await linux.getPhpSock();
+          await exec(`php${version}-fpm`);
+          config.connectPhp = await linux.getPhpSock();
 
-          config.service_php = 'true';
           const data = JSON.stringify(config, null, 2);
           fs.writeFileSync(`${__dirname}/../../config/config.json`, data);
         } catch (e) {
@@ -58,11 +56,10 @@ export default class installPhp extends Install {
             `yum install -y php${version}w-curl php${version}w-devel php${version}w-mysql php${version}w-json php${version}w-mbstring php${version}w-gd php${version}w-intl php${version}w-xml php${version}w-pecl-imagick php${version}w-redis php${version}w-zip`
           );
           await exec(`yum install -y php${version}w-fpm`);
-          let file = fs.readFileSync('/etc/php-fpm.d/www.conf');
-          file = _.replace(file, 'listen = 127.0.0.1:9000', 'listen = /var/run/php-fpm/php-fpm.sock');
-          await rimraf('/etc/php-fpm.d/www.conf');
-          fs.writeFileSync('/etc/php-fpm.d/www.conf', file);
 
+          config.connectPhp = await linux.getPhpSock();
+          await exec(`php${version}-fpm`);
+          config.connectPhp = await linux.getPhpSock();
           const data = JSON.stringify(config, null, 2);
           fs.writeFileSync(`${__dirname}/../../config/config.json`, data);
         } catch (e) {
