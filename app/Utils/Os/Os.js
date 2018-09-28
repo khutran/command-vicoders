@@ -23,16 +23,18 @@ export default class Os {
     return os.platform();
   }
 
-  getPhpSock() {
+  async getPhpSock() {
     let path_sock;
     const forder = ['/var/run/php', '/run/php', '/var/run/php'];
-    _.forEach(forder, item => {
-      fs.readdirSync(item).filter(sock => {
-        if (sock.includes('php')) {
-          path_sock = sock;
-        }
+    if (await this.CheckExists('php')) {
+      _.forEach(forder, item => {
+        fs.readdirSync(item).filter(sock => {
+          if (sock.includes('php')) {
+            path_sock = `${item}/${sock};
+          }
+        });
       });
-    });
+    }
     console.log(path_sock);
   }
 }
