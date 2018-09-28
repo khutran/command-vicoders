@@ -46,6 +46,8 @@ export default class CreateConfigCommand extends Command {
         if (_.isEmpty(config.apache.dir_etc)) {
           config.apache.dir_etc = '/usr/local/etc/apache2/servers';
         }
+
+        config.connectPhp = await platform.getPhpSock();
       }
       if (os === 'linux') {
         platform = new Linux();
@@ -82,6 +84,7 @@ export default class CreateConfigCommand extends Command {
         if (_.isEmpty(config.apache.dir_etc)) {
           config.apache.dir_etc = '/etc/apache2';
         }
+        config.connectPhp = await platform.getPhpSock();
       }
 
       if (!(await platform.CheckExists('nginx'))) {
