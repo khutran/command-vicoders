@@ -3,7 +3,7 @@ import { Exception } from '@nsilly/exceptions/dist/src/Exceptions/Exception';
 import Linux from '../Os/Linux';
 import fs from 'fs';
 import config from '../../config/config.json';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import { exec } from 'child-process-promise';
 const util = require('util');
 const rimraf = util.promisify(require('rimraf'));

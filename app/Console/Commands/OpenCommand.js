@@ -1,5 +1,5 @@
 import { Command } from './Command';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import colors from 'colors';
 import ProjectRepository from '../../Repositories/ProjectRepository';
 import Os from '../../Utils/Os/Os';
@@ -8,7 +8,6 @@ import Linux from '../../Utils/Os/Linux';
 import { Exception } from '@nsilly/exceptions';
 import { exec } from 'child-process-promise';
 import inquirer from 'inquirer';
-import { dd } from 'dumper.js';
 
 export default class OpenCommand extends Command {
   signature() {

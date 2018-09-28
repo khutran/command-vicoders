@@ -1,7 +1,7 @@
 import { Command } from './Command';
 import ProjectRepository from '../../Repositories/ProjectRepository';
 import colors from 'colors';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import fs from 'fs';
 import Os from '../../Utils/Os/Os';
 import config from '../../config/config.json';

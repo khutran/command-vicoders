@@ -1,5 +1,5 @@
 import { Command } from './Command';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import colors from 'colors';
 import ProjectRepository from '../../Repositories/ProjectRepository';
 import ApiResponse from '../../Responses/ApiResponse';

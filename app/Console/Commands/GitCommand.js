@@ -1,6 +1,6 @@
 import { Command } from './Command';
 import inquirer from 'inquirer';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import opn from 'opn';
 import remoteOriginUrl from 'remote-origin-url';
 import GitUrlParse from 'git-url-parse';

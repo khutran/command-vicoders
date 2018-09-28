@@ -4,7 +4,7 @@ import Linux from '../Os/Linux';
 import fs from 'fs';
 import config from '../../config/config.json';
 import of from 'await-of';
-import _ from 'lodash';
+import * as _ from 'lodash';
 const util = require('util');
 const rimraf = util.promisify(require('rimraf'));
 const exec = util.promisify(require('child_process').exec);

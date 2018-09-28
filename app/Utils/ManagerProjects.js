@@ -1,5 +1,5 @@
 import fs from 'fs';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 export default class ManagerProjects {
   async framework() {

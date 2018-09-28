@@ -160,7 +160,7 @@ export default class InitCommand extends Command {
           }
 
           if (_.isEmpty(config.connectPhp)) {
-            const answers = await inquirer.prompt({ type: 'input', name: 'path', message: 'input method connect php-fpm' });
+            const answers = await inquirer.prompt({ type: 'input', name: 'path', message: 'input method connect php-fpm :' });
             config.connectPhp = answers.path;
           }
 
@@ -205,7 +205,7 @@ export default class InitCommand extends Command {
           }
 
           if (_.isEmpty(config.connectPhp)) {
-            const answers = await inquirer.prompt({ type: 'input', name: 'path', message: 'input method connect php-fpm' });
+            const answers = await inquirer.prompt({ type: 'input', name: 'path', message: 'input method connect php-fpm : ' });
             config.connectPhp = answers.path;
           }
 

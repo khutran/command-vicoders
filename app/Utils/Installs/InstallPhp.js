@@ -3,12 +3,9 @@ import Linux from '../Os/Linux';
 import of from 'await-of';
 import { exec } from 'child-process-promise';
 import { dd } from 'dumper.js';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import fs from 'fs';
 import config from '../../config/config.json';
-
-const util = require('util');
-const rimraf = util.promisify(require('rimraf'));
 
 export default class installPhp extends Install {
   async service(version) {
@@ -36,7 +33,7 @@ export default class installPhp extends Install {
           );
 
           config.connectPhp = await linux.getPhpSock();
-          await exec(`php${version}-fpm`);
+          await exec(`php-fpm${version}`);
           config.connectPhp = await linux.getPhpSock();
 
           const data = JSON.stringify(config, null, 2);
@@ -47,18 +44,19 @@ export default class installPhp extends Install {
       }
       if (osName === 'redhat') {
         try {
-          version = _.replace(version, '.', '');
+          const version_new = _.replace(version, '.', '');
+
           console.log('instal repo ... !');
           await exec('yum install -y epel-release');
           await of(exec('rpm -Uvh https://mirror.webtatic.com/yum/el7/webtatic-release.rpm'));
-          console.log(`install php ${version}`);
+          console.log(`install php ${version_new}`);
           await exec(
-            `yum install -y php${version}w-curl php${version}w-devel php${version}w-mysql php${version}w-json php${version}w-mbstring php${version}w-gd php${version}w-intl php${version}w-xml php${version}w-pecl-imagick php${version}w-redis php${version}w-zip`
+            `yum install -y php${version_new}w-curl php${version_new}w-devel php${version_new}w-mysql php${version_new}w-json php${version_new}w-mbstring php${version_new}w-gd php${version_new}w-intl php${version_new}w-xml php${version_new}w-pecl-imagick php${version_new}w-redis php${version_new}w-zip`
           );
-          await exec(`yum install -y php${version}w-fpm`);
+          await exec(`yum install -y php${version_new}w-fpm`);
 
           config.connectPhp = await linux.getPhpSock();
-          await exec(`php${version}-fpm`);
+          await exec(`php-fpm${version}`);
           config.connectPhp = await linux.getPhpSock();
           const data = JSON.stringify(config, null, 2);
           fs.writeFileSync(`${__dirname}/../../config/config.json`, data);
