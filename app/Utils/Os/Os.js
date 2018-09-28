@@ -30,7 +30,7 @@ export default class Os {
       _.forEach(forder, item => {
         fs.readdirSync(item).filter(sock => {
           if (sock.includes('php')) {
-            path_sock = `${item}/${sock};
+            path_sock = `${item}/${sock}`;
           }
         });
       });
