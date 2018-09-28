@@ -185,6 +185,8 @@ export default class CreateConfigCommand extends Command {
             config_nginx.stdout = _.replace(config_nginx.stdout, new RegExp('proxy_pass http://apache', 'g'), 'proxy_pass http://web');
           }
         }
+      } else {
+        config_nginx.stdout = _.replace(config_nginx.stdout, new RegExp('#includeNginx', 'g'), 'try_files $uri $uri/ /index.php?$query_string');
       }
 
       fs.writeFileSync(`${config.nginx.dir_conf}/nginx-${item.name}.conf`, config_nginx.stdout);

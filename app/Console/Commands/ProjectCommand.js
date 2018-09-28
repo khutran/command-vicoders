@@ -4,8 +4,9 @@ import colors from 'colors';
 import ProjectRepository from '../../Repositories/ProjectRepository';
 import ApiResponse from '../../Responses/ApiResponse';
 import ManagerProjects from '../../Utils/ManagerProjects';
-import { exec } from 'child-process-promise';
 import inquirer from 'inquirer';
+import remoteOriginUrl from 'remote-origin-url';
+import GitUrlParse from 'git-url-parse';
 
 const path = require('path');
 
@@ -33,9 +34,9 @@ export default class ProjectCommand extends Command {
             dir_home: process.cwd(),
             framework: await manager.framework()
           };
-          const git_remote = await exec('git remote -v');
-          const i = _.split(git_remote.stdout, '\n');
-          data.git_remote = i[0].slice(7, -8);
+          const remote = remoteOriginUrl.sync();
+          const url = GitUrlParse(remote);
+          data.git_remote = `https://${url.source}/${url.full_name}.git`;
 
           data.port = await manager.getPort();
           if (data.name === 'workspace' || data.name === 'public_html') {

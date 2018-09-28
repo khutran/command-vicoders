@@ -28,8 +28,8 @@ export default class OpenCommand extends Command {
       const os = new Os().platform();
       if (os === 'darwin') {
         const darwin = new Darwin();
-        if (!darwin.CheckExists('code')) {
-          if (!darwin.CheckExists('subl')) {
+        if (!(await darwin.CheckExists('code'))) {
+          if (!(await darwin.CheckExists('subl'))) {
             throw new Exception('You not install vscode or subl');
           }
           editer = 'subl';
@@ -37,8 +37,8 @@ export default class OpenCommand extends Command {
       }
       if (os === 'linux') {
         const linux = new Linux();
-        if (!linux.CheckExists('code')) {
-          if (!linux.CheckExists('subl')) {
+        if (!(await linux.CheckExists('code'))) {
+          if (!(await linux.CheckExists('subl'))) {
             throw new Exception('You not install vscode or subl');
           }
           editer = 'subl';
