@@ -32,7 +32,7 @@ export default class Os {
           fs.mkdirSync(item);
         }
         fs.readdirSync(item).filter(sock => {
-          if (sock.includes('php')) {
+          if (sock.includes('php') && sock.includes('sock')) {
             path_sock = `unix:${item}/${sock}`;
           }
         });

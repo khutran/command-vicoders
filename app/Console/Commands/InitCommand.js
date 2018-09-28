@@ -85,7 +85,6 @@ export default class InitCommand extends Command {
         const linux = new Linux();
         const user = linux.userInfo();
         const nameOs = linux.osName();
-        config.connectPhp = await linux.getPhpSock();
 
         if (!fs.existsSync(`${user.homedir}/.npm/vcc/config.json`)) {
           await mv(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`, { mkdirp: true });
@@ -204,10 +203,10 @@ export default class InitCommand extends Command {
             }
           }
 
-          if (_.isEmpty(config.connectPhp)) {
-            const answers = await inquirer.prompt({ type: 'input', name: 'path', message: 'input method connect php-fpm : ' });
-            config.connectPhp = answers.path;
-          }
+          // if (_.isEmpty(config.connectPhp)) {
+          //   const answers = await inquirer.prompt({ type: 'input', name: 'path', message: 'input method connect php-fpm : ' });
+          //   config.connectPhp = answers.path;
+          // }
 
           const data = JSON.stringify(config, null, 2);
           fs.writeFileSync(`${__dirname}/../../config/config.json`, data);

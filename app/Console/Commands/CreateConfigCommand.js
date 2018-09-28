@@ -46,8 +46,6 @@ export default class CreateConfigCommand extends Command {
         if (_.isEmpty(config.apache.dir_etc)) {
           config.apache.dir_etc = '/usr/local/etc/apache2/servers';
         }
-
-        config.connectPhp = await platform.getPhpSock();
       }
       if (os === 'linux') {
         platform = new Linux();
@@ -84,7 +82,6 @@ export default class CreateConfigCommand extends Command {
         if (_.isEmpty(config.apache.dir_etc)) {
           config.apache.dir_etc = '/etc/apache2';
         }
-        config.connectPhp = await platform.getPhpSock();
       }
 
       if (!(await platform.CheckExists('nginx'))) {
@@ -158,18 +155,15 @@ export default class CreateConfigCommand extends Command {
       }
 
       const apache = await inquirer.prompt({ type: 'confirm', name: 'status', message: 'You have want use apache : ', default: true });
-
+      let config_apache;
       if (item.framework !== 'nodejs') {
         if (apache.status) {
-          const config_apache = await exec(`curl https://raw.githubusercontent.com/khutran/config_web/master/default-${item.framework}-apache.conf`);
+          config_apache = await exec(`curl https://raw.githubusercontent.com/khutran/config_web/master/default-${item.framework}-apache.conf`);
           config_apache.stdout = _.replace(config_apache.stdout, new RegExp('xxx.com', 'g'), item.name);
           config_apache.stdout = _.replace(config_apache.stdout, new RegExp('/path', 'g'), item.dir_home);
           if (platform.osName() === 'debian') {
             config_apache.stdout = _.replace(config_apache.stdout, new RegExp('httpd', 'g'), 'apache2');
           }
-
-          fs.writeFileSync(`${config.apache.dir_conf}/apache-${item.name}.conf`, config_apache.stdout);
-          console.log(colors.green(`${config.apache.dir_conf}/apache-${item.name}.conf`));
         }
       }
 
@@ -191,20 +185,33 @@ export default class CreateConfigCommand extends Command {
       } else {
         config_nginx.stdout = _.replace(config_nginx.stdout, new RegExp('#includeNginx', 'g'), 'try_files $uri $uri/ /index.php?$query_string');
       }
+
+      console.log(config);
       if (_.isEmpty(config.connectPhp)) {
-        const answers = await inquirer.prompt({ type: 'input', name: 'path', message: 'input method connect php-fpm' });
-        config.connectPhp = answers.path;
+        config.connectPhp = await platform.getPhpSock();
+        if (_.isEmpty(config.connectPhp)) {
+          const answers = await inquirer.prompt({ type: 'input', name: 'path', message: 'input method connect php-fpm : ' });
+          config.connectPhp = answers.path;
+        }
       }
 
       config_nginx.stdout = _.replace(config_nginx.stdout, new RegExp('#connectPhp', 'g'), config.connectPhp);
-
-      fs.writeFileSync(`${config.nginx.dir_conf}/nginx-${item.name}.conf`, config_nginx.stdout);
-      console.log(colors.green(`${config.nginx.dir_conf}/nginx-${item.name}.conf`));
 
       const addHost = await inquirer.prompt({ type: 'confirm', name: 'add', message: 'you want add domain to file host "/etc/hosts" : ', default: true });
       if (addHost.add) {
         fs.appendFileSync('/etc/hosts', `\n127.0.0.1 ${item.name}`);
       }
+
+      if (config_apache) {
+        fs.writeFileSync(`${config.apache.dir_conf}/apache-${item.name}.conf`, config_apache.stdout);
+        console.log(colors.green(`${config.apache.dir_conf}/apache-${item.name}.conf`));
+      }
+
+      fs.writeFileSync(`${config.nginx.dir_conf}/nginx-${item.name}.conf`, config_nginx.stdout);
+      console.log(colors.green(`${config.nginx.dir_conf}/nginx-${item.name}.conf`));
+
+      const data = JSON.stringify(config, null, 2);
+      fs.writeFileSync(`${__dirname}/../../config/config.json`, data);
 
       if (platform.osName() === 'debian') {
         await exec('nginx -s reload');
