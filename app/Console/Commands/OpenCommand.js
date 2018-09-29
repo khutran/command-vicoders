@@ -50,7 +50,6 @@ export default class OpenCommand extends Command {
           await exec(`${editer} /etc/hosts`);
           break;
         case 'config':
-          // const user = new Os().userInfo();
           await exec(`${editer} ${__dirname}/../../config/config.json`);
           break;
         default:
