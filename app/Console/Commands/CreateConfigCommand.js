@@ -186,7 +186,6 @@ export default class CreateConfigCommand extends Command {
         config_nginx.stdout = _.replace(config_nginx.stdout, new RegExp('#includeNginx', 'g'), 'try_files $uri $uri/ /index.php?$query_string');
       }
 
-      console.log(config);
       if (_.isEmpty(config.connectPhp)) {
         config.connectPhp = await platform.getPhpSock();
         if (_.isEmpty(config.connectPhp)) {
@@ -215,10 +214,14 @@ export default class CreateConfigCommand extends Command {
 
       if (platform.osName() === 'debian') {
         await exec('nginx -s reload');
-        await exec('apache2 -k restart');
+        if (config_apache) {
+          await exec('apache2 -k restart');
+        }
       } else if (platform.osName() === 'redhat') {
         await exec('nginx -s reload');
-        await exec('httpd -k restart');
+        if (config_apache) {
+          await exec('httpd -k restart');
+        }
       }
 
       console.log(colors.green('Create success ... !'));

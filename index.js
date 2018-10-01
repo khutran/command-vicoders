@@ -5,7 +5,7 @@ import { Kernel } from './app/Console/Kernel';
 import _ from 'lodash';
 import { Exception } from '@nsilly/exceptions';
 
-program.version('1.0.0');
+program.version('1.0.0', '-v, --version');
 const kernel = new Kernel();
 const commands = kernel.commands();
 
