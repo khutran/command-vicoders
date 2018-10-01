@@ -20,7 +20,7 @@ export default class InstallSubl extends Install {
           } else {
             console.log(colors.green('Install Subl ... !'));
             await exec(`git clone https://github.com/khutran/subl-win.git ${win.tmpDir()}/subl-win`);
-            await exec(`${win.tmpDir()}/vscode-win/VSCodeUserSetup-x64-1.27.2.exe`);
+            await exec(`${win.tmpDir()}/subl-win/Sublime-Text-Build-3176-x64-Setup.exe`);
             console.log(colors.green('Install Success ... !'));
             await rimraf(`${win.tmpDir()}/subl-win`);
             console.log(colors.green('Install Success ... !'));
