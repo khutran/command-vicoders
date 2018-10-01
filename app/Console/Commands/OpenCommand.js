@@ -47,7 +47,11 @@ export default class OpenCommand extends Command {
       }
       switch (project) {
         case 'host':
-          await exec(`${editer} /etc/hosts`);
+          let path_host = '/etc/hosts';
+          if (os.name === 'win32') {
+            path_host = '/c/Windows/System32/drivers/etc';
+          }
+          await exec(`${editer} ${path_host}`);
           break;
         case 'config':
           await exec(`${editer} ${__dirname}/../../config/config.json`);
