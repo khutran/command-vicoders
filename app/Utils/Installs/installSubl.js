@@ -5,9 +5,32 @@ import colors from 'colors';
 import Darwin from '../Os/Darwin';
 import Linux from '../Os/Linux';
 import { spawn, exec } from 'child-process-promise';
+import Win from '../Os/Win';
+const util = require('util');
+const rimraf = util.promisify(require('rimraf'));
 
 export default class InstallSubl extends Install {
   async service() {
+    if (this.os === 'win32') {
+      return new Promise(async (resolve, reject) => {
+        try {
+          const win = new Win();
+          if (await win.CheckExists('subl')) {
+            resolve({ code: 1, message: 'service Subl exitis install' });
+          } else {
+            console.log(colors.green('Install Subl ... !'));
+            await exec(`git clone https://github.com/khutran/subl-win.git ${win.tmpDir()}/subl-win`);
+            await exec(`${win.tmpDir()}/vscode-win/VSCodeUserSetup-x64-1.27.2.exe`);
+            console.log(colors.green('Install Success ... !'));
+            await rimraf(`${win.tmpDir()}/subl-win`);
+            console.log(colors.green('Install Success ... !'));
+            resolve({ message: 'install success !', code: 0 });
+          }
+        } catch (e) {
+          reject(e);
+        }
+      });
+    }
     if (this.os === 'darwin') {
       return new Promise(async (resolve, reject) => {
         try {
