@@ -7,12 +7,33 @@ import Darwin from '../Os/Darwin';
 import Linux from '../Os/Linux';
 import * as _ from 'lodash';
 import { spawn, exec } from 'child-process-promise';
+import Win from '../Os/Win';
 const util = require('util');
 const rimraf = util.promisify(require('rimraf'));
 const chownr = util.promisify(require('chownr'));
 
 export default class InstallVscode extends Install {
   async service() {
+    if (this.os === 'win32') {
+      return new Promise(async (resolve, reject) => {
+        try {
+          const win = new Win();
+          if (await win.CheckExists('code')) {
+            resolve({ code: 1, message: 'service vscode exitis install' });
+          } else {
+            console.log(colors.green('Install Vscode ... !'));
+            await exec(`git clone https://github.com/khutran/vscode-win.git ${win.tmpDir()}/vscode-win`);
+            await exec(`${win.tmpDir()}/vscode-win/VSCodeUserSetup-x64-1.27.2.exe`);
+            console.log(colors.green('Install Success ... !'));
+            await rimraf(`${win.tmpDir()}/vscode-win`);
+            console.log(colors.green('Install Success ... !'));
+            resolve({ message: 'install success !', code: 0 });
+          }
+        } catch (e) {
+          reject(e);
+        }
+      });
+    }
     if (this.os === 'darwin') {
       return new Promise(async (resolve, reject) => {
         try {

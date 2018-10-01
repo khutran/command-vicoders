@@ -48,9 +48,10 @@ export default class OpenCommand extends Command {
       switch (project) {
         case 'host':
           let path_host = '/etc/hosts';
-          if (os.name === 'win32') {
-            path_host = '/c/Windows/System32/drivers/etc';
+          if (os === 'win32') {
+            path_host = 'C:\\Windows\\System32\\drivers\\etc\\hosts';
           }
+          console.log(`open : ${path_host}`);
           await exec(`${editer} ${path_host}`);
           break;
         case 'config':

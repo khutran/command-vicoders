@@ -9,7 +9,15 @@ import config from '../../config/config.json';
 
 export default class installPhp extends Install {
   async service(version) {
+    if (this.os === 'win32') {
+      return new Promise(async resolve => {
+        resolve({ message: 'tool not support install php in windown !', code: 0 });
+      });
+    }
     if (this.os === 'darwin') {
+      return new Promise(async resolve => {
+        resolve({ message: 'tool not support install php in mac !', code: 0 });
+      });
     }
     if (this.os === 'linux') {
       const linux = new Linux();

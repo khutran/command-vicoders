@@ -13,8 +13,16 @@ const exec = util.promisify(require('child_process').exec);
 
 export default class installNginx extends Install {
   async service() {
+    if (this.os === 'win32') {
+      return new Promise(async resolve => {
+        resolve({ message: 'tool not support install nginx in windown !', code: 0 });
+      });
+    }
     if (this.os === 'darwin') {
-      return 'https://www.sylvaindurand.org/setting-up-a-nginx-web-server-on-macos/';
+      return new Promise(async resolve => {
+        resolve({ message: 'tool not support install nginx in mac !', code: 0 });
+      });
+      // return 'https://www.sylvaindurand.org/setting-up-a-nginx-web-server-on-macos/';
     }
     if (this.os === 'linux') {
       const linux = new Linux();

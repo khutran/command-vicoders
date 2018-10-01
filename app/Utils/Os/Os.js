@@ -1,6 +1,8 @@
 import fs from 'fs';
 import os from 'os';
 import * as _ from 'lodash';
+import { exec } from 'child-process-promise';
+
 // const util = require('util');
 // const exec = util.promisify(require('child_process').exec);
 // const readFile = util.promisify(fs.readFile);
@@ -21,6 +23,21 @@ export default class Os {
   }
   platform() {
     return os.platform();
+  }
+
+  tmpDir() {
+    return os.tmpdir();
+  }
+
+  async CheckExists(name) {
+    return new Promise(async resolve => {
+      try {
+        await exec(`which ${name}`);
+        resolve(true);
+      } catch (e) {
+        resolve(false);
+      }
+    });
   }
 
   async getPhpSock() {

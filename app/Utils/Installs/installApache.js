@@ -10,6 +10,11 @@ const rimraf = util.promisify(require('rimraf'));
 
 export default class installAPache extends Install {
   async service() {
+    if (this.os === 'win32') {
+      return new Promise(async resolve => {
+        resolve({ message: 'tool not support install apache in windown !', code: 0 });
+      });
+    }
     if (this.os === 'darwin') {
       return 'https://www.sylvaindurand.org/setting-up-a-apache-web-server-on-macos/';
     }
