@@ -189,7 +189,7 @@ export default class CreateConfigCommand extends Command {
       if (_.isEmpty(config.connectPhp)) {
         config.connectPhp = await platform.getPhpSock();
         if (_.isEmpty(config.connectPhp)) {
-          const answers = await inquirer.prompt({ type: 'input', name: 'path', message: 'input method connect php-fpm : ' });
+          const answers = await inquirer.prompt({ type: 'input', name: 'path', message: 'input method connect php-fpm : ', default: '127.0.0.1:9000' });
           config.connectPhp = answers.path;
         }
       }
@@ -202,8 +202,14 @@ export default class CreateConfigCommand extends Command {
       }
 
       if (config_apache) {
-        fs.writeFileSync(`${config.apache.dir_conf}/apache-${item.name}.conf`, config_apache.stdout);
-        console.log(colors.green(`${config.apache.dir_conf}/apache-${item.name}.conf`));
+        if (platform.osName() === 'redhat') {
+          fs.writeFileSync(`${config.apache.dir_conf}/apache-${item.name}.conf`, config_apache.stdout);
+          console.log(colors.green(`${config.apache.dir_conf}/apache-${item.name}.conf`));
+        }
+        if (platform.osName() === 'dibian') {
+          fs.writeFileSync(`${config.apache.dir_conf}/apache-${item.name}`, config_apache.stdout);
+          console.log(colors.green(`${config.apache.dir_conf}/apache-${item.name}`));
+        }
       }
 
       fs.writeFileSync(`${config.nginx.dir_conf}/nginx-${item.name}.conf`, config_nginx.stdout);
