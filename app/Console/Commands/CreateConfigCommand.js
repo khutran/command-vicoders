@@ -31,6 +31,9 @@ export default class CreateConfigCommand extends Command {
     try {
       const os = new Os().platform();
       let platform;
+      if (os === 'win32') {
+        console.log('command vcc not support create config in windown ... !');
+      }
       if (os === 'darwin') {
         platform = new Darwin();
 

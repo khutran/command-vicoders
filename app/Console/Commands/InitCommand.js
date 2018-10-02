@@ -11,6 +11,7 @@ import installNginx from '../../Utils/Installs/installNginx';
 import installPhp from '../../Utils/Installs/InstallPhp';
 import * as _ from 'lodash';
 // import of from 'await-of';
+import Win from '../../Utils/Os/Win';
 const util = require('util');
 const rimraf = util.promisify(require('rimraf'));
 const mv = util.promisify(require('mv'));
@@ -31,6 +32,45 @@ export default class InitCommand extends Command {
   async handle() {
     try {
       const os = new Os().platform();
+      if (os === 'win32') {
+        const win = new Win();
+        const user = win.userInfo();
+
+        if (!fs.existsSync(`${user.homedir}/.npm/vcc/config.json`)) {
+          await mv(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`, { mkdirp: true });
+          fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
+        } else {
+          const answers = await inquirer.prompt({ type: 'confirm', name: 'config', message: 'Config exitis - you overwrite ?', default: false });
+          if (answers.config) {
+            await rimraf(`${user.homedir}/.npm/vcc/config.json`);
+            await mv(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`, { mkdirp: true });
+            fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
+          } else {
+            await rimraf(`${__dirname}/../../config/config.json`);
+            fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
+          }
+        }
+
+        if (!fs.existsSync(`${user.homedir}/.npm/vcc/data/vcc.db`)) {
+          await mv(`${__dirname}/../../../data/vcc.db`, `${user.homedir}/.npm/vcc/data/vcc.db`, { mkdirp: true });
+          fs.symlinkSync(`${user.homedir}/.npm/vcc/data/vcc.db`, `${__dirname}/../../../data/vcc.db`);
+        } else {
+          const answers = await inquirer.prompt({ type: 'confirm', name: 'config', message: 'Database exitis - you overwrite ?', default: false });
+          if (answers.config) {
+            await rimraf(`${user.homedir}/.npm/vcc/data/vcc.db`);
+            await mv(`${__dirname}/../../../data/vcc.db`, `${user.homedir}/.npm/vcc/data/vcc.db`, { mkdirp: true });
+            fs.symlinkSync(`${user.homedir}/.npm/vcc/data/vcc.db`, `${__dirname}/../../../data/vcc.db`);
+          } else {
+            await rimraf(`${__dirname}/../../../data/vcc.db`);
+            fs.symlinkSync(`${user.homedir}/.npm/vcc/data/vcc.db`, `${__dirname}/../../../data/vcc.db`);
+          }
+        }
+        const config = require(`${__dirname}/../../config/config.json`);
+
+        const data = JSON.stringify(config, null, 2);
+        fs.writeFileSync(`${__dirname}/../../config/config.json`, data);
+        console.log(colors.green('success ... !'));
+      }
       if (os === 'darwin') {
         const darwin = new Darwin();
         const user = darwin.userInfo();
