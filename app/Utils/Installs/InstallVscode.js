@@ -22,6 +22,11 @@ export default class InstallVscode extends Install {
             resolve({ code: 1, message: 'service vscode exitis install' });
           } else {
             console.log(colors.green('Install Vscode ... !'));
+
+            if (fs.existsSync(`${win.tmpDir()}/vscode-win`)) {
+              await rimraf(`${win.tmpDir()}/vscode-win`);
+            }
+
             await exec(`git clone https://github.com/khutran/vscode-win.git ${win.tmpDir()}/vscode-win`);
             await exec(`${win.tmpDir()}/vscode-win/VSCodeUserSetup-x64-1.27.2.exe`);
             console.log(colors.green('Install Success ... !'));
@@ -148,11 +153,11 @@ export default class InstallVscode extends Install {
   }
 
   async extentions() {
-    if (this.os === 'darwin') {
-      const darwin = new Darwin();
-      const user = darwin.userInfo();
+    if (this.os === 'win32') {
+      const win = new Win();
+      const user = win.userInfo();
       console.log('Clear extentions ....');
-      if (!(await darwin.CheckExists('code'))) {
+      if (!(await win.CheckExists('code'))) {
         throw new Exception('VIsual studio not install', 2);
       }
       if (!fs.existsSync(`${user.homedir}/.vscode`)) {
@@ -173,6 +178,31 @@ export default class InstallVscode extends Install {
             throw new Exception(err.messages);
           }
         });
+        console.log(`Install ... ${code} ${colors.green('done')}`);
+      });
+    }
+
+    if (this.os === 'darwin') {
+      const darwin = new Darwin();
+      const user = darwin.userInfo();
+      console.log('Clear extentions ....');
+      if (!(await darwin.CheckExists('code'))) {
+        throw new Exception('VIsual studio not install', 2);
+      }
+      if (!fs.existsSync(`${user.homedir}/.vscode`)) {
+        fs.mkdirSync(`${user.homedir}/.vscode`);
+      }
+      await rimraf(`${user.homedir}/.vscode/extensions`);
+      console.log(`Clear extentions .... ${colors.green('done')}`);
+      const extension = spawn('git', ['clone', 'https://github.com/codersvn/vscode_extensions.git', `${user.homedir}/.vscode/extensions`]);
+      extension.childProcess.stderr.on('data', data => {
+        if (data.indexOf('done') > -1) {
+          data = _.replace(data, ', done.', '');
+        }
+        console.log(`${data}`);
+      });
+      extension.childProcess.on('close', async code => {
+        await chownr(`${user.homedir}/.vscode/extensions`, user.uid, user.gid);
         console.log(`Install ... ${code} ${colors.green('done')}`);
       });
     }

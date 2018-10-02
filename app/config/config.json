@@ -1,14 +1,23 @@
 {
-  "use_db_commands": ["project", "open", "create-config", "pwd"],
+  "use_db_commands": [
+    "project",
+    "open",
+    "create-config",
+    "pwd"
+  ],
   "apache": {
     "dir_conf": "",
     "dir_etc": ""
   },
-  "nginx": { "dir_conf": "", "dir_etc": "" },
-  "mysql": {
-    "user_root": "root",
-    "pass_root": "",
-    "localhost": "127.0.0.1"
+  "nginx": {
+    "dir_conf": "",
+    "dir_etc": ""
   },
-  "connectPhp": ""
+  "mysql": {
+    "user_root": "",
+    "pass_root": "",
+    "localhost": ""
+  },
+  "connectPhp": "",
+  "sql_lite_path": ""
 }

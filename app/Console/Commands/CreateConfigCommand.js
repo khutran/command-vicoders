@@ -31,6 +31,8 @@ export default class CreateConfigCommand extends Command {
     try {
       const os = new Os().platform();
       let platform;
+      let name_apache;
+      let check_apache;
       if (os === 'win32') {
         console.log('command vcc not support create config webserver in windown ... !');
       }
@@ -54,7 +56,9 @@ export default class CreateConfigCommand extends Command {
         platform = new Linux();
 
         if (platform.osName() === 'debian') {
-          if (!(await platform.CheckExists('apache2'))) {
+          name_apache = 'apache2';
+          check_apache = await platform.CheckExists(name_apache);
+          if (!check_apache) {
             const answers = await inquirer.prompt({ type: 'confirm', name: 'install', message: 'you want install apache : ', default: true });
             if (answers.install) {
               const install = new installAPache();
@@ -64,7 +68,9 @@ export default class CreateConfigCommand extends Command {
         }
 
         if (platform.osName() === 'redhat') {
-          if (!(await platform.CheckExists('httpd'))) {
+          name_apache = 'httpd';
+          check_apache = await platform.CheckExists(name_apache);
+          if (!check_apache) {
             const answers = await inquirer.prompt({ type: 'confirm', name: 'install', message: 'you want install apache : ', default: true });
             if (answers.install) {
               const install = new installAPache();
@@ -99,8 +105,8 @@ export default class CreateConfigCommand extends Command {
 
       if (!project) {
         const list = await repository.get();
-        _.mapKeys(list, (value, key) => {
-          console.log(`${parseInt(key) + 1} : ${value.name}`);
+        _.map(list, value => {
+          console.log(`${value.id} : ${colors.green(value.name)}`);
         });
 
         const as = await inquirer.prompt({ type: 'input', name: 'project', message: 'Select project  : ' });
@@ -157,7 +163,10 @@ export default class CreateConfigCommand extends Command {
         fs.writeFileSync(`${config.nginx.dir_etc}/ssl/key.pem`, key.stdout);
       }
 
-      const apache = await inquirer.prompt({ type: 'confirm', name: 'status', message: 'You have want use apache : ', default: true });
+      let apache = { status: false };
+      if (check_apache) {
+        apache = await inquirer.prompt({ type: 'confirm', name: 'status', message: 'You have want use apache : ', default: true });
+      }
       let config_apache;
       if (item.framework !== 'nodejs') {
         if (apache.status) {
@@ -180,20 +189,33 @@ export default class CreateConfigCommand extends Command {
       if (apache.status) {
         config_nginx.stdout = _.replace(config_nginx.stdout, new RegExp('#includeApache', 'g'), 'proxy_pass http://apache');
         if (item.framework === 'angular') {
-          const answers = await inquirer.prompt({ type: 'confirm', name: 'bool', message: 'you want use apache', default: true });
-          if (!answers.bool) {
-            config_nginx.stdout = _.replace(config_nginx.stdout, new RegExp('proxy_pass http://apache', 'g'), 'proxy_pass http://web');
+          const answers = await inquirer.prompt({ type: 'confirm', name: 'bool', message: 'you want use port 4200 ? :', default: true });
+          if (answers.bool) {
+            if (config_nginx.stdout.includes('#includeApache')) {
+              config_nginx.stdout = _.replace(config_nginx.stdout, new RegExp('#includeAngular', 'g'), 'proxy_pass http://web');
+            } else {
+              config_nginx.stdout = _.replace(config_nginx.stdout, new RegExp('proxy_pass http://apache', 'g'), 'proxy_pass http://web');
+            }
           }
         }
       } else {
-        config_nginx.stdout = _.replace(config_nginx.stdout, new RegExp('#includeNginx', 'g'), 'try_files $uri $uri/ /index.php?$query_string');
+        if (item.framework === 'angular') {
+          const answers = await inquirer.prompt({ type: 'confirm', name: 'bool', message: 'you want use port 4200 ? :', default: true });
+          if (answers.bool) {
+            config_nginx.stdout = _.replace(config_nginx.stdout, new RegExp('#includeAngular', 'g'), 'proxy_pass http://web');
+          }
+        } else {
+          config_nginx.stdout = _.replace(config_nginx.stdout, new RegExp('#includeNginx', 'g'), 'try_files $uri $uri/ /index.php?$query_string');
+        }
       }
 
-      if (_.isEmpty(config.connectPhp)) {
-        config.connectPhp = await platform.getPhpSock();
+      if (await platform.CheckExists('php')) {
         if (_.isEmpty(config.connectPhp)) {
-          const answers = await inquirer.prompt({ type: 'input', name: 'path', message: 'input method connect php-fpm : ', default: '127.0.0.1:9000' });
-          config.connectPhp = answers.path;
+          config.connectPhp = await platform.getPhpSock();
+          if (_.isEmpty(config.connectPhp)) {
+            const answers = await inquirer.prompt({ type: 'input', name: 'path', message: 'input method connect php-fpm : ', default: '127.0.0.1:9000' });
+            config.connectPhp = answers.path;
+          }
         }
       }
 
