@@ -32,7 +32,7 @@ export default class CreateConfigCommand extends Command {
       const os = new Os().platform();
       let platform;
       if (os === 'win32') {
-        console.log('command vcc not support create config in windown ... !');
+        console.log('command vcc not support create config webserver in windown ... !');
       }
       if (os === 'darwin') {
         platform = new Darwin();
