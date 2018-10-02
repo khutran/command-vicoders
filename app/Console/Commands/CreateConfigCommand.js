@@ -149,7 +149,7 @@ export default class CreateConfigCommand extends Command {
         const certificate = await exec('curl https://raw.githubusercontent.com/khutran/config_web/master/ssl/certificate.pem');
         fs.writeFileSync(`${config.nginx.dir_etc}/ssl/certificate.pem`, certificate.stdout);
       }
-      if (!fs.existsSync(!fs.existsSync(`${config.nginx.dir_etc}/ssl/key.pem`))) {
+      if (!fs.existsSync(`${config.nginx.dir_etc}/ssl/key.pem`)) {
         const key = await exec('curl https://raw.githubusercontent.com/khutran/config_web/master/ssl/key.pem');
         fs.writeFileSync(`${config.nginx.dir_etc}/ssl/key.pem`, key.stdout);
       }

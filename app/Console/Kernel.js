@@ -8,9 +8,22 @@ import ConfigCommand from './Commands/ConfigCommand';
 import InitCommand from './Commands/InitCommand';
 import GitCommand from './Commands/GitCommand';
 import PwdCommand from './Commands/PwdCommand';
+import ChdirCommand from './Commands/ChdirCommand';
 
 export class Kernel {
   commands() {
-    return [MakeCommandCommand, InstallServiceCommand, ProjectCommand, OpenCommand, CreateProjectCommand, CreateConfigCommand, ConfigCommand, InitCommand, GitCommand, PwdCommand];
+    return [
+      ChdirCommand,
+      MakeCommandCommand,
+      InstallServiceCommand,
+      ProjectCommand,
+      OpenCommand,
+      CreateProjectCommand,
+      CreateConfigCommand,
+      ConfigCommand,
+      InitCommand,
+      GitCommand,
+      PwdCommand
+    ];
   }
 }
