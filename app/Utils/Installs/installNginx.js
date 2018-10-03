@@ -4,7 +4,7 @@ import Linux from '../Os/Linux';
 import fs from 'fs';
 import config from '../../config/config.json';
 import of from 'await-of';
-import _ from 'lodash';
+import * as _ from 'lodash';
 const util = require('util');
 const rimraf = util.promisify(require('rimraf'));
 const exec = util.promisify(require('child_process').exec);
@@ -13,8 +13,16 @@ const exec = util.promisify(require('child_process').exec);
 
 export default class installNginx extends Install {
   async service() {
+    if (this.os === 'win32') {
+      return new Promise(async resolve => {
+        resolve({ message: 'tool not support install nginx in windown !', code: 0 });
+      });
+    }
     if (this.os === 'darwin') {
-      return 'https://www.sylvaindurand.org/setting-up-a-nginx-web-server-on-macos/';
+      return new Promise(async resolve => {
+        resolve({ message: 'tool not support install nginx in mac !', code: 0 });
+      });
+      // return 'https://www.sylvaindurand.org/setting-up-a-nginx-web-server-on-macos/';
     }
     if (this.os === 'linux') {
       const linux = new Linux();
@@ -30,11 +38,11 @@ export default class installNginx extends Install {
           await exec(
             'apt install -y gcc libpcre3-dev zlib1g-dev libssl-dev libxml2-dev libxslt1-dev  libgd-dev google-perftools libgoogle-perftools-dev libperl-dev libgeoip-dev libatomic-ops-dev'
           );
-          await exec('apt install -y software-properties-common');
+          await exec('apt-get install -y software-properties-common');
           await of(exec('add-apt-repository -y ppa:nginx/stable'));
-          await exec('apt -y update');
+          await exec('apt-get -y update');
           console.log('install nginx ... !');
-          await exec('apt install -y nginx');
+          await exec('apt-get install -y nginx');
           const nginx = await exec('curl https://raw.githubusercontent.com/khutran/config_web/master/nginx.conf');
           await rimraf(`${config.nginx.dir_etc}/nginx.conf`);
 
@@ -75,16 +83,16 @@ export default class installNginx extends Install {
           await rimraf(`${config.nginx.dir_etc}/nginx.conf`);
 
           fs.writeFileSync(`${config.nginx.dir_etc}/nginx.conf`, nginx.stdout);
-          if (!fs.existsSync(`${config.nginx.dir_conf}/ssl/certificate.pem`)) {
-            if (!fs.existsSync(`${config.nginx.dir_conf}/ssl`)) {
-              fs.mkdirSync(`${config.nginx.dir_conf}/ssl`);
+          if (!fs.existsSync(`${config.nginx.dir_etc}/ssl/certificate.pem`)) {
+            if (!fs.existsSync(`${config.nginx.dir_etc}/ssl`)) {
+              fs.mkdirSync(`${config.nginx.dir_etc}/ssl`);
             }
             const certificate = await exec('curl https://raw.githubusercontent.com/khutran/config_web/master/ssl/certificate.pem');
-            fs.writeFileSync(`${config.nginx.dir_conf}/ssl/certificate.pem`, certificate.stdout);
+            fs.writeFileSync(`${config.nginx.dir_etc}/ssl/certificate.pem`, certificate.stdout);
           }
-          if (!fs.existsSync(!fs.existsSync(`${config.nginx.dir_conf}/ssl/key.pem`))) {
+          if (!fs.existsSync(!fs.existsSync(`${config.nginx.dir_etc}/ssl/key.pem`))) {
             const key = await exec('curl https://raw.githubusercontent.com/khutran/config_web/master/ssl/key.pem');
-            fs.writeFileSync(`${config.nginx.dir_conf}/ssl/key.pem`, key.stdout);
+            fs.writeFileSync(`${config.nginx.dir_etc}/ssl/key.pem`, key.stdout);
           }
 
           await exec('nginx');

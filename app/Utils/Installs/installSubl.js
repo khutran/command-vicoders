@@ -1,13 +1,43 @@
 import Install from './Install';
 import fs from 'fs';
+import * as _ from 'lodash';
+import { Exception } from '@nsilly/exceptions';
 import inquirer from 'inquirer';
 import colors from 'colors';
 import Darwin from '../Os/Darwin';
 import Linux from '../Os/Linux';
 import { spawn, exec } from 'child-process-promise';
+import Win from '../Os/Win';
+import path from 'path';
+const util = require('util');
+const rimraf = util.promisify(require('rimraf'));
+const chownr = util.promisify(require('chownr'));
 
 export default class InstallSubl extends Install {
   async service() {
+    if (this.os === 'win32') {
+      return new Promise(async (resolve, reject) => {
+        try {
+          const win = new Win();
+          if (fs.existsSync(path.join('C:', 'Program Files', 'Sublime Text 3'))) {
+            resolve({ code: 1, message: 'service Subl exitis install' });
+          } else {
+            console.log(colors.green('Install Subl ... !'));
+            if (fs.existsSync(`${win.tmpDir()}/subl-win`)) {
+              await rimraf(`${win.tmpDir()}/subl-win`);
+            }
+            await exec(`git clone https://github.com/khutran/subl-win.git ${win.tmpDir()}/subl-win`);
+            await exec(`${win.tmpDir()}/subl-win/Sublime-Text-Build-3176-x64-Setup.exe`);
+            console.log(colors.green('Install Success ... !'));
+            await rimraf(`${win.tmpDir()}/subl-win`);
+            console.log(colors.green('Install Success ... !'));
+            resolve({ message: 'install success !', code: 0 });
+          }
+        } catch (e) {
+          reject(e);
+        }
+      });
+    }
     if (this.os === 'darwin') {
       return new Promise(async (resolve, reject) => {
         try {
@@ -39,7 +69,7 @@ export default class InstallSubl extends Install {
           try {
             if (!fs.existsSync('/usr/bin/wget')) {
               console.log('install wget ... !');
-              await exec('apt install -y wget');
+              await exec('apt-get install -y wget');
             }
             if (await linux.CheckExists('subl')) {
               resolve({ message: 'subl exitis install !', code: 1 });
@@ -53,7 +83,7 @@ export default class InstallSubl extends Install {
 
               console.log(colors.green('down sublime-text success ... done !'));
               fs.writeFileSync('/etc/apt/sources.list.d/sublime-text.list', data);
-              await exec('apt -y update');
+              await exec('apt-get -y update');
               await spawn('apt-get', ['-y', 'install', 'sublime-text']);
               resolve({ message: 'install success !', code: 0 });
             }
@@ -88,15 +118,126 @@ export default class InstallSubl extends Install {
   }
 
   async extentions() {
+    if (this.os === 'win32') {
+      const win = new Win();
+      const user = win.userInfo();
+      console.log('Clear extentions ....');
+      if (!(await win.CheckExists('code'))) {
+        throw new Exception('VIsual studio not install', 2);
+      }
+      if (!fs.existsSync(`${user.homedir}/.vscode`)) {
+        fs.mkdirSync(`${user.homedir}/.vscode`);
+      }
+      await rimraf(`${user.homedir}\\${path.join('AppData', 'Roaming', 'Sublime Text 3', 'Packages')}`);
+      console.log(`Clear extentions .... ${colors.green('done')}`);
+      const extension = spawn('git', [
+        'clone',
+        '--recurse-submodules',
+        '-j8',
+        'https://github.com/codersvn/sublime_extensitions',
+        `${user.homedir}\\${path.join('AppData', 'Roaming', 'Sublime Text 3', 'Packages')}`
+      ]);
+      extension.childProcess.stderr.on('data', data => {
+        if (data.indexOf('done') > -1) {
+          data = _.replace(data, ', done.', '');
+        }
+        console.log(`${data}`);
+      });
+      extension.childProcess.on('close', async code => {
+        // await chownr(`${user.homedir}\\${path.join('AppData', 'Roaming', 'Sublime Text 3', 'Packages')}`, user.uid, user.gid);
+        console.log(`Install ... ${code} ${colors.green('done')}`);
+      });
+    }
+
     if (this.os === 'darwin') {
+      const darwin = new Darwin();
+      const user = darwin.userInfo();
+      console.log('Clear extentions ....');
+      if (!(await darwin.CheckExists('subl'))) {
+        throw new Exception('Sublime - text not install', 2);
+      }
+      if (!fs.existsSync(`${user.homedir}/.config/sublime-text-3/Packages`)) {
+        fs.mkdirSync(`${user.homedir}/.config/sublime-text-3/Packages`);
+      }
+      await rimraf(`${user.homedir}/.config/sublime-text-3/Packages`);
+      console.log(`Clear extentions .... ${colors.green('done')}`);
+      const extension = spawn('git', [
+        'clone',
+        '--recurse-submodules',
+        '-j8',
+        'https://github.com/codersvn/sublime_extensitions',
+        `${user.homedir}/.config/sublime-text-3/Packages}`
+      ]);
+      extension.childProcess.stderr.on('data', data => {
+        if (data.indexOf('done') > -1) {
+          data = _.replace(data, ', done.', '');
+        }
+        console.log(`${data}`);
+      });
+      extension.childProcess.on('close', async code => {
+        await chownr(`${user.homedir}/.config/sublime-text-3/Packages`, user.uid, user.gid);
+        console.log(`Install ... ${code} ${colors.green('done')}`);
+      });
     }
     if (this.os === 'linux') {
       const linux = new Linux();
       const osName = linux.osName();
-      // const user = linux.userInfo();
+      const user = linux.userInfo();
       if (osName === 'debian') {
+        console.log('Clear extentions ....');
+        if (!(await linux.CheckExists('subl'))) {
+          throw new Exception('Sublime - text not install', 2);
+        }
+        if (!fs.existsSync(`${user.homedir}/.config/sublime-text-3/Packages`)) {
+          fs.mkdirSync(`${user.homedir}/.config/sublime-text-3/Packages`);
+        }
+        await rimraf(`${user.homedir}/.config/sublime-text-3/Packages`);
+        console.log(`Clear extentions .... ${colors.green('done')}`);
+        const extension = spawn('git', [
+          'clone',
+          '--recurse-submodules',
+          '-j8',
+          'https://github.com/codersvn/sublime_extensitions',
+          `${user.homedir}/.config/sublime-text-3/Packages}`
+        ]);
+        extension.childProcess.stderr.on('data', data => {
+          if (data.indexOf('done') > -1) {
+            data = _.replace(data, ', done.', '');
+          }
+          console.log(`${data}`);
+        });
+        extension.childProcess.on('close', async code => {
+          await chownr(`${user.homedir}/.config/sublime-text-3/Packages`, user.uid, user.gid);
+          console.log(`Install ... ${code} ${colors.green('done')}`);
+        });
       }
       if (osName === 'redhat') {
+        console.log('Clear extentions ....');
+        if (!(await linux.CheckExists('subl'))) {
+          throw new Exception('Sublime - text not install', 2);
+        }
+        if (!fs.existsSync(`${user.homedir}/.config/sublime-text-3/Packages`)) {
+          fs.mkdirSync(`${user.homedir}/.config/sublime-text-3/Packages`);
+        }
+        await rimraf(`${user.homedir}/.config/sublime-text-3/Packages`);
+        console.log(`Clear extentions .... ${colors.green('done')}`);
+        const extension = spawn('git', [
+          'clone',
+          '--recurse-submodules',
+          '-j8',
+          'https://github.com/codersvn/sublime_extensitions',
+          `${user.homedir}/.config/sublime-text-3/Packages}`
+        ]);
+        extension.childProcess.stderr.on('data', data => {
+          if (data.indexOf('done') > -1) {
+            data = _.replace(data, ', done.', '');
+          }
+          console.log(`${data}`);
+        });
+        extension.childProcess.on('close', async code => {
+          await chownr(`${user.homedir}/.config/sublime-text-3/Packages`, user.uid, user.gid);
+          console.log(`Install ... ${code} ${colors.green('done')}`);
+        });
       }
     }
   }

@@ -5,7 +5,15 @@ import { dd } from 'dumper.js';
 
 export default class installMysql extends Install {
   async service() {
+    if (this.os === 'win32') {
+      return new Promise(async resolve => {
+        resolve({ message: 'tool not support install mysql in windown !', code: 0 });
+      });
+    }
     if (this.os === 'darwin') {
+      return new Promise(async resolve => {
+        resolve({ message: 'tool not support install mysql in mac !', code: 0 });
+      });
     }
     if (this.os === 'linux') {
       const linux = new Linux();

@@ -9,7 +9,9 @@ import colors from 'colors';
 import installAPache from '../../Utils/Installs/installApache';
 import installNginx from '../../Utils/Installs/installNginx';
 import installPhp from '../../Utils/Installs/InstallPhp';
-import of from 'await-of';
+import * as _ from 'lodash';
+// import of from 'await-of';
+import Win from '../../Utils/Os/Win';
 const util = require('util');
 const rimraf = util.promisify(require('rimraf'));
 const mv = util.promisify(require('mv'));
@@ -30,8 +32,9 @@ export default class InitCommand extends Command {
   async handle() {
     try {
       const os = new Os().platform();
-      if (os === 'darwin') {
-        const user = new Darwin().userInfo();
+      if (os === 'win32') {
+        const win = new Win();
+        const user = win.userInfo();
 
         if (!fs.existsSync(`${user.homedir}/.npm/vcc/config.json`)) {
           await mv(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`, { mkdirp: true });
@@ -63,6 +66,52 @@ export default class InitCommand extends Command {
           }
         }
         const config = require(`${__dirname}/../../config/config.json`);
+
+        const data = JSON.stringify(config, null, 2);
+        fs.writeFileSync(`${__dirname}/../../config/config.json`, data);
+        console.log(colors.green('success ... !'));
+      }
+      if (os === 'darwin') {
+        const darwin = new Darwin();
+        const user = darwin.userInfo();
+
+        if (!fs.existsSync(`${user.homedir}/.npm/vcc/config.json`)) {
+          await mv(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`, { mkdirp: true });
+          fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
+        } else {
+          const answers = await inquirer.prompt({ type: 'confirm', name: 'config', message: 'Config exitis - you overwrite ?', default: false });
+          if (answers.config) {
+            await rimraf(`${user.homedir}/.npm/vcc/config.json`);
+            await mv(`${__dirname}/../../config/config.json`, `${user.homedir}/.npm/vcc/config.json`, { mkdirp: true });
+            fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
+          } else {
+            await rimraf(`${__dirname}/../../config/config.json`);
+            fs.symlinkSync(`${user.homedir}/.npm/vcc/config.json`, `${__dirname}/../../config/config.json`);
+          }
+        }
+
+        if (!fs.existsSync(`${user.homedir}/.npm/vcc/data/vcc.db`)) {
+          await mv(`${__dirname}/../../../data/vcc.db`, `${user.homedir}/.npm/vcc/data/vcc.db`, { mkdirp: true });
+          fs.symlinkSync(`${user.homedir}/.npm/vcc/data/vcc.db`, `${__dirname}/../../../data/vcc.db`);
+        } else {
+          const answers = await inquirer.prompt({ type: 'confirm', name: 'config', message: 'Database exitis - you overwrite ?', default: false });
+          if (answers.config) {
+            await rimraf(`${user.homedir}/.npm/vcc/data/vcc.db`);
+            await mv(`${__dirname}/../../../data/vcc.db`, `${user.homedir}/.npm/vcc/data/vcc.db`, { mkdirp: true });
+            fs.symlinkSync(`${user.homedir}/.npm/vcc/data/vcc.db`, `${__dirname}/../../../data/vcc.db`);
+          } else {
+            await rimraf(`${__dirname}/../../../data/vcc.db`);
+            fs.symlinkSync(`${user.homedir}/.npm/vcc/data/vcc.db`, `${__dirname}/../../../data/vcc.db`);
+          }
+        }
+        const config = require(`${__dirname}/../../config/config.json`);
+        config.connectPhp = await darwin.getPhpSock();
+
+        if (_.isEmpty(config.connectPhp)) {
+          const answers = await inquirer.prompt({ type: 'input', name: 'path', message: 'input method connect php-fpm' });
+          config.connectPhp = answers.path;
+        }
+
         config.apache.dir_etc = '/usr/local/etc/httpd';
         config.apache.dir_conf = '/usr/local/etc/httpd/servers';
         config.nginx.dir_conf = '/usr/local/etc/nginx/servers/';
@@ -149,6 +198,11 @@ export default class InitCommand extends Command {
             }
           }
 
+          if (_.isEmpty(config.connectPhp)) {
+            const answers = await inquirer.prompt({ type: 'input', name: 'path', message: 'input method connect php-fpm :' });
+            config.connectPhp = answers.path;
+          }
+
           const data = JSON.stringify(config, null, 2);
           fs.writeFileSync(`${__dirname}/../../config/config.json`, data);
           console.log(colors.green('success ... !'));
@@ -188,6 +242,11 @@ export default class InitCommand extends Command {
               await new installPhp().service('7.2');
             }
           }
+
+          // if (_.isEmpty(config.connectPhp)) {
+          //   const answers = await inquirer.prompt({ type: 'input', name: 'path', message: 'input method connect php-fpm : ' });
+          //   config.connectPhp = answers.path;
+          // }
 
           const data = JSON.stringify(config, null, 2);
           fs.writeFileSync(`${__dirname}/../../config/config.json`, data);

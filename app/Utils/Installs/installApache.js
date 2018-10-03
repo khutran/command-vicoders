@@ -3,13 +3,18 @@ import { Exception } from '@nsilly/exceptions/dist/src/Exceptions/Exception';
 import Linux from '../Os/Linux';
 import fs from 'fs';
 import config from '../../config/config.json';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import { exec } from 'child-process-promise';
 const util = require('util');
 const rimraf = util.promisify(require('rimraf'));
 
 export default class installAPache extends Install {
   async service() {
+    if (this.os === 'win32') {
+      return new Promise(async resolve => {
+        resolve({ message: 'tool not support install apache in windown !', code: 0 });
+      });
+    }
     if (this.os === 'darwin') {
       return 'https://www.sylvaindurand.org/setting-up-a-apache-web-server-on-macos/';
     }
@@ -30,6 +35,19 @@ export default class installAPache extends Install {
           );
           console.log('install apache2 ... !');
           await exec('apt-get -y install apache2');
+
+          if (!fs.existsSync('/var/run/apache2')) {
+            fs.mkdirSync('/var/run/apache2');
+          }
+
+          if (!fs.existsSync('/var/lock/apache2')) {
+            fs.mkdirSync('/var/lock/apache2');
+          }
+
+          if (!fs.existsSync('/var/log/apache2')) {
+            fs.mkdirSync('/var/log/apache2');
+          }
+
           let port = fs.readFileSync(`${config.apache.dir_etc}/ports.conf`);
           port = _.replace(port, new RegExp('80', 'g'), '6669');
           fs.writeFileSync(`${config.apache.dir_etc}/ports.conf`, port);

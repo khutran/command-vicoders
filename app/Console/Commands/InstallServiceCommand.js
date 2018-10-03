@@ -1,5 +1,5 @@
 import { Command } from './Command';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import colors from 'colors';
 import InstallVscode from '../../Utils/Installs/InstallVscode';
 import InstallSubl from '../../Utils/Installs/installSubl';
