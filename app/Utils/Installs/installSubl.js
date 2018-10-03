@@ -144,7 +144,7 @@ export default class InstallSubl extends Install {
         console.log(`${data}`);
       });
       extension.childProcess.on('close', async code => {
-        await chownr(`${user.homedir}\\${path.join('AppData', 'Roaming', 'Sublime Text 3', 'Packages')}`, user.uid, user.gid);
+        // await chownr(`${user.homedir}\\${path.join('AppData', 'Roaming', 'Sublime Text 3', 'Packages')}`, user.uid, user.gid);
         console.log(`Install ... ${code} ${colors.green('done')}`);
       });
     }
@@ -153,15 +153,21 @@ export default class InstallSubl extends Install {
       const darwin = new Darwin();
       const user = darwin.userInfo();
       console.log('Clear extentions ....');
-      if (!(await darwin.CheckExists('code'))) {
-        throw new Exception('VIsual studio not install', 2);
+      if (!(await darwin.CheckExists('subl'))) {
+        throw new Exception('Sublime - text not install', 2);
       }
-      if (!fs.existsSync(`${user.homedir}/.vscode`)) {
-        fs.mkdirSync(`${user.homedir}/.vscode`);
+      if (!fs.existsSync(`${user.homedir}/.config/sublime-text-3/Packages`)) {
+        fs.mkdirSync(`${user.homedir}/.config/sublime-text-3/Packages`);
       }
-      await rimraf(`${user.homedir}/.vscode/extensions`);
+      await rimraf(`${user.homedir}/.config/sublime-text-3/Packages`);
       console.log(`Clear extentions .... ${colors.green('done')}`);
-      const extension = spawn('git', ['clone', 'https://github.com/codersvn/vscode_extensions.git', `${user.homedir}/.vscode/extensions`]);
+      const extension = spawn('git', [
+        'clone',
+        '--recurse-submodules',
+        '-j8',
+        'https://github.com/codersvn/sublime_extensitions',
+        `${user.homedir}/.config/sublime-text-3/Packages}`
+      ]);
       extension.childProcess.stderr.on('data', data => {
         if (data.indexOf('done') > -1) {
           data = _.replace(data, ', done.', '');
@@ -169,7 +175,7 @@ export default class InstallSubl extends Install {
         console.log(`${data}`);
       });
       extension.childProcess.on('close', async code => {
-        await chownr(`${user.homedir}/.vscode/extensions`, user.uid, user.gid);
+        await chownr(`${user.homedir}/.config/sublime-text-3/Packages`, user.uid, user.gid);
         console.log(`Install ... ${code} ${colors.green('done')}`);
       });
     }
@@ -179,15 +185,21 @@ export default class InstallSubl extends Install {
       const user = linux.userInfo();
       if (osName === 'debian') {
         console.log('Clear extentions ....');
-        if (!(await linux.CheckExists('code'))) {
-          throw new Exception('VIsual studio not install', 2);
+        if (!(await linux.CheckExists('subl'))) {
+          throw new Exception('Sublime - text not install', 2);
         }
-        if (!fs.existsSync(`${user.homedir}/.vscode`)) {
-          fs.mkdirSync(`${user.homedir}/.vscode`);
+        if (!fs.existsSync(`${user.homedir}/.config/sublime-text-3/Packages`)) {
+          fs.mkdirSync(`${user.homedir}/.config/sublime-text-3/Packages`);
         }
-        await rimraf(`${user.homedir}/.vscode/extensions`);
+        await rimraf(`${user.homedir}/.config/sublime-text-3/Packages`);
         console.log(`Clear extentions .... ${colors.green('done')}`);
-        const extension = spawn('git', ['clone', 'https://github.com/codersvn/vscode_extensions.git', `${user.homedir}/.vscode/extensions`]);
+        const extension = spawn('git', [
+          'clone',
+          '--recurse-submodules',
+          '-j8',
+          'https://github.com/codersvn/sublime_extensitions',
+          `${user.homedir}/.config/sublime-text-3/Packages}`
+        ]);
         extension.childProcess.stderr.on('data', data => {
           if (data.indexOf('done') > -1) {
             data = _.replace(data, ', done.', '');
@@ -195,21 +207,27 @@ export default class InstallSubl extends Install {
           console.log(`${data}`);
         });
         extension.childProcess.on('close', async code => {
-          await chownr(`${user.homedir}/.vscode/extensions`, user.uid, user.gid);
+          await chownr(`${user.homedir}/.config/sublime-text-3/Packages`, user.uid, user.gid);
           console.log(`Install ... ${code} ${colors.green('done')}`);
         });
       }
       if (osName === 'redhat') {
         console.log('Clear extentions ....');
-        if (!(await linux.CheckExists('code'))) {
-          throw new Exception('VIsual studio not install', 2);
+        if (!(await linux.CheckExists('subl'))) {
+          throw new Exception('Sublime - text not install', 2);
         }
-        if (!fs.existsSync(`${user.homedir}/.vscode`)) {
-          fs.mkdirSync(`${user.homedir}/.vscode`);
+        if (!fs.existsSync(`${user.homedir}/.config/sublime-text-3/Packages`)) {
+          fs.mkdirSync(`${user.homedir}/.config/sublime-text-3/Packages`);
         }
-        await rimraf(`${user.homedir}/.vscode/extensions`);
+        await rimraf(`${user.homedir}/.config/sublime-text-3/Packages`);
         console.log(`Clear extentions .... ${colors.green('done')}`);
-        const extension = spawn('git', ['clone', 'https://github.com/codersvn/vscode_extensions.git', `${user.homedir}/.vscode/extensions`]);
+        const extension = spawn('git', [
+          'clone',
+          '--recurse-submodules',
+          '-j8',
+          'https://github.com/codersvn/sublime_extensitions',
+          `${user.homedir}/.config/sublime-text-3/Packages}`
+        ]);
         extension.childProcess.stderr.on('data', data => {
           if (data.indexOf('done') > -1) {
             data = _.replace(data, ', done.', '');
@@ -217,7 +235,7 @@ export default class InstallSubl extends Install {
           console.log(`${data}`);
         });
         extension.childProcess.on('close', async code => {
-          await chownr(`${user.homedir}/.vscode/extensions`, user.uid, user.gid);
+          await chownr(`${user.homedir}/.config/sublime-text-3/Packages`, user.uid, user.gid);
           console.log(`Install ... ${code} ${colors.green('done')}`);
         });
       }

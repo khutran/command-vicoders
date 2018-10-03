@@ -14,12 +14,12 @@ Platform:
   linux x64
 
 Trace: 
-  Error: ENOENT: no such file or directory, copyfile '/usr/local/share/.cache/yarn/v2/npm-core-js-2.5.7-f972608ff0cead68b841a16a932d0b183791814e/library/fn/string/virtual/anchor.js' -> '/mnt/e/projects/command-vicoders/node_modules/core-js/library/fn/string/virtual/anchor.js'
+  Error: EEXIST: file already exists, mkdir '/mnt/e/projects/command-vicoders/node_modules/define-property/node_modules/is-accessor-descriptor'
 
 npm manifest: 
   {
     "name": "@vicoders/cli",
-    "version": "1.3.55",
+    "version": "1.3.66",
     "description": "",
     "main": "dist/index.js",
     "scripts": {
