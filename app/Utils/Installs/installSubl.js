@@ -156,8 +156,8 @@ export default class InstallSubl extends Install {
       if (!(await darwin.CheckExists('subl'))) {
         throw new Exception('Sublime - text not install', 2);
       }
-      if (!fs.existsSync(`${user.homedir}/.config/sublime-text-3/Packages`)) {
-        fs.mkdirSync(`${user.homedir}/.config/sublime-text-3/Packages`);
+      if (!fs.existsSync(`${user.homedir}/.config/sublime-text-3`)) {
+        fs.mkdirSync(`${user.homedir}/.config/sublime-text-3`);
       }
       await rimraf(`${user.homedir}/.config/sublime-text-3/Packages`);
       console.log(`Clear extentions .... ${colors.green('done')}`);
@@ -166,7 +166,7 @@ export default class InstallSubl extends Install {
         '--recurse-submodules',
         '-j8',
         'https://github.com/codersvn/sublime_extensitions',
-        `${user.homedir}/.config/sublime-text-3/Packages}`
+        `${user.homedir}/${path.join('.config', 'sublime-text-3', 'Packages')}`
       ]);
       extension.childProcess.stderr.on('data', data => {
         if (data.indexOf('done') > -1) {
@@ -175,7 +175,7 @@ export default class InstallSubl extends Install {
         console.log(`${data}`);
       });
       extension.childProcess.on('close', async code => {
-        await chownr(`${user.homedir}/.config/sublime-text-3/Packages`, user.uid, user.gid);
+        await chownr(`${user.homedir}/${path.join('.config', 'sublime-text-3', 'Packages')}`, user.uid, user.gid);
         console.log(`Install ... ${code} ${colors.green('done')}`);
       });
     }
@@ -188,17 +188,17 @@ export default class InstallSubl extends Install {
         if (!(await linux.CheckExists('subl'))) {
           throw new Exception('Sublime - text not install', 2);
         }
-        if (!fs.existsSync(`${user.homedir}/.config/sublime-text-3/Packages`)) {
-          fs.mkdirSync(`${user.homedir}/.config/sublime-text-3/Packages`);
+        if (!fs.existsSync(`${user.homedir}/${path.join('.config', 'sublime-text-3')}`)) {
+          fs.mkdirSync(`${user.homedir}/${path.join('.config', 'sublime-text-3')}`);
         }
-        await rimraf(`${user.homedir}/.config/sublime-text-3/Packages`);
+        await rimraf(`${user.homedir}/${path.join('.config', 'sublime-text-3', 'Packages')}`);
         console.log(`Clear extentions .... ${colors.green('done')}`);
         const extension = spawn('git', [
           'clone',
           '--recurse-submodules',
           '-j8',
           'https://github.com/codersvn/sublime_extensitions',
-          `${user.homedir}/.config/sublime-text-3/Packages}`
+          `${user.homedir}/${path.join('.config', 'sublime-text-3', 'Packages')}`
         ]);
         extension.childProcess.stderr.on('data', data => {
           if (data.indexOf('done') > -1) {
@@ -207,7 +207,7 @@ export default class InstallSubl extends Install {
           console.log(`${data}`);
         });
         extension.childProcess.on('close', async code => {
-          await chownr(`${user.homedir}/.config/sublime-text-3/Packages`, user.uid, user.gid);
+          await chownr(`${user.homedir}/${path.join('.config', 'sublime-text-3', 'Packages')}`, user.uid, user.gid);
           console.log(`Install ... ${code} ${colors.green('done')}`);
         });
       }
@@ -216,17 +216,17 @@ export default class InstallSubl extends Install {
         if (!(await linux.CheckExists('subl'))) {
           throw new Exception('Sublime - text not install', 2);
         }
-        if (!fs.existsSync(`${user.homedir}/.config/sublime-text-3/Packages`)) {
-          fs.mkdirSync(`${user.homedir}/.config/sublime-text-3/Packages`);
+        if (!fs.existsSync(`${user.homedir}/${path.join('.config', 'sublime-text-3')}`)) {
+          fs.mkdirSync(`${user.homedir}/${path.join('.config', 'sublime-text-3')}`);
         }
-        await rimraf(`${user.homedir}/.config/sublime-text-3/Packages`);
+        await rimraf(`${user.homedir}/${path.join('.config', 'sublime-text-3', 'Packages')}`);
         console.log(`Clear extentions .... ${colors.green('done')}`);
         const extension = spawn('git', [
           'clone',
           '--recurse-submodules',
           '-j8',
           'https://github.com/codersvn/sublime_extensitions',
-          `${user.homedir}/.config/sublime-text-3/Packages}`
+          `${user.homedir}/${path.join('.config', 'sublime-text-3', 'Packages')}`
         ]);
         extension.childProcess.stderr.on('data', data => {
           if (data.indexOf('done') > -1) {
@@ -235,7 +235,7 @@ export default class InstallSubl extends Install {
           console.log(`${data}`);
         });
         extension.childProcess.on('close', async code => {
-          await chownr(`${user.homedir}/.config/sublime-text-3/Packages`, user.uid, user.gid);
+          await chownr(`${user.homedir}/${path.join('.config', 'sublime-text-3', 'Packages')}`, user.uid, user.gid);
           console.log(`Install ... ${code} ${colors.green('done')}`);
         });
       }
