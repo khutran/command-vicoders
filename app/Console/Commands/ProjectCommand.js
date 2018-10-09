@@ -47,7 +47,7 @@ export default class ProjectCommand extends Command {
             let update_project = {};
             const name = await inquirer.prompt({ type: 'input', name: 'value', message: 'Update name project  : ', default: item.name });
             const framework = await inquirer.prompt({ type: 'input', name: 'value', message: 'Update framework project  : ', default: item.framework });
-            const dir_home = await inquirer.prompt({ type: 'input', name: 'value', message: 'Update dir_home project  : ', default: item.dir_home });
+            const dir_home = await inquirer.prompt({ type: 'input', name: 'value', message: 'Update dir_home project  : ', default: process.cwd() });
             const git_remote = await inquirer.prompt({ type: 'input', name: 'value', message: 'Update git_remote project  : ', default: item.git_remote });
             const port = await inquirer.prompt({ type: 'input', name: 'value', message: 'Update port project  : ', default: item.port });
             update_project.name = name.value;

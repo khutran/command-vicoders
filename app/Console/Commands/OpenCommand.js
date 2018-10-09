@@ -88,11 +88,7 @@ export default class OpenCommand extends Command {
               editer = option.e;
             }
           }
-          spawn('bash', ['-i'], {
-            cwd: item.dir_home,
-            env: process.env,
-            stdio: 'inherit'
-          });
+
           await exec(`${editer} ${item.dir_home}`);
           break;
       }
