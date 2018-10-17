@@ -5,6 +5,7 @@ Vicoders CLI is a command line tool that can help you create some incredible thi
 ## Table of Contents
 
 - <a href="#installation">Installation</a>
+- <a href="#commands">Commands</a>
 
 ## Installation
 
@@ -22,7 +23,7 @@ If Yarn
 yarn global add @vicoders/cli
 ```
 
-## Availabel Commands
+## Commands
 
 For the list of all availabel commands, run following command
 ```
@@ -33,6 +34,12 @@ vcc --help
 
 ```
 vcc create-project --name="Project Name"
+```
+
+#### Install Servcice / Editor Extensition
+
+```
+vcc install
 ```
 
 #### Git
