@@ -8,6 +8,7 @@ import Linux from '../../Utils/Os/Linux';
 import { Exception } from '@nsilly/exceptions';
 import { exec } from 'child-process-promise';
 import inquirer from 'inquirer';
+const { spawn } = require('child_process');
 
 export default class OpenCommand extends Command {
   signature() {
@@ -87,6 +88,7 @@ export default class OpenCommand extends Command {
               editer = option.e;
             }
           }
+
           await exec(`${editer} ${item.dir_home}`);
           break;
       }
