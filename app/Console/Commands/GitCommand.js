@@ -20,7 +20,7 @@ export default class GitCommand extends Command {
     const urlParser = () => {
       const remote = remoteOriginUrl.sync();
       const data = GitUrlParse(remote);
-      const url = `https://${data.source}/${data.full_name}`;
+      const url = `https://${data.source}/${data.organization.replace(/[:]/, '')}/${data.name}`;
       return url;
     };
 
