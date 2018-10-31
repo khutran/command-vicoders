@@ -39,27 +39,37 @@ export default class CreateProjectCommand extends Command {
       {
         url: 'http://bitbucket.org/vicoderscom/vc_kit_angular_cli_v6/get/master.zip',
         name: 'angular-admin',
-        description: 'Create an angular admin'
+        description: 'a kit for Angular admin panel'
       },
       {
         url: 'https://bitbucket.org/vicoderscom/vc_kit_html_css_javascript/get/master.zip',
         name: 'kit-html-css',
-        description: 'Create a kit for HTML/CSS/JS project'
+        description: 'A kit for HTML/CSS/JS project'
       },
       {
         url: 'https://bitbucket.org/hieu_pv/vc_kit_javascript_module/get/master.zip',
         name: 'kit-javascript',
-        description: 'Create a kit for javascript module development'
+        description: 'A kit for javascript module development'
       },
       {
         url: 'https://github.com/codersvn/kit_nodejs/archive/master.zip',
         name: 'kit-nodejs',
-        description: 'Create a kit for nodejs module development'
+        description: 'A kit for nodejs module development'
       },
       {
         url: 'https://github.com/codersvn/kit-tsx/archive/master.zip',
         name: 'kit-tsx',
-        description: 'Create a kit for react library development'
+        description: 'A kit for react library development'
+      },
+      {
+        url: 'https://github.com/nsilly/nsilly/archive/master.zip',
+        name: 'kit-nodejs-nsilly',
+        description: 'Create a Nodejs with nsilly framework'
+      },
+      {
+        url: 'https://github.com/codersvn/kit-wp-plugin/archive/master.zip',
+        name: 'kit-wordpress-plugin',
+        description: 'Create a wordpress plugin with nf-core package'
       }
     ];
     return new Promise(async function(resolve, reject) {
