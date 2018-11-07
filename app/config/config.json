@@ -1,18 +1,1 @@
-{
-  "use_db_commands": ["project", "open", "create-config", "pwd", "cd"],
-  "apache": {
-    "dir_conf": "",
-    "dir_etc": ""
-  },
-  "nginx": {
-    "dir_conf": "",
-    "dir_etc": ""
-  },
-  "mysql": {
-    "user_root": "",
-    "pass_root": "",
-    "localhost": ""
-  },
-  "connectPhp": "",
-  "sql_lite_path": ""
-}
+/Users/hieupv/.npm/vcc/config.json

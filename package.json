@@ -1,6 +1,6 @@
 {
   "name": "@vicoders/cli",
-  "version": "1.4.4",
+  "version": "1.5.3",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
@@ -51,6 +51,8 @@
     "sqlite3": "^4.0.2"
   },
   "devDependencies": {
+    "@angular/cli": "^7.0.4",
+    "@vicoders/vc-component": "^1.0.0",
     "babel": "^6.23.0",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
