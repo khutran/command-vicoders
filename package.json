@@ -1,18 +1,22 @@
 {
   "name": "@vicoders/cli",
-  "version": "1.5.3",
+  "version": "1.6.4",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "vcc": "./node_modules/.bin/babel-node index.js",
+    "generate": "./node_modules/.bin/babel-node generator.js",
+    "vcinstall": "./node_modules/.bin/babel-node installer.js",
     "migrate": "./node_modules/.bin/sequelize db:migrate",
     "build": "rimraf dist/ && babel ./ --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./npm-debug.log,error_code.md,README.md,app.test.js --copy-files",
     "publish_module": "rm -rf data/vcc.db && npm run migrate && npm run build && npx @codersvn/npm-auto-version && npm publish --access public && rm -rf dist/",
     "publish_module_only": "rm -rf data/vcc.db && npm run migrate && npm run build && npm publish --access public && rm -rf dist/"
   },
   "bin": {
-    "vcc": "./dist/index.js"
+    "vcc": "./dist/index.js",
+    "vcgenerate": "./dist/generator.js",
+    "vcinstall": "./dist/installer.js"
   },
   "repository": {
     "type": "git",

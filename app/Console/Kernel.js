@@ -9,6 +9,7 @@ import GitCommand from './Commands/GitCommand';
 import PwdCommand from './Commands/PwdCommand';
 import ChdirCommand from './Commands/ChdirCommand';
 import GenerateCommand from './Commands/GenerateCommand';
+import LaravelPackageInstaller from './Commands/LaravelPackageInstaller';
 
 export class Kernel {
   commands() {
@@ -25,5 +26,12 @@ export class Kernel {
       PwdCommand,
       GenerateCommand
     ];
+  }
+
+  generator() {
+    return [];
+  }
+  installer() {
+    return [LaravelPackageInstaller];
   }
 }
