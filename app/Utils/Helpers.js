@@ -87,4 +87,12 @@ export class Helpers {
       });
     });
   }
+
+  static sleep(time) {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve();
+      }, time);
+    });
+  }
 }

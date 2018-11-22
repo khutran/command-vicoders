@@ -10,9 +10,11 @@ export default class LaravelPackageInstaller extends Command {
     return 'Install laravel package';
   }
 
-  options() {}
+  options() {
+    return [{ key: 'migrate?', description: 'Run migrate command also' }];
+  }
 
-  async handle() {
+  async handle(options) {
     const package_name = await Helpers.select('package', [
       { type: 'usermanager', description: 'Vicoders User Manager' },
       { type: 'postmanager', description: 'Vicoders Post Manager' },
@@ -25,17 +27,16 @@ export default class LaravelPackageInstaller extends Command {
         await Helpers.spawn('npm install @vicoders/generator --save-dev');
         await Helpers.spawn(`mv config/auth.php config/auth.php.${Math.round(Math.random() * 1000)}.bak`);
         await Helpers.spawn('node_modules/.bin/ng generate @vicoders/generator:installer --package=usermanagement');
-        const publishCommands = [
-          'php artisan vendor:publish --provider="VCComponentLaravelUserProvidersUserComponentProvider"',
-          'php artisan vendor:publish --provider="DingoApiProviderLaravelServiceProvider"',
-          'php artisan vendor:publish --provider="TymonJWTAuthProvidersLaravelServiceProvider"',
-          'php artisan vendor:publish --provider "PrettusRepositoryProvidersRepositoryServiceProvider"'
-        ];
-        for (const command of publishCommands) {
-          await Helpers.spawn(command);
-        }
+
+        await Helpers.exec('php artisan vendor:publish --provider="VCComponent\\Laravel\\User\\Providers\\UserComponentProvider"');
+        await Helpers.exec('php artisan vendor:publish --provider="Dingo\\Api\\Provider\\LaravelServiceProvider"');
+        await Helpers.exec('php artisan vendor:publish --provider="Tymon\\JWTAuth\\Providers\\LaravelServiceProvider"');
+        await Helpers.exec('php artisan vendor:publish --provider "Prettus\\Repository\\Providers\\RepositoryServiceProvider"');
+
         await Helpers.spawn('php artisan jwt:secret');
-        await Helpers.spawn('php artisan migrate');
+        if (options.migrate === true) {
+          await Helpers.spawn('php artisan migrate');
+        }
         break;
       default:
         break;
