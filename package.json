@@ -16,7 +16,8 @@
   "bin": {
     "vcc": "./dist/index.js",
     "vcgenerate": "./dist/generator.js",
-    "vcinstall": "./dist/installer.js"
+    "vcinstall": "./dist/installer.js",
+    "vcsupport": "./dist/supporter.js"
   },
   "repository": {
     "type": "git",

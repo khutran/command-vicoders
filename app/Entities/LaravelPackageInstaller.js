@@ -2,10 +2,6 @@ import { exec } from 'child_process';
 import _ from 'lodash';
 
 export class AngularResourceComponent {
-  constructor() {
-    this.availabel_options = ['name', 'type', 'api', 'apifolderpath', 'model', 'component'];
-  }
-
   setOption(option, value) {
     this[option] = value;
     return this;

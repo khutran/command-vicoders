@@ -10,6 +10,7 @@ import PwdCommand from './Commands/PwdCommand';
 import ChdirCommand from './Commands/ChdirCommand';
 import GenerateCommand from './Commands/GenerateCommand';
 import LaravelPackageInstaller from './Commands/LaravelPackageInstaller';
+import SetupVicodersPackageRepositoryCommand from './Commands/SetupVicodersPackageRepositoryCommand';
 
 export class Kernel {
   commands() {
@@ -31,7 +32,12 @@ export class Kernel {
   generator() {
     return [];
   }
+
   installer() {
     return [LaravelPackageInstaller];
+  }
+
+  supporter() {
+    return [SetupVicodersPackageRepositoryCommand];
   }
 }

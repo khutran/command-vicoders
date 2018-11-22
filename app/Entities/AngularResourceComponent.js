@@ -3,7 +3,7 @@ import _ from 'lodash';
 
 export class AngularResourceComponent {
   constructor() {
-    this.availabel_options = ['name', 'type', 'api', 'apifolderpath', 'model', 'component'];
+    this.availabel_options = ['name', 'type', 'api', 'apifolderpath', 'model', 'component', 'with'];
   }
   setOption(option, value) {
     this[option] = value;

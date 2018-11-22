@@ -20,11 +20,22 @@ export default class LaravelPackageInstaller extends Command {
     ]);
     switch (package_name.type) {
       case 'usermanager':
-        let msg = '';
-        msg += await Helpers.exec('composer require codersvn/usermanagement');
-        msg += await Helpers.exec('./node_modules/.bin/ng generate @vicoders/laravelgenerator:installer --package=usermanagement');
-        console.log(msg);
-
+        await Helpers.spawn('vcsupport setup-vicoders-repository');
+        await Helpers.spawn('composer require vicoders/usermanager');
+        await Helpers.spawn('npm install @vicoders/generator --save-dev');
+        await Helpers.spawn(`mv config/auth.php config/auth.php.${Math.round(Math.random() * 1000)}.bak`);
+        await Helpers.spawn('node_modules/.bin/ng generate @vicoders/generator:installer --package=usermanagement');
+        const publishCommands = [
+          'php artisan vendor:publish --provider="VCComponentLaravelUserProvidersUserComponentProvider"',
+          'php artisan vendor:publish --provider="DingoApiProviderLaravelServiceProvider"',
+          'php artisan vendor:publish --provider="TymonJWTAuthProvidersLaravelServiceProvider"',
+          'php artisan vendor:publish --provider "PrettusRepositoryProvidersRepositoryServiceProvider"'
+        ];
+        for (const command of publishCommands) {
+          await Helpers.spawn(command);
+        }
+        await Helpers.spawn('php artisan jwt:secret');
+        await Helpers.spawn('php artisan migrate');
         break;
       default:
         break;
